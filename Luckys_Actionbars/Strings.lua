@@ -26,7 +26,7 @@ LuckyActionbars.Strings = {
             padding = "Icon Padding",
         },
         pageUsers = {
-            [7] = "Druids use this page for Cat Form, rogues for Stealth and evokers for Soar.",
+            [7] = "Druids use this page for Cat Form, rogues for Stealth and Dracthyr for Soar.",
             [8] = "Druids keep this page for their forms.",
             [9] = "Druids use this page for Bear Form.",
             [10] = "Druids use this page for Moonkin Form.",
