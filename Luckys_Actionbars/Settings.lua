@@ -75,6 +75,7 @@ function LuckyActionbars.Settings:Init(db)
             end
             group:Select({
                 S.tooltips,
+                newLine = true,
                 options = modes,
                 value = function() return LuckyActionbars.Tooltips:GetMode() end,
                 onSelect = function(mode) LuckyActionbars.Tooltips:SetMode(mode) end,
