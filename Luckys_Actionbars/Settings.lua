@@ -56,6 +56,13 @@ function LuckyActionbars.Settings:Init(db)
         builder:Group(S.groups.bars, function(group)
             BuildBarRows(group, S)
         end)
+        builder:Group(S.groups.buttons, function(group)
+            group:Toggle({
+                S.rangeIndicator,
+                checked = function() return db.rangeIndicator end,
+                onToggle = function(checked) LuckyActionbars.RangeIndicator:SetEnabled(checked) end,
+            })
+        end)
     end)
 end
 
