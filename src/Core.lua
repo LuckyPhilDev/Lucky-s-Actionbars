@@ -26,6 +26,7 @@ local function LoadDatabase()
     return db
 end
 
+-- PLAYER_LOGIN, not ADDON_LOADED: paging mirrors key bindings, which are not loaded until then.
 local loader = CreateFrame("Frame")
 loader:RegisterEvent("PLAYER_LOGIN")
 loader:SetScript("OnEvent", function()

@@ -1,3 +1,6 @@
 .release/
 *.zip
 .docs/
+.claude/
+AGENTS.md
+src/Libs/LuckysUtils/

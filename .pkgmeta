@@ -1,15 +1,18 @@
 package-as: Luckys_Actionbars
 
 move-folders:
-  Luckys_Actionbars/Luckys_Actionbars: Luckys_Actionbars
+  Luckys_Actionbars/src: Luckys_Actionbars
 
 manual-changelog:
   filename: CHANGELOG.md
   markup-type: markdown
 
 externals:
-  Luckys_Actionbars/Libs/LuckysUtils:
+  src/Libs/LuckysUtils:
     url: https://github.com/LuckyPhilDev/LuckyUtils
     tag: latest
+
+ignore:
+  - tests
 
 enable-nolib-creation: no
