@@ -7,11 +7,9 @@ LuckyActionbars.Strings = {
     },
     forms = {
         cat = "Cat Form",
-        druidSpare = "Druid forms",
         bear = "Bear Form",
         moonkin = "Moonkin Form",
         stealth = "Stealth",
-        soar = "Soar",
     },
     bars = {
         fade = {
@@ -26,8 +24,8 @@ LuckyActionbars.Strings = {
             padding = "Icon Padding",
         },
         pageUsers = {
-            [7] = "Druids use this page for Cat Form, rogues for Stealth and Dracthyr for Soar.",
-            [8] = "Druids keep this page for their forms.",
+            [7] = "Druids use this page for Cat Form and rogues for Stealth.",
+            [8] = "No class or form uses this page, so it is free for everyone.",
             [9] = "Druids use this page for Bear Form.",
             [10] = "Druids use this page for Moonkin Form.",
         },
