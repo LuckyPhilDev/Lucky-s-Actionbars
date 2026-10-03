@@ -7,4 +7,6 @@ LuckyActionbars.DB_DEFAULTS = {
     hideKeybinds = false,
     hideMacroNames = false,
     tooltipMode = "always",
+    fadeInMs = 50,
+    fadeOutMs = 400,
 }

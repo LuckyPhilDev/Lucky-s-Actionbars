@@ -6,6 +6,11 @@ LuckyActionbars.Strings = {
         minimapHint = "Click to open settings.",
     },
     bars = {
+        fade = {
+            label = "Hidden until hovered",
+            desc = "This bar stays invisible until you point at it or drag something to place. Its keybinds still work while it is invisible.",
+        },
+        extraBarsDivider = "Extra bars",
         combatBlocked = "Lucky's Actionbars: action bars can't be shown or hidden in combat.",
         names = {
             [9] = "Action Bar 9",
@@ -16,7 +21,16 @@ LuckyActionbars.Strings = {
     },
     settings = {
         groups = { bars = "Bars", buttons = "Buttons" },
-        sections = { stockBars = "Stock bars", extraBars = "Extra bars" },
+        sections = { stockBars = "Stock bars", extraBars = "Extra bars", fade = "Hidden until hovered" },
+        fadeInMs = {
+            label = "Time to appear",
+            desc = "How long a hidden bar takes to appear when you point at it. Set to 0 to show it instantly.",
+        },
+        fadeOutMs = {
+            label = "Time to hide",
+            desc = "How long a hidden bar takes to disappear once you stop pointing at it. Set to 0 to hide it instantly.",
+        },
+        milliseconds = " ms",
         rangeIndicator = {
             label = "Red icon when out of range",
             desc = "Action buttons turn their whole icon red while the target is out of range, instead of only the keybind text.",
