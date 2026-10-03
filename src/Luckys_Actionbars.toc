@@ -1,7 +1,7 @@
 ## Interface: 120100
 ## Title: Lucky's Actionbars
 ## Notes: Hold a modifier to page Action Bars 1 to 8, plus four extra bars, all set up in Edit Mode.
-## Version: 0.1.0
+## Version: 0.1
 ## Author: Lucky Phil
 ## SavedVariables: LuckyActionbarsDB, LuckySettingsDB, LuckyRosterDB
 ## OptionalDeps: Luckys_Utils

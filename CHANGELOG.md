@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.1] - 2026-10-03
 
 ### Added
 - **Hold to page** Select any of Action Bars 1 to 8 in Edit Mode and pick a page for Ctrl, Alt, Shift, Ctrl+Shift, Ctrl+Alt, Alt+Shift or a friendly target. The bar swaps while the key is held, and its keys press the paged buttons.
