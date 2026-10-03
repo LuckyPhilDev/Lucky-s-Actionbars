@@ -3,6 +3,7 @@ LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.Strings = {
     addon = {
         title = "Lucky's Actionbars",
+        minimapHint = "Click to open settings.",
     },
     bars = {
         combatBlocked = "Lucky's Actionbars: action bars can't be shown or hidden in combat.",
@@ -14,8 +15,8 @@ LuckyActionbars.Strings = {
         },
     },
     settings = {
-        groups = { paging = "Paging", bars = "Bars", buttons = "Buttons" },
-        sections = { modifiers = "Hold to page", stockBars = "Stock bars", extraBars = "Extra bars" },
+        groups = { bars = "Bars", buttons = "Buttons" },
+        sections = { stockBars = "Stock bars", extraBars = "Extra bars" },
         rangeIndicator = {
             label = "Red icon when out of range",
             desc = "Action buttons turn their whole icon red while the target is out of range, instead of only the keybind text.",
@@ -55,18 +56,35 @@ LuckyActionbars.Strings = {
             },
         },
         off = "Off",
+        paging = { expander = "Paging" },
         modifiers = {
             CTRL = {
                 label = "Ctrl",
-                desc = "While Ctrl is held, Action Bar 1 shows the chosen page and your Action Bar 1 keys press its buttons.",
+                desc = "While Ctrl is held, this bar shows the chosen page and its keys press the paged buttons.",
             },
             ALT = {
                 label = "Alt",
-                desc = "While Alt is held, Action Bar 1 shows the chosen page and your Action Bar 1 keys press its buttons.",
+                desc = "While Alt is held, this bar shows the chosen page and its keys press the paged buttons.",
             },
             SHIFT = {
                 label = "Shift",
-                desc = "While Shift is held, Action Bar 1 shows the chosen page. Shift-1 to Shift-6 switch action bar pages by default, so unbind them in Key Bindings for those keys to press the paged buttons.",
+                desc = "While Shift is held, this bar shows the chosen page. Shift-1 to Shift-6 switch action bar pages by default, so unbind them in Key Bindings for those keys to press the paged buttons.",
+            },
+            ["CTRL-SHIFT"] = {
+                label = "Ctrl+Shift",
+                desc = "While Ctrl and Shift are both held, this bar shows the chosen page. This wins over the Ctrl and Shift pages.",
+            },
+            ["ALT-CTRL"] = {
+                label = "Ctrl+Alt",
+                desc = "While Ctrl and Alt are both held, this bar shows the chosen page. This wins over the Ctrl and Alt pages.",
+            },
+            ["ALT-SHIFT"] = {
+                label = "Alt+Shift",
+                desc = "While Alt and Shift are both held, this bar shows the chosen page. This wins over the Alt and Shift pages.",
+            },
+            HELP = {
+                label = "Friendly target",
+                desc = "While your target is friendly, this bar shows the chosen page. Any held modifier with a page of its own wins over this.",
             },
         },
         pageLabels = {

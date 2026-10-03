@@ -3,14 +3,6 @@ LuckyActionbars.Settings = {}
 
 local panel
 
-local function PageOptions(S)
-    local options = { { key = 0, label = S.off } }
-    for _, page in ipairs(LuckyActionbars.Paging:AllowedPages()) do
-        options[#options + 1] = { key = page, label = S.pageLabels[page] }
-    end
-    return options
-end
-
 local function BarToggle(group, strings, number, module, ...)
     group:Toggle({
         label = strings.label:format(number),
@@ -37,22 +29,6 @@ function LuckyActionbars.Settings:Init(db)
     panel = LuckySettings:NewRichPanel(LuckyActionbars.Strings.addon.title, {
         addonFolder = "Luckys_Actionbars",
     }, function(builder)
-        local options = PageOptions(S)
-        builder:Group(S.groups.paging, function(group)
-            group:Section(S.sections.modifiers)
-            for _, modifier in ipairs(LuckyActionbars.Paging.MODIFIERS) do
-                group:Select({
-                    S.modifiers[modifier],
-                    options = options,
-                    placeholder = S.off,
-                    value = function() return db.pages[modifier] end,
-                    onSelect = function(page)
-                        db.pages[modifier] = page
-                        LuckyActionbars.Paging:Apply()
-                    end,
-                })
-            end
-        end)
         builder:Group(S.groups.bars, function(group)
             BuildBarRows(group, S)
         end)

@@ -18,5 +18,6 @@ features\RangeIndicator.lua
 features\ButtonText.lua
 features\Tooltips.lua
 features\EditModePanel.lua
+features\EditModePaging.lua
 Settings.lua
 Core.lua
