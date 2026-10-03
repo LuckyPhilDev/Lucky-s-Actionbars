@@ -126,7 +126,7 @@ local function CreateBar(number)
     end
     ApplyLayout(bar)
     ApplyPosition(bar)
-    bar:SetShown(db.bars[number].shown)
+    bar:SetShown(LuckyActionbars.ExtraBars:IsShown(number))
     LibEditMode:AddFrame(bar, OnPositionChanged, DefaultPosition(number), LuckyActionbars.Strings.bars.names[number])
     LibEditMode.frameSelections[bar]:HookScript("OnDragStop", function() SnapAfterDrag(bar) end)
     bar.editModeSettings = {}
@@ -177,11 +177,27 @@ function LuckyActionbars.ExtraBars:AddEditModeSettings(bar, settings)
     LibEditMode:AddFrameSettings(bar, bar.editModeSettings)
 end
 
+function LuckyActionbars.ExtraBars:Page(number)
+    return BAR_PAGES[number]
+end
+
+-- A bar whose page your class's forms already use would only duplicate Action Bar 1 in that form.
+function LuckyActionbars.ExtraBars:FormOnPage(number)
+    return LuckyActionbars.PlayerFormPages()[BAR_PAGES[number]]
+end
+
+function LuckyActionbars.ExtraBars:IsAvailable(number)
+    return not self:FormOnPage(number)
+end
+
 function LuckyActionbars.ExtraBars:IsShown(number)
-    return db.bars[number].shown
+    return db.bars[number].shown and self:IsAvailable(number)
 end
 
 function LuckyActionbars.ExtraBars:SetShown(number, shown)
+    if not self:IsAvailable(number) then
+        return
+    end
     if InCombatLockdown() then
         print(LuckyActionbars.Strings.bars.combatBlocked)
         return

@@ -12,6 +12,21 @@ local function BarToggle(group, strings, number, module, ...)
     })
 end
 
+local function ExtraBarToggle(group, S, number)
+    local extraBars = LuckyActionbars.ExtraBars
+    local page = extraBars:Page(number)
+    local form = extraBars:FormOnPage(number)
+    local note = form and S.bars.formNote:format(page, LuckyActionbars.Strings.forms[form])
+        or LuckyActionbars.Strings.bars.pageUsers[page]
+    group:Toggle({
+        label = S.bars.extra.label:format(number),
+        desc = S.bars.extra.desc:format(page) .. " " .. note,
+        disabled = form ~= nil,
+        checked = function() return extraBars:IsShown(number) end,
+        onToggle = function(checked) extraBars:SetShown(number, checked) end,
+    })
+end
+
 local function BuildBarRows(group, S)
     group:Section(S.sections.stockBars)
     group:Toggle({ S.bars[1], checked = true, disabled = true })
@@ -20,7 +35,7 @@ local function BuildBarRows(group, S)
     end
     group:Section(S.sections.extraBars)
     for number = 9, 12 do
-        BarToggle(group, S.bars.extra, number, LuckyActionbars.ExtraBars, number - 2)
+        ExtraBarToggle(group, S, number)
     end
 end
 

@@ -5,6 +5,14 @@ LuckyActionbars.Strings = {
         title = "Lucky's Actionbars",
         minimapHint = "Click to open settings.",
     },
+    forms = {
+        cat = "Cat Form",
+        druidSpare = "Druid forms",
+        bear = "Bear Form",
+        moonkin = "Moonkin Form",
+        stealth = "Stealth",
+        soar = "Soar",
+    },
     bars = {
         fade = {
             label = "Hidden until hovered",
@@ -16,6 +24,12 @@ LuckyActionbars.Strings = {
             icons = "# of Icons",
             size = "Icon Size",
             padding = "Icon Padding",
+        },
+        pageUsers = {
+            [7] = "Druids use this page for Cat Form, rogues for Stealth and evokers for Soar.",
+            [8] = "Druids keep this page for their forms.",
+            [9] = "Druids use this page for Bear Form.",
+            [10] = "Druids use this page for Moonkin Form.",
         },
         combatBlocked = "Lucky's Actionbars: action bars can't be shown or hidden in combat.",
         names = {
@@ -70,6 +84,7 @@ LuckyActionbars.Strings = {
                 label = "Action Bar %d",
                 desc = "Same as the Action Bar %d checkbox in Options, Action Bars.",
             },
+            formNote = "Unavailable: page %d is already used by your %s on Action Bar 1.",
             extra = {
                 label = "Action Bar %d",
                 desc = "Shows page %d as a bar of its own. Move it in Edit Mode like any other bar.",
