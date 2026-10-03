@@ -21,6 +21,7 @@ local function LoadDatabase()
     for _, number in ipairs(LuckyActionbars.DB_DEFAULTS.extraBars) do
         db.bars[number] = db.bars[number] or { shown = false }
         db.bars[number].positions = db.bars[number].positions or {}
+        db.bars[number].layouts = db.bars[number].layouts or {}
     end
     return db
 end

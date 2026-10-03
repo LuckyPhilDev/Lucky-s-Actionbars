@@ -6,10 +6,13 @@ local LibEditMode = LibStub("LibEditMode")
 local BAR_PAGES = { [9] = 7, [10] = 8, [11] = 9, [12] = 10 }
 local BUTTON_COUNT = 12
 local BUTTON_SIZE = 45
-local BUTTON_SPACING = 2
+
+local LAYOUT_DEFAULTS = { rows = 1, icons = 12, size = 100, padding = 2 }
 
 local db
 local bars = {}
+local activeLayoutName
+local layoutFrame = CreateFrame("Frame")
 
 local function DefaultPosition(number)
     return { point = "CENTER", x = 0, y = -(BUTTON_SIZE + 10) * (number - 9) }
@@ -42,27 +45,93 @@ local function CreateButton(bar, index)
     local button = CreateFrame("CheckButton", bar:GetName() .. "Button" .. index, bar, "ActionBarButtonTemplate")
     button:SetID(0)
     button:SetAttribute("action", (BAR_PAGES[bar.number] - 1) * BUTTON_COUNT + index)
-    button:SetPoint("LEFT", (index - 1) * (BUTTON_SIZE + BUTTON_SPACING), 0)
+    bar.buttons[index] = button
+end
+
+local function LayoutValue(bar, key)
+    local layout = bar.layouts[activeLayoutName]
+    return layout and layout[key] or LAYOUT_DEFAULTS[key]
+end
+
+local function ApplyLayout(bar)
+    local icons, rows = LayoutValue(bar, "icons"), LayoutValue(bar, "rows")
+    local scale, padding = LayoutValue(bar, "size") / 100, LayoutValue(bar, "padding")
+    local columns = math.ceil(icons / rows)
+    local step = BUTTON_SIZE * scale + padding
+    for index, button in ipairs(bar.buttons) do
+        local column, row = (index - 1) % columns, math.floor((index - 1) / columns)
+        button:SetScale(scale)
+        button:ClearAllPoints()
+        -- Offsets are in the button's own scaled units.
+        button:SetPoint("TOPLEFT", bar, "TOPLEFT", column * step / scale, -row * step / scale)
+        button:SetShown(index <= icons)
+    end
+    bar:SetSize(columns * step - padding, math.ceil(icons / columns) * step - padding)
+end
+
+local function ApplyAllLayouts()
+    if InCombatLockdown() then
+        layoutFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+        return
+    end
+    for _, bar in pairs(bars) do
+        ApplyLayout(bar)
+    end
+end
+
+local function LayoutSlider(bar, key, minValue, maxValue, valueStep)
+    return {
+        kind = LibEditMode.SettingType.Slider,
+        name = LuckyActionbars.Strings.bars.layout[key],
+        default = LAYOUT_DEFAULTS[key],
+        minValue = minValue,
+        maxValue = maxValue,
+        valueStep = valueStep,
+        get = function(layoutName)
+            local layout = bar.layouts[layoutName]
+            return layout and layout[key] or LAYOUT_DEFAULTS[key]
+        end,
+        set = function(layoutName, value)
+            bar.layouts[layoutName] = bar.layouts[layoutName] or {}
+            bar.layouts[layoutName][key] = value
+            ApplyLayout(bar)
+        end,
+    }
+end
+
+local function LayoutSettings(bar)
+    return {
+        LayoutSlider(bar, "rows", 1, 12, 1),
+        LayoutSlider(bar, "icons", 6, 12, 1),
+        LayoutSlider(bar, "size", 50, 200, 10),
+        LayoutSlider(bar, "padding", 2, 10, 1),
+    }
 end
 
 local function CreateBar(number)
     local bar = CreateFrame("Frame", "LuckyActionbarsBar" .. number, UIParent)
     bar.number = number
+    bar.buttons = {}
     bar.positions = db.bars[number].positions
-    bar:SetSize(BUTTON_COUNT * (BUTTON_SIZE + BUTTON_SPACING) - BUTTON_SPACING, BUTTON_SIZE)
+    bar.layouts = db.bars[number].layouts
     bar:SetClampedToScreen(true)
     bar:SetDontSavePosition(true)
     for index = 1, BUTTON_COUNT do
         CreateButton(bar, index)
     end
+    ApplyLayout(bar)
     ApplyPosition(bar)
     bar:SetShown(db.bars[number].shown)
     LibEditMode:AddFrame(bar, OnPositionChanged, DefaultPosition(number), LuckyActionbars.Strings.bars.names[number])
     LibEditMode.frameSelections[bar]:HookScript("OnDragStop", function() SnapAfterDrag(bar) end)
+    bar.editModeSettings = {}
+    LuckyActionbars.ExtraBars:AddEditModeSettings(bar, LayoutSettings(bar))
     return bar
 end
 
 local function OnLayoutChanged(layoutName)
+    activeLayoutName = layoutName
+    ApplyAllLayouts()
     for _, bar in pairs(bars) do
         ApplyPosition(bar, layoutName)
     end
@@ -72,11 +141,21 @@ local function OnLayoutRenamed(oldName, newName)
     for _, bar in pairs(bars) do
         bar.positions[newName] = bar.positions[oldName]
         bar.positions[oldName] = nil
+        bar.layouts[newName] = bar.layouts[oldName]
+        bar.layouts[oldName] = nil
     end
 end
 
 function LuckyActionbars.ExtraBars:Frames()
     return bars
+end
+
+-- The library keeps one settings list per frame, so every module adds to this shared one.
+function LuckyActionbars.ExtraBars:AddEditModeSettings(bar, settings)
+    for _, setting in ipairs(settings) do
+        bar.editModeSettings[#bar.editModeSettings + 1] = setting
+    end
+    LibEditMode:AddFrameSettings(bar, bar.editModeSettings)
 end
 
 function LuckyActionbars.ExtraBars:IsShown(number)
@@ -99,4 +178,8 @@ function LuckyActionbars.ExtraBars:Init(database)
     end
     LibEditMode:RegisterCallback("layout", OnLayoutChanged)
     LibEditMode:RegisterCallback("rename", OnLayoutRenamed)
+    layoutFrame:SetScript("OnEvent", function(frame, event)
+        frame:UnregisterEvent(event)
+        ApplyAllLayouts()
+    end)
 end
