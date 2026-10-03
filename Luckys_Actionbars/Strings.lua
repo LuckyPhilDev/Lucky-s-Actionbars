@@ -6,6 +6,11 @@ LuckyActionbars.Strings = {
         minimapHint = "Click to open settings.",
     },
     bars = {
+        fade = {
+            label = "Hidden until hovered",
+            desc = "This bar stays invisible until you point at it or drag something to place. Its keybinds still work while it is invisible.",
+        },
+        extraBarsDivider = "Extra bars",
         combatBlocked = "Lucky's Actionbars: action bars can't be shown or hidden in combat.",
         names = {
             [9] = "Action Bar 9",

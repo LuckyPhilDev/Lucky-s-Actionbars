@@ -7,6 +7,6 @@
 - **Out-of-range icons** Action buttons on every bar turn red while your target is out of range, not just their keybind text. Turn it off under Buttons in `/luckybars`.
 - **Hide button text** Remove keybind text or macro names from every action button, under Buttons in `/luckybars`.
 - **Button tooltips** Choose whether action button tooltips show always, only out of combat, only while holding a modifier, or never, under Buttons in `/luckybars`.
-- **Hidden until hovered** Any of Action Bars 1 to 12 can stay invisible until you point at it, drag a spell or open Edit Mode, set under Fade in `/luckybars`.
+- **Hidden until hovered** Any of Action Bars 1 to 12 can fade out until you point at it or drag a spell, set per bar in its Edit Mode settings.
 - **Bars settings** Show or hide Action Bars 2 to 12 from one place in `/luckybars`, kept in sync with the stock Action Bars options.
 - **Minimap button** Click it to open `/luckybars`. Drag it to move it around the minimap.

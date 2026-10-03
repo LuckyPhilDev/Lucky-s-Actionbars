@@ -12,7 +12,7 @@ Adds hold-to-page and extra bars to the stock action bars, no bar replacement ne
 - **Out-of-range icons**: the whole icon turns red while your target is out of range, on every action bar.
 - **Hide button text**: remove keybind text or macro names from every action button.
 - **Button tooltips**: show action button tooltips always, out of combat only, with a modifier held, or never.
-- **Hidden until hovered**: any action bar can stay invisible until you point at it. Its keybinds keep working.
+- **Hidden until hovered**: any action bar can fade out until you point at it, set per bar in its Edit Mode settings. Its keybinds keep working.
 - **Works in combat**: paging runs through the game's secure state system.
 - **Stays out of the way**: vehicles, override bars, possession and pet battles are never paged.
 

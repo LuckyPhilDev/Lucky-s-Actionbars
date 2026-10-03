@@ -1,7 +1,8 @@
 LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.MouseoverFade = {}
 
-local POLL_SECONDS = 0.1
+local FADE_IN_SECONDS = 0.15
+local FADE_OUT_SECONDS = 0.4
 local BAR_FRAMES = {
     "MainActionBar", "MultiBarBottomLeft", "MultiBarBottomRight", "MultiBarRight",
     "MultiBarLeft", "MultiBar5", "MultiBar6", "MultiBar7",
@@ -9,29 +10,29 @@ local BAR_FRAMES = {
 }
 
 local db
-local poller = CreateFrame("Frame")
-local elapsedSinceCheck = 0
+local animator = CreateFrame("Frame")
 
 -- A drag in progress or an open Edit Mode needs every bar visible to drop onto or arrange.
 local function ShowEverything()
     return GetCursorInfo() ~= nil or EditModeManagerFrame:IsShown()
 end
 
-local function UpdateAlphas()
-    local showAll = ShowEverything()
-    for number, name in ipairs(BAR_FRAMES) do
-        local bar = _G[name]
-        if bar and db.fade[number] then
-            bar:SetAlpha((showAll or bar:IsMouseOver()) and 1 or 0)
-        end
+local function StepTowards(bar, target, elapsed)
+    local alpha = bar:GetAlpha()
+    if alpha < target then
+        bar:SetAlpha(math.min(target, alpha + elapsed / FADE_IN_SECONDS))
+    elseif alpha > target then
+        bar:SetAlpha(math.max(target, alpha - elapsed / FADE_OUT_SECONDS))
     end
 end
 
 local function OnUpdate(_, elapsed)
-    elapsedSinceCheck = elapsedSinceCheck + elapsed
-    if elapsedSinceCheck >= POLL_SECONDS then
-        elapsedSinceCheck = 0
-        UpdateAlphas()
+    local showAll = ShowEverything()
+    for number, name in ipairs(BAR_FRAMES) do
+        local bar = _G[name]
+        if bar and db.fade[number] then
+            StepTowards(bar, (showAll or bar:IsMouseOver()) and 1 or 0, elapsed)
+        end
     end
 end
 
@@ -54,12 +55,10 @@ function LuckyActionbars.MouseoverFade:SetFaded(number, faded)
     if bar and not faded then
         bar:SetAlpha(1)
     end
-    poller:SetScript("OnUpdate", HasFadedBar() and OnUpdate or nil)
-    UpdateAlphas()
+    animator:SetScript("OnUpdate", HasFadedBar() and OnUpdate or nil)
 end
 
 function LuckyActionbars.MouseoverFade:Init(database)
     db = database
-    poller:SetScript("OnUpdate", HasFadedBar() and OnUpdate or nil)
-    UpdateAlphas()
+    animator:SetScript("OnUpdate", HasFadedBar() and OnUpdate or nil)
 end
