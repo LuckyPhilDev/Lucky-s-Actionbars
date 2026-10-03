@@ -13,6 +13,7 @@ Defaults.lua
 features\Paging.lua
 features\StockBars.lua
 features\ExtraBars.lua
+features\ButtonText.lua
 features\EditModePanel.lua
 Settings.lua
 Core.lua

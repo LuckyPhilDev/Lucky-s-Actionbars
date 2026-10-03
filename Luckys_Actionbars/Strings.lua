@@ -14,8 +14,18 @@ LuckyActionbars.Strings = {
         },
     },
     settings = {
-        groups = { paging = "Paging", bars = "Bars" },
+        groups = { paging = "Paging", bars = "Bars", buttons = "Buttons" },
         sections = { modifiers = "Hold to page", stockBars = "Stock bars", extraBars = "Extra bars" },
+        buttonText = {
+            hideKeybinds = {
+                label = "Hide keybind text",
+                desc = "Removes the keybind shown in the corner of every action button.",
+            },
+            hideMacroNames = {
+                label = "Hide macro names",
+                desc = "Removes the macro name shown along the bottom of every action button.",
+            },
+        },
         bars = {
             [1] = {
                 label = "Action Bar 1",

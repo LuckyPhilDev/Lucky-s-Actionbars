@@ -56,6 +56,15 @@ function LuckyActionbars.Settings:Init(db)
         builder:Group(S.groups.bars, function(group)
             BuildBarRows(group, S)
         end)
+        builder:Group(S.groups.buttons, function(group)
+            for _, setting in ipairs({ "hideKeybinds", "hideMacroNames" }) do
+                group:Toggle({
+                    S.buttonText[setting],
+                    checked = function() return LuckyActionbars.ButtonText:IsHidden(setting) end,
+                    onToggle = function(checked) LuckyActionbars.ButtonText:SetHidden(setting, checked) end,
+                })
+            end
+        end)
     end)
 end
 
