@@ -9,6 +9,7 @@ Adds hold-to-page to the stock main action bar, no bar replacement needed.
 - **Keybinds follow the page**: while a modifier is held, your Action Bar 1 keys press the paged buttons. Any modifier key you have already bound to something else is left alone.
 - **Action Bars 9 to 12**: four extra bars that show pages 7 to 10, built from the stock buttons. Move them in Edit Mode, with a separate position for each layout. Selecting any action bar in Edit Mode lets you show or hide them.
 - **One place for bar visibility**: show or hide Action Bars 2 to 12. Bars 2 to 8 stay in sync with the stock Action Bars options.
+- **Out-of-range icons**: the whole icon turns red while your target is out of range, on every action bar.
 - **Works in combat**: paging runs through the game's secure state system.
 - **Stays out of the way**: vehicles, override bars, possession and pet battles are never paged.
 

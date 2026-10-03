@@ -14,8 +14,12 @@ LuckyActionbars.Strings = {
         },
     },
     settings = {
-        groups = { paging = "Paging", bars = "Bars" },
+        groups = { paging = "Paging", bars = "Bars", buttons = "Buttons" },
         sections = { modifiers = "Hold to page", stockBars = "Stock bars", extraBars = "Extra bars" },
+        rangeIndicator = {
+            label = "Red icon when out of range",
+            desc = "Action buttons turn their whole icon red while the target is out of range, instead of only the keybind text.",
+        },
         bars = {
             [1] = {
                 label = "Action Bar 1",

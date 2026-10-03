@@ -3,6 +3,11 @@ LuckyActionbars = LuckyActionbars or {}
 local function LoadDatabase()
     LuckyActionbarsDB = LuckyActionbarsDB or {}
     local db = LuckyActionbarsDB
+    for key, value in pairs(LuckyActionbars.DB_DEFAULTS) do
+        if type(value) ~= "table" and db[key] == nil then
+            db[key] = value
+        end
+    end
     db.pages = db.pages or {}
     for modifier, page in pairs(LuckyActionbars.DB_DEFAULTS.pages) do
         if db.pages[modifier] == nil then
@@ -23,6 +28,7 @@ loader:SetScript("OnEvent", function()
     local db = LoadDatabase()
     LuckyActionbars.Paging:Init(db)
     LuckyActionbars.ExtraBars:Init(db)
+    LuckyActionbars.RangeIndicator:Init(db)
     LuckyActionbars.EditModePanel:Init()
     LuckyActionbars.Settings:Init(db)
 end)
