@@ -1,0 +1,64 @@
+LuckyActionbars = LuckyActionbars or {}
+LuckyActionbars.Tooltips = {}
+
+LuckyActionbars.Tooltips.MODES = { "always", "outOfCombat", "modifier", "never" }
+
+local db
+local hookedButtons = {}
+local modifierWatcher = CreateFrame("Frame")
+
+local function IsAllowed()
+    local mode = db.tooltipMode
+    if mode == "outOfCombat" then
+        return not InCombatLockdown()
+    elseif mode == "modifier" then
+        return IsModifierKeyDown()
+    end
+    return mode ~= "never"
+end
+
+local function HideIfNotAllowed()
+    if not IsAllowed() then
+        GameTooltip:Hide()
+    end
+end
+
+local function HoveredButton()
+    for _, frame in ipairs(GetMouseFoci()) do
+        if hookedButtons[frame] then
+            return frame
+        end
+    end
+end
+
+-- Pressing the modifier while already pointing at a button shows its tooltip there and then.
+local function OnModifierChanged()
+    local button = HoveredButton()
+    if not button then
+        return
+    end
+    if IsAllowed() then
+        button:SetTooltip()
+    else
+        GameTooltip:Hide()
+    end
+end
+
+function LuckyActionbars.Tooltips:GetMode()
+    return db.tooltipMode
+end
+
+function LuckyActionbars.Tooltips:SetMode(mode)
+    db.tooltipMode = mode
+end
+
+-- Hooked on SetTooltip, which Blizzard also re-runs every tooltip refresh, so a hidden tooltip stays hidden.
+function LuckyActionbars.Tooltips:Init(database)
+    db = database
+    for _, button in pairs(ActionBarButtonEventsFrame.frames) do
+        hooksecurefunc(button, "SetTooltip", HideIfNotAllowed)
+        hookedButtons[button] = true
+    end
+    modifierWatcher:RegisterEvent("MODIFIER_STATE_CHANGED")
+    modifierWatcher:SetScript("OnEvent", OnModifierChanged)
+end

@@ -11,6 +11,7 @@ Adds hold-to-page to the stock main action bar, no bar replacement needed.
 - **One place for bar visibility**: show or hide Action Bars 2 to 12. Bars 2 to 8 stay in sync with the stock Action Bars options.
 - **Out-of-range icons**: the whole icon turns red while your target is out of range, on every action bar.
 - **Hide button text**: remove keybind text or macro names from every action button.
+- **Button tooltips**: show action button tooltips always, out of combat only, with a modifier held, or never.
 - **Works in combat**: paging runs through the game's secure state system.
 - **Stays out of the way**: vehicles, override bars, possession and pet battles are never paged.
 

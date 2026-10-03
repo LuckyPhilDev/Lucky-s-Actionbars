@@ -6,4 +6,5 @@ LuckyActionbars.DB_DEFAULTS = {
     rangeIndicator = true,
     hideKeybinds = false,
     hideMacroNames = false,
+    tooltipMode = "always",
 }

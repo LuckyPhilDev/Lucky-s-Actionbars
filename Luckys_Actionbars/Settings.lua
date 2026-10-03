@@ -69,6 +69,16 @@ function LuckyActionbars.Settings:Init(db)
                     onToggle = function(checked) LuckyActionbars.ButtonText:SetHidden(setting, checked) end,
                 })
             end
+            local modes = {}
+            for _, mode in ipairs(LuckyActionbars.Tooltips.MODES) do
+                modes[#modes + 1] = { key = mode, label = S.tooltips.modes[mode] }
+            end
+            group:Select({
+                S.tooltips,
+                options = modes,
+                value = function() return LuckyActionbars.Tooltips:GetMode() end,
+                onSelect = function(mode) LuckyActionbars.Tooltips:SetMode(mode) end,
+            })
         end)
     end)
 end

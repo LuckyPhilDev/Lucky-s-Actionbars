@@ -30,6 +30,16 @@ LuckyActionbars.Strings = {
                 desc = "Removes the macro name shown along the bottom of every action button.",
             },
         },
+        tooltips = {
+            label = "Button tooltips",
+            desc = "When action buttons show their tooltip as you point at them.",
+            modes = {
+                always = "Always",
+                outOfCombat = "Out of combat only",
+                modifier = "While holding Shift, Ctrl or Alt",
+                never = "Never",
+            },
+        },
         bars = {
             [1] = {
                 label = "Action Bar 1",
