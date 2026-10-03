@@ -36,6 +36,19 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.EditModePanel:Init()
     LuckyActionbars.EditModePaging:Init()
     LuckyActionbars.Settings:Init(db)
+    LuckyMinimap:Create({
+        name = "LuckyActionbarsMinimapButton",
+        tocname = "Luckys_Actionbars",
+        icon = "Interface\\Icons\\INV_Misc_Gear_01",
+        dbKey = "minimap",
+        db = db,
+        defaultAngle = 280,
+        onClick = function() LuckyActionbars.Settings:Open() end,
+        tooltip = function(tooltip)
+            tooltip:AddLine(LuckyActionbars.Strings.addon.title)
+            tooltip:AddLine(LuckyActionbars.Strings.addon.minimapHint, 0.8, 0.8, 0.8)
+        end,
+    })
 end)
 
 SLASH_LUCKYACTIONBARS1 = "/luckybars"

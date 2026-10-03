@@ -3,6 +3,7 @@ LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.Strings = {
     addon = {
         title = "Lucky's Actionbars",
+        minimapHint = "Click to open settings.",
     },
     bars = {
         combatBlocked = "Lucky's Actionbars: action bars can't be shown or hidden in combat.",

@@ -8,3 +8,4 @@
 - **Hide button text** Remove keybind text or macro names from every action button, under Buttons in `/luckybars`.
 - **Button tooltips** Choose whether action button tooltips show always, only out of combat, only while holding a modifier, or never, under Buttons in `/luckybars`.
 - **Bars settings** Show or hide Action Bars 2 to 12 from one place in `/luckybars`, kept in sync with the stock Action Bars options.
+- **Minimap button** Click it to open `/luckybars`. Drag it to move it around the minimap.
