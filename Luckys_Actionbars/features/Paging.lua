@@ -3,11 +3,11 @@ LuckyActionbars.Paging = {}
 
 local MODIFIERS = { "CTRL", "ALT", "SHIFT" }
 local PAGEABLE = { 1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 14, 15 }
--- Pages the class's own forms already put on Action Bar 1 (Cat, Bear, Moonkin, Stealth, Soar).
+-- Pages the class's own forms put on Action Bar 1, measured in game: Cat 7, Bear 9, Moonkin 10, rogue Stealth 7.
+-- Soar and Flight Form use the skyriding page 11, which is never offered.
 local CLASS_FORM_PAGES = {
-    DRUID = { [7] = true, [8] = true, [9] = true, [10] = true },
+    DRUID = { [7] = true, [9] = true, [10] = true },
     ROGUE = { [7] = true },
-    EVOKER = { [7] = true },
 }
 local BUTTON_COUNT = 12
 local MODIFIER_PREFIXES = { "ALT-", "CTRL-", "SHIFT-", "META-" }
