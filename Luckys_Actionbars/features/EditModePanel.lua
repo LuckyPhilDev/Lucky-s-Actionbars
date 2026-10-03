@@ -50,6 +50,6 @@ function LuckyActionbars.EditModePanel:Init()
         LibEditMode:AddSystemSettings(Enum.EditModeSystem.ActionBar, BarSettings(number), subSystem)
     end
     for number, bar in pairs(LuckyActionbars.ExtraBars:Frames()) do
-        LibEditMode:AddFrameSettings(bar, BarSettings(number))
+        LuckyActionbars.ExtraBars:AddEditModeSettings(bar, BarSettings(number))
     end
 end

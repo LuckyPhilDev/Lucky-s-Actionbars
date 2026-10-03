@@ -8,5 +8,6 @@
 - **Hide button text** Remove keybind text or macro names from every action button, under Buttons in `/luckybars`.
 - **Button tooltips** Choose whether action button tooltips show always, only out of combat, only while holding a modifier, or never, under Buttons in `/luckybars`.
 - **Hidden until hovered** Any of Action Bars 1 to 12 can fade out until you point at it or drag a spell, set per bar in its Edit Mode settings. Set how quickly they appear and hide under Bars in `/luckybars`.
+- **Layout for Action Bars 9 to 12** Selecting one in Edit Mode gives you # of Rows, # of Icons, Icon Size and Icon Padding, saved per layout like the stock bars.
 - **Bars settings** Show or hide Action Bars 2 to 12 from one place in `/luckybars`, kept in sync with the stock Action Bars options.
 - **Minimap button** Click it to open `/luckybars`. Drag it to move it around the minimap.
