@@ -21,7 +21,16 @@ LuckyActionbars.Strings = {
     },
     settings = {
         groups = { bars = "Bars", buttons = "Buttons" },
-        sections = { stockBars = "Stock bars", extraBars = "Extra bars" },
+        sections = { stockBars = "Stock bars", extraBars = "Extra bars", fade = "Hidden until hovered" },
+        fadeInMs = {
+            label = "Time to appear",
+            desc = "How long a hidden bar takes to appear when you point at it. Set to 0 to show it instantly.",
+        },
+        fadeOutMs = {
+            label = "Time to hide",
+            desc = "How long a hidden bar takes to disappear once you stop pointing at it. Set to 0 to hide it instantly.",
+        },
+        milliseconds = " ms",
         rangeIndicator = {
             label = "Red icon when out of range",
             desc = "Action buttons turn their whole icon red while the target is out of range, instead of only the keybind text.",

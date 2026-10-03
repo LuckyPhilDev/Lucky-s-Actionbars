@@ -1,8 +1,6 @@
 LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.MouseoverFade = {}
 
-local FADE_IN_SECONDS = 0.15
-local FADE_OUT_SECONDS = 0.4
 local BAR_FRAMES = {
     "MainActionBar", "MultiBarBottomLeft", "MultiBarBottomRight", "MultiBarRight",
     "MultiBarLeft", "MultiBar5", "MultiBar6", "MultiBar7",
@@ -20,9 +18,9 @@ end
 local function StepTowards(bar, target, elapsed)
     local alpha = bar:GetAlpha()
     if alpha < target then
-        bar:SetAlpha(math.min(target, alpha + elapsed / FADE_IN_SECONDS))
+        bar:SetAlpha(math.min(target, alpha + elapsed * 1000 / db.fadeInMs))
     elseif alpha > target then
-        bar:SetAlpha(math.max(target, alpha - elapsed / FADE_OUT_SECONDS))
+        bar:SetAlpha(math.max(target, alpha - elapsed * 1000 / db.fadeOutMs))
     end
 end
 

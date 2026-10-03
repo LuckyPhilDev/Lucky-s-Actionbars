@@ -24,6 +24,22 @@ local function BuildBarRows(group, S)
     end
 end
 
+local function BuildFadeRows(group, S, db)
+    group:Section(S.sections.fade)
+    for _, setting in ipairs({ "fadeInMs", "fadeOutMs" }) do
+        group:Slider({
+            S[setting],
+            key = setting,
+            min = 0,
+            max = 2000,
+            step = 50,
+            suffix = S.milliseconds,
+            value = function() return db[setting] end,
+            onChanged = function(ms) db[setting] = ms end,
+        })
+    end
+end
+
 function LuckyActionbars.Settings:Init(db)
     local S = LuckyActionbars.Strings.settings
     panel = LuckySettings:NewRichPanel(LuckyActionbars.Strings.addon.title, {
@@ -31,6 +47,7 @@ function LuckyActionbars.Settings:Init(db)
     }, function(builder)
         builder:Group(S.groups.bars, function(group)
             BuildBarRows(group, S)
+            BuildFadeRows(group, S, db)
         end)
         builder:Group(S.groups.buttons, function(group)
             group:Toggle({
