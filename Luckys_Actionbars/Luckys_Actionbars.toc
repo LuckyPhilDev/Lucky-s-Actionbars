@@ -12,6 +12,7 @@ Strings.lua
 Defaults.lua
 features\Paging.lua
 features\StockBars.lua
+features\Snapping.lua
 features\ExtraBars.lua
 features\EditModePanel.lua
 Settings.lua

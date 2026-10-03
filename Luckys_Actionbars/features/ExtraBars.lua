@@ -25,6 +25,18 @@ local function OnPositionChanged(bar, layoutName, point, x, y)
     bar.positions[layoutName] = { point = point, x = x, y = y }
 end
 
+-- Hooked on drag stop rather than the position callback, which also fires for arrow-key nudges.
+local function SnapAfterDrag(bar)
+    local dx, dy = LuckyActionbars.Snapping:Offset(bar, bars)
+    if dx == 0 and dy == 0 then
+        return
+    end
+    local point, _, _, x, y = bar:GetPoint()
+    bar:ClearAllPoints()
+    bar:SetPoint(point, UIParent, point, x + dx, y + dy)
+    OnPositionChanged(bar, LibEditMode:GetActiveLayoutName(), point, x + dx, y + dy)
+end
+
 -- Buttons get a fixed "action" and ID 0, as Dominos does, so the stock paging and bar 1 keybinds never touch them.
 local function CreateButton(bar, index)
     local button = CreateFrame("CheckButton", bar:GetName() .. "Button" .. index, bar, "ActionBarButtonTemplate")
@@ -46,6 +58,7 @@ local function CreateBar(number)
     ApplyPosition(bar)
     bar:SetShown(db.bars[number].shown)
     LibEditMode:AddFrame(bar, OnPositionChanged, DefaultPosition(number), LuckyActionbars.Strings.bars.names[number])
+    LibEditMode.frameSelections[bar]:HookScript("OnDragStop", function() SnapAfterDrag(bar) end)
     return bar
 end
 
