@@ -1,8 +1,18 @@
 ## Interface: 120100
 ## Title: Lucky's Actionbars
-## Notes: Hold Ctrl to page the stock main action bar.
+## Notes: Hold a modifier to page the stock main action bar.
 ## Version: 0.1.0
 ## Author: Lucky Phil
+## SavedVariables: LuckyActionbarsDB, LuckySettingsDB, LuckyRosterDB
+## OptionalDeps: Luckys_Utils
 
-Paging.lua
+Libs\LuckysUtils\embeds.xml
+Libs\LibEditMode\embed.xml
+Strings.lua
+Defaults.lua
+features\Paging.lua
+features\StockBars.lua
+features\ExtraBars.lua
+features\EditModePanel.lua
+Settings.lua
 Core.lua
