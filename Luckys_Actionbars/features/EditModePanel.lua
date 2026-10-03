@@ -36,7 +36,9 @@ local function BarSettings(number)
         settings[#settings + 1] = {
             kind = LibEditMode.SettingType.Checkbox,
             name = LuckyActionbars.Strings.bars.names[extraNumber],
+            desc = LuckyActionbars.Strings.bars.pageUsers[LuckyActionbars.ExtraBars:Page(extraNumber)],
             default = false,
+            hidden = function() return not LuckyActionbars.ExtraBars:IsAvailable(extraNumber) end,
             get = function() return LuckyActionbars.ExtraBars:IsShown(extraNumber) end,
             set = function(_, shown) LuckyActionbars.ExtraBars:SetShown(extraNumber, shown) end,
         }

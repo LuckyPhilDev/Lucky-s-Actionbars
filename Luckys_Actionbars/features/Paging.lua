@@ -24,12 +24,6 @@ local BARS = {
     { frame = "MultiBar7", buttons = "MultiBar7Button", command = "MULTIACTIONBAR7BUTTON", homePage = 15 },
 }
 local PAGEABLE = { 1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 14, 15 }
--- Pages the class's own forms put on Action Bar 1, measured in game: Cat 7, Bear 9, Moonkin 10, rogue Stealth 7.
--- Soar and Flight Form use the skyriding page 11, which is never offered.
-local CLASS_FORM_PAGES = {
-    DRUID = { [7] = true, [9] = true, [10] = true },
-    ROGUE = { [7] = true },
-}
 local BUTTON_COUNT = 12
 local MODIFIER_PREFIXES = { "ALT-", "CTRL-", "SHIFT-", "META-" }
 
@@ -141,8 +135,7 @@ local function CreatePager(bar)
 end
 
 local function CollectAllowedPages()
-    local _, class = UnitClass("player")
-    local taken = CLASS_FORM_PAGES[class] or {}
+    local taken = LuckyActionbars.PlayerFormPages()
     for _, page in ipairs(PAGEABLE) do
         if not taken[page] then
             allowedPages[#allowedPages + 1] = page

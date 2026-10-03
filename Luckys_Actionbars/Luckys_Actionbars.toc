@@ -8,6 +8,7 @@
 
 Libs\LuckysUtils\embeds.xml
 Libs\LibEditMode\embed.xml
+Constants.lua
 Strings.lua
 Defaults.lua
 features\Paging.lua
