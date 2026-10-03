@@ -79,7 +79,11 @@ local function ApplyAllLayouts()
     end
 end
 
-local function LayoutSlider(bar, key, minValue, maxValue, valueStep)
+local function FormatPercent(value)
+    return value .. "%"
+end
+
+local function LayoutSlider(bar, key, minValue, maxValue, valueStep, formatter)
     return {
         kind = LibEditMode.SettingType.Slider,
         name = LuckyActionbars.Strings.bars.layout[key],
@@ -87,6 +91,7 @@ local function LayoutSlider(bar, key, minValue, maxValue, valueStep)
         minValue = minValue,
         maxValue = maxValue,
         valueStep = valueStep,
+        formatter = formatter,
         get = function(layoutName)
             local layout = bar.layouts[layoutName]
             return layout and layout[key] or LAYOUT_DEFAULTS[key]
@@ -103,7 +108,7 @@ local function LayoutSettings(bar)
     return {
         LayoutSlider(bar, "rows", 1, 12, 1),
         LayoutSlider(bar, "icons", 6, 12, 1),
-        LayoutSlider(bar, "size", 50, 200, 10),
+        LayoutSlider(bar, "size", 50, 200, 10, FormatPercent),
         LayoutSlider(bar, "padding", 2, 10, 1),
     }
 end
@@ -127,6 +132,20 @@ local function CreateBar(number)
     bar.editModeSettings = {}
     LuckyActionbars.ExtraBars:AddEditModeSettings(bar, LayoutSettings(bar))
     return bar
+end
+
+-- The library frames each slider value in an input box; stock bars show bare text. The widgets
+-- are pooled with every other addon using the library, so the box comes back for their frames.
+local function StyleSliders(dialog, selection)
+    local ours = bars[selection.parent.number] == selection.parent
+    for _, widget in ipairs(dialog.Settings.widgets) do
+        local editBox = widget.EditBox
+        if editBox then
+            editBox.Left:SetShown(not ours)
+            editBox.Middle:SetShown(not ours)
+            editBox.Right:SetShown(not ours)
+        end
+    end
 end
 
 local function OnLayoutChanged(layoutName)
@@ -176,6 +195,7 @@ function LuckyActionbars.ExtraBars:Init(database)
     for number in pairs(BAR_PAGES) do
         bars[number] = CreateBar(number)
     end
+    hooksecurefunc(LibEditMode.internal.dialog, "Update", StyleSliders)
     LibEditMode:RegisterCallback("layout", OnLayoutChanged)
     LibEditMode:RegisterCallback("rename", OnLayoutRenamed)
     layoutFrame:SetScript("OnEvent", function(frame, event)
