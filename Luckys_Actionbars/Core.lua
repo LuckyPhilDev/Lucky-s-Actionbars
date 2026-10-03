@@ -8,11 +8,13 @@ local function LoadDatabase()
             db[key] = value
         end
     end
-    db.pages = db.pages or {}
-    for modifier, page in pairs(LuckyActionbars.DB_DEFAULTS.pages) do
-        if db.pages[modifier] == nil then
-            db.pages[modifier] = page
-        end
+    if not db.paging then
+        -- Before paging moved into Edit Mode it only covered Action Bar 1, stored as db.pages.
+        db.paging = db.pages and { [1] = db.pages } or CopyTable(LuckyActionbars.DB_DEFAULTS.paging)
+        db.pages = nil
+    end
+    for number = 1, LuckyActionbars.Paging.BAR_COUNT do
+        db.paging[number] = db.paging[number] or {}
     end
     db.bars = db.bars or {}
     for _, number in ipairs(LuckyActionbars.DB_DEFAULTS.extraBars) do
@@ -32,6 +34,7 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.ButtonText:Init(db)
     LuckyActionbars.Tooltips:Init(db)
     LuckyActionbars.EditModePanel:Init()
+    LuckyActionbars.EditModePaging:Init()
     LuckyActionbars.Settings:Init(db)
 end)
 
