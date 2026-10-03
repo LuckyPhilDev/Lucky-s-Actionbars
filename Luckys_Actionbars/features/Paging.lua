@@ -1,7 +1,17 @@
 LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.Paging = {}
 
-local MODIFIERS = { "CTRL", "ALT", "SHIFT" }
+-- Combinations come first: a state driver takes the first match, and [mod:ctrl] also matches Ctrl+Shift.
+local TRIGGERS = {
+    { key = "ALT-CTRL", condition = "mod:alt,mod:ctrl", keyPrefix = "ALT-CTRL-" },
+    { key = "ALT-SHIFT", condition = "mod:alt,mod:shift", keyPrefix = "ALT-SHIFT-" },
+    { key = "CTRL-SHIFT", condition = "mod:ctrl,mod:shift", keyPrefix = "CTRL-SHIFT-" },
+    { key = "CTRL", condition = "mod:ctrl", keyPrefix = "CTRL-" },
+    { key = "ALT", condition = "mod:alt", keyPrefix = "ALT-" },
+    { key = "SHIFT", condition = "mod:shift", keyPrefix = "SHIFT-" },
+    { key = "HELP", condition = "help" },
+}
+local SETTINGS_ORDER = { "CTRL", "ALT", "SHIFT", "CTRL-SHIFT", "ALT-CTRL", "ALT-SHIFT", "HELP" }
 local PAGEABLE = { 1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 14, 15 }
 -- Pages the class's own forms put on Action Bar 1, measured in game: Cat 7, Bear 9, Moonkin 10, rogue Stealth 7.
 -- Soar and Flight Form use the skyriding page 11, which is never offered.
@@ -50,12 +60,12 @@ local function HasModifier(key)
     return false
 end
 
-local function ActiveModifiers()
+local function ActiveTriggers()
     local active = {}
-    for _, modifier in ipairs(MODIFIERS) do
-        local page = db.pages[modifier]
+    for _, trigger in ipairs(TRIGGERS) do
+        local page = db.pages[trigger.key]
         if isAllowed[page] then
-            active[#active + 1] = { modifier = modifier, page = page }
+            active[#active + 1] = { trigger = trigger, page = page }
         end
     end
     return active
@@ -64,7 +74,7 @@ end
 local function BuildConditions(active)
     local parts = { "[vehicleui][overridebar][possessbar][petbattle] 0" }
     for _, entry in ipairs(active) do
-        parts[#parts + 1] = ("[mod:%s] %d"):format(entry.modifier:lower(), entry.page)
+        parts[#parts + 1] = ("[%s] %d"):format(entry.trigger.condition, entry.page)
     end
     parts[#parts + 1] = "0"
     return table.concat(parts, "; ")
@@ -74,13 +84,16 @@ end
 local function ApplyModifierBindings(active)
     local wanted, signature = {}, {}
     for _, entry in ipairs(active) do
-        for i = 1, BUTTON_COUNT do
-            local command = "ACTIONBUTTON" .. i
-            for _, key in ipairs({ GetBindingKey(command) }) do
-                local modifiedKey = entry.modifier .. "-" .. key
-                if not HasModifier(key) and GetBindingAction(modifiedKey) == "" then
-                    wanted[#wanted + 1] = { modifiedKey, command }
-                    signature[#signature + 1] = modifiedKey .. command
+        local keyPrefix = entry.trigger.keyPrefix
+        if keyPrefix then
+            for i = 1, BUTTON_COUNT do
+                local command = "ACTIONBUTTON" .. i
+                for _, key in ipairs({ GetBindingKey(command) }) do
+                    local modifiedKey = keyPrefix .. key
+                    if not HasModifier(key) and GetBindingAction(modifiedKey) == "" then
+                        wanted[#wanted + 1] = { modifiedKey, command }
+                        signature[#signature + 1] = modifiedKey .. command
+                    end
                 end
             end
         end
@@ -118,7 +131,7 @@ local function CollectAllowedPages()
     end
 end
 
-LuckyActionbars.Paging.MODIFIERS = MODIFIERS
+LuckyActionbars.Paging.TRIGGERS = SETTINGS_ORDER
 
 function LuckyActionbars.Paging:AllowedPages()
     return allowedPages
@@ -129,7 +142,7 @@ function LuckyActionbars.Paging:Apply()
         eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
         return
     end
-    local active = ActiveModifiers()
+    local active = ActiveTriggers()
     RegisterStateDriver(pager, "page", BuildConditions(active))
     ApplyModifierBindings(active)
 end

@@ -5,6 +5,7 @@ Adds hold-to-page to the stock main action bar, no bar replacement needed.
 ## Features
 
 - **Hold to page**: pick a page for Ctrl, Alt and Shift. Holding the key shows that page on Action Bar 1, and releasing it returns to whatever it showed before, including stance, form and stealth pages.
+- **More triggers**: Ctrl+Shift, Ctrl+Alt and Alt+Shift can each have their own page, and so can a friendly target.
 - **Any spare page**: page Action Bar 1 to its second page, to the contents of Action Bars 3 to 8, or to a form page your class does not use.
 - **Keybinds follow the page**: while a modifier is held, your Action Bar 1 keys press the paged buttons. Any modifier key you have already bound to something else is left alone.
 - **Action Bars 9 to 12**: four extra bars that show pages 7 to 10, built from the stock buttons. Move them in Edit Mode, where they snap to nearby bars, with a separate position for each layout. Selecting any action bar in Edit Mode lets you show or hide them.

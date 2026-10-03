@@ -40,7 +40,7 @@ function LuckyActionbars.Settings:Init(db)
         local options = PageOptions(S)
         builder:Group(S.groups.paging, function(group)
             group:Section(S.sections.modifiers)
-            for _, modifier in ipairs(LuckyActionbars.Paging.MODIFIERS) do
+            for _, modifier in ipairs(LuckyActionbars.Paging.TRIGGERS) do
                 group:Select({
                     S.modifiers[modifier],
                     options = options,

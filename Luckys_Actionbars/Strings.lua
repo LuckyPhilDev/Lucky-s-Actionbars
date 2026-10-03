@@ -68,6 +68,22 @@ LuckyActionbars.Strings = {
                 label = "Shift",
                 desc = "While Shift is held, Action Bar 1 shows the chosen page. Shift-1 to Shift-6 switch action bar pages by default, so unbind them in Key Bindings for those keys to press the paged buttons.",
             },
+            ["CTRL-SHIFT"] = {
+                label = "Ctrl+Shift",
+                desc = "While Ctrl and Shift are both held, Action Bar 1 shows the chosen page. This wins over the Ctrl and Shift pages.",
+            },
+            ["ALT-CTRL"] = {
+                label = "Ctrl+Alt",
+                desc = "While Ctrl and Alt are both held, Action Bar 1 shows the chosen page. This wins over the Ctrl and Alt pages.",
+            },
+            ["ALT-SHIFT"] = {
+                label = "Alt+Shift",
+                desc = "While Alt and Shift are both held, Action Bar 1 shows the chosen page. This wins over the Alt and Shift pages.",
+            },
+            HELP = {
+                label = "Friendly target",
+                desc = "While your target is friendly, Action Bar 1 shows the chosen page. Any held modifier with a page of its own wins over this.",
+            },
         },
         pageLabels = {
             [1] = "Page 1: Action Bar 1",
