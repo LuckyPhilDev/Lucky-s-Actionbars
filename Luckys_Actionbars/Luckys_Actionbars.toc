@@ -15,6 +15,7 @@ features\StockBars.lua
 features\Snapping.lua
 features\ExtraBars.lua
 features\RangeIndicator.lua
+features\ButtonText.lua
 features\EditModePanel.lua
 Settings.lua
 Core.lua

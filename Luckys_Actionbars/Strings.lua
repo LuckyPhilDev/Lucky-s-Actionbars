@@ -20,6 +20,16 @@ LuckyActionbars.Strings = {
             label = "Red icon when out of range",
             desc = "Action buttons turn their whole icon red while the target is out of range, instead of only the keybind text.",
         },
+        buttonText = {
+            hideKeybinds = {
+                label = "Hide keybind text",
+                desc = "Removes the keybind shown in the corner of every action button.",
+            },
+            hideMacroNames = {
+                label = "Hide macro names",
+                desc = "Removes the macro name shown along the bottom of every action button.",
+            },
+        },
         bars = {
             [1] = {
                 label = "Action Bar 1",

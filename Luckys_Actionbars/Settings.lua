@@ -62,6 +62,13 @@ function LuckyActionbars.Settings:Init(db)
                 checked = function() return db.rangeIndicator end,
                 onToggle = function(checked) LuckyActionbars.RangeIndicator:SetEnabled(checked) end,
             })
+            for _, setting in ipairs({ "hideKeybinds", "hideMacroNames" }) do
+                group:Toggle({
+                    S.buttonText[setting],
+                    checked = function() return LuckyActionbars.ButtonText:IsHidden(setting) end,
+                    onToggle = function(checked) LuckyActionbars.ButtonText:SetHidden(setting, checked) end,
+                })
+            end
         end)
     end)
 end
