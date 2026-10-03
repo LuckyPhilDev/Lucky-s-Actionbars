@@ -37,6 +37,8 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.ButtonText:Init(db)
     LuckyActionbars.Tooltips:Init(db)
     LuckyActionbars.MouseoverFade:Init(db)
+    LuckyActionbarsCharDB = LuckyActionbarsCharDB or { skyridingIncluded = true }
+    LuckyActionbars.SkyridingBar:Init(db, LuckyActionbarsCharDB)
     LuckyActionbars.EditModePanel:Init()
     LuckyActionbars.EditModePaging:Init()
     LuckyActionbars.Settings:Init(db)

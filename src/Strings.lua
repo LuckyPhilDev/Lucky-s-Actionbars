@@ -39,7 +39,15 @@ LuckyActionbars.Strings = {
     },
     settings = {
         groups = { bars = "Bars", buttons = "Buttons" },
-        sections = { stockBars = "Stock bars", extraBars = "Extra bars", fade = "Hidden until hovered" },
+        sections = { stockBars = "Stock bars", extraBars = "Extra bars", skyriding = "Skyriding", fade = "Hidden until hovered" },
+        shareSkyriding = {
+            label = "Share Skyriding Bar layout",
+            desc = "Keeps Surge Forward, Skyward Ascent and the other skyriding abilities in the same slots on the skyriding bar of every included character. Turning this on shares the layout on the character you are playing, and your other included characters pick it up at their next login. Anything else you put on that bar stays with each character.",
+        },
+        includeSkyriding = {
+            label = "Include this character",
+            desc = "This character uses the shared skyriding layout, and rearranging its skyriding abilities updates it for the others. Set per character.",
+        },
         fadeInMs = {
             label = "Time to appear",
             desc = "How long a hidden bar takes to appear when you point at it. Set to 0 to show it instantly.",

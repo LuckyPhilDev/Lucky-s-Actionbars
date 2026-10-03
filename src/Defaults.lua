@@ -4,6 +4,7 @@ LuckyActionbars.DB_DEFAULTS = {
     paging = { [1] = { CTRL = 2 } },
     extraBars = { 9, 10, 11, 12 },
     rangeIndicator = true,
+    shareSkyriding = false,
     hideKeybinds = false,
     hideMacroNames = false,
     tooltipMode = "always",

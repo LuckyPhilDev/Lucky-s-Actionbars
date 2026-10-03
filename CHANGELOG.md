@@ -10,4 +10,5 @@
 - **Hidden until hovered** Any of Action Bars 1 to 12 can fade out until you point at it or drag a spell, set per bar in its Edit Mode settings. Set how quickly they appear and hide under Bars in `/luckybars`.
 - **Layout for Action Bars 9 to 12** Selecting one in Edit Mode gives you # of Rows, # of Icons, Icon Size and Icon Padding, saved per layout like the stock bars.
 - **Bars settings** Show or hide Action Bars 2 to 12 from one place in `/luckybars`, kept in sync with the stock Action Bars options.
+- **Shared skyriding bar** Surge Forward, Skyward Ascent and the other skyriding abilities sit in the same slots on every character's skyriding bar. Set them up on one character and turn on Share Skyriding Bar layout there, then rearrange them on any character and the rest follow at their next login. Anything else on that bar stays per character. Leave one character out with Include this character. Both settings are under Bars in `/luckybars`.
 - **Minimap button** Click it to open `/luckybars`. Drag it to move it around the minimap.
