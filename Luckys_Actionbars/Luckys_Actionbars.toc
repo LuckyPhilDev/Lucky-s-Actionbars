@@ -1,0 +1,8 @@
+## Interface: 120100
+## Title: Lucky's Actionbars
+## Notes: Hold Ctrl to page the stock main action bar.
+## Version: 0.1.0
+## Author: Lucky Phil
+
+Paging.lua
+Core.lua

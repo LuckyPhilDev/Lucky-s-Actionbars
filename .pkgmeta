@@ -1,0 +1,8 @@
+package-as: Luckys_Actionbars
+
+move-folders:
+  Luckys_Actionbars/Luckys_Actionbars: Luckys_Actionbars
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
