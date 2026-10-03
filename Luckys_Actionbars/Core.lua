@@ -16,6 +16,7 @@ local function LoadDatabase()
     for number = 1, LuckyActionbars.Paging.BAR_COUNT do
         db.paging[number] = db.paging[number] or {}
     end
+    db.fade = db.fade or {}
     db.bars = db.bars or {}
     for _, number in ipairs(LuckyActionbars.DB_DEFAULTS.extraBars) do
         db.bars[number] = db.bars[number] or { shown = false }
@@ -33,6 +34,7 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.RangeIndicator:Init(db)
     LuckyActionbars.ButtonText:Init(db)
     LuckyActionbars.Tooltips:Init(db)
+    LuckyActionbars.MouseoverFade:Init(db)
     LuckyActionbars.EditModePanel:Init()
     LuckyActionbars.EditModePaging:Init()
     LuckyActionbars.Settings:Init(db)

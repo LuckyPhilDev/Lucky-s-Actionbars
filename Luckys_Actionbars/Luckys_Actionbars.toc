@@ -17,6 +17,7 @@ features\ExtraBars.lua
 features\RangeIndicator.lua
 features\ButtonText.lua
 features\Tooltips.lua
+features\MouseoverFade.lua
 features\EditModePanel.lua
 features\EditModePaging.lua
 Settings.lua
