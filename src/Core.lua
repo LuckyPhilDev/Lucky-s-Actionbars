@@ -18,6 +18,7 @@ local function LoadDatabase()
     end
     db.fade = db.fade or {}
     db.rowsDown = db.rowsDown or {}
+    db.hiddenMicroButtons = db.hiddenMicroButtons or {}
     db.bars = db.bars or {}
     for _, number in ipairs(LuckyActionbars.DB_DEFAULTS.extraBars) do
         db.bars[number] = db.bars[number] or { shown = false }
@@ -39,6 +40,8 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.Tooltips:Init(db)
     LuckyActionbars.MouseoverFade:Init(db)
     LuckyActionbars.RowDirection:Init(db)
+    LuckyActionbars.BagsBar:Init(db)
+    LuckyActionbars.MicroMenu:Init(db)
     LuckyActionbars.EditModePanel:Init()
     LuckyActionbars.Settings:Init(db)
     LuckyActionbars.minimapButton = LuckyMinimap:Create({

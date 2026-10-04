@@ -5,6 +5,8 @@
 - **More Edit Mode settings for Action Bars 9 to 12** Orientation, Bar Visible and Always Show Buttons work just like they do on the stock bars. Bars with more than one row now stack upwards, as the stock bars do.
 - **Rows Grow** A new Edit Mode setting on horizontal action bars, including Action Bars 1 to 8, picks whether extra rows stack upwards or downwards, so your first button can sit top left.
 - **Hidden until hovered for the Menu and Bags bars** Select the Micro Menu or Bags bar in Edit Mode to fade it out until you point at it.
+- **Backpack only** A new Edit Mode setting on the Bags bar hides the other bag slots and the arrow that shows them, leaving just the backpack.
+- **Hidden menu buttons** Pick any Micro Menu buttons to remove in its Edit Mode settings. The rest close up to fill the gap.
 - **Masque support for Action Bars 9 to 12** With Masque installed, each extra bar has its own group under Lucky's Actionbars, so you can skin them like any other bar.
 
 ### Improved

@@ -40,6 +40,71 @@ local function RowsGrowSetting(number)
     }
 end
 
+local function BackpackOnlySetting()
+    local S = LuckyActionbars.Strings.bags.backpackOnly
+    return {
+        kind = LibEditMode.SettingType.Checkbox,
+        name = LuckyActionbars.Utils.Mark(S.label),
+        desc = S.desc,
+        default = false,
+        get = function() return LuckyActionbars.BagsBar:IsBackpackOnly() end,
+        set = function(_, backpackOnly) LuckyActionbars.BagsBar:SetBackpackOnly(backpackOnly) end,
+    }
+end
+
+-- Blizzard's Edit Mode dropdowns are a 100 wide label, a 5 gap and a 225 wide dropdown. The library
+-- matches the label but makes the dropdown 200, and its widgets are pooled across every addon that
+-- uses it, so each Setup puts the library's sizes back unless the setting asks for a fitted label.
+local LIBRARY_LABEL_WIDTH, LIBRARY_DROPDOWN_WIDTH, LABEL_GAP = 100, 200, 5
+local BLIZZARD_DROPDOWN_RIGHT = 100 + 5 + 225
+
+local function SizeDropdownWidget(widget)
+    local labelWidth, dropdownWidth = LIBRARY_LABEL_WIDTH, LIBRARY_DROPDOWN_WIDTH
+    if widget.setting.fitLabel then
+        labelWidth = math.ceil(widget.Label:GetUnboundedStringWidth())
+        dropdownWidth = BLIZZARD_DROPDOWN_RIGHT - labelWidth - LABEL_GAP
+    end
+    widget.Label:SetWidth(labelWidth)
+    widget.Dropdown:SetWidth(dropdownWidth)
+end
+
+local function FitDropdownLabel(dropdown)
+    local widget = dropdown:GetParent()
+    if not widget.luckySizeHooked then
+        widget.luckySizeHooked = true
+        hooksecurefunc(widget, "Setup", SizeDropdownWidget)
+    end
+    SizeDropdownWidget(widget)
+end
+
+local function HiddenMicroButtonsSetting()
+    local S = LuckyActionbars.Strings.menu.hiddenButtons
+    return {
+        kind = LibEditMode.SettingType.Dropdown,
+        name = LuckyActionbars.Utils.Mark(S.label),
+        desc = S.desc,
+        default = {},
+        fitLabel = true,
+        -- A generator rather than `values`, so an empty selection can say None and Unhide all fits in.
+        generator = function(dropdown, rootDescription)
+            local MicroMenu = LuckyActionbars.MicroMenu
+            FitDropdownLabel(dropdown)
+            dropdown:SetDefaultText(S.none)
+            for _, choice in ipairs(MicroMenu:Choices()) do
+                rootDescription:CreateCheckbox(choice.text,
+                    function() return MicroMenu:IsHidden(choice.value) end,
+                    function() MicroMenu:ToggleButton(choice.value) end)
+            end
+            rootDescription:CreateDivider()
+            local unhideAll = rootDescription:CreateButton(S.unhideAll, function()
+                MicroMenu:UnhideAll()
+                dropdown:GenerateMenu()
+            end)
+            unhideAll:SetEnabled(function() return MicroMenu:HasHidden() end)
+        end,
+    }
+end
+
 local function StockBarSettings(number)
     return { FadeSetting(number), RowsGrowSetting(number) }
 end
@@ -165,8 +230,9 @@ function LuckyActionbars.EditModePanel:Init()
         LibEditMode:AddSystemSettings(Enum.EditModeSystem.ActionBar, StockBarSettings(number), subSystem)
     end
     local fadeDesc = LuckyActionbars.Strings.bars.fade.descNoKeybinds
-    LibEditMode:AddSystemSettings(Enum.EditModeSystem.MicroMenu, { FadeSetting("menu", fadeDesc) })
-    LibEditMode:AddSystemSettings(Enum.EditModeSystem.Bags, { FadeSetting("bags", fadeDesc) })
+    LibEditMode:AddSystemSettings(Enum.EditModeSystem.MicroMenu,
+        { FadeSetting("menu", fadeDesc), HiddenMicroButtonsSetting() })
+    LibEditMode:AddSystemSettings(Enum.EditModeSystem.Bags, { FadeSetting("bags", fadeDesc), BackpackOnlySetting() })
     MergeExtensionIntoDialog()
     for number, bar in pairs(LuckyActionbars.ExtraBars:Frames()) do
         LuckyActionbars.ExtraBars:AddEditModeSettings(bar,
