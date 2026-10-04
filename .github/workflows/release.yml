@@ -26,7 +26,7 @@ jobs:
           GITHUB_OAUTH: ${{ secrets.GITHUB_OAUTH }}
 
       - name: Notify Discord on success
-        if: false # temporarily disabled
+        if: success()
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           NOTES=$(awk '/^## /{c++; if(c==2) exit} c==1 && !/^## /' CHANGELOG.md | sed '/./,$!d')
@@ -41,7 +41,7 @@ jobs:
             "${{ secrets.DISCORD_WEBHOOK }}"
 
       - name: Notify Discord on failure
-        if: false # temporarily disabled
+        if: failure()
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           RUN_URL="https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
