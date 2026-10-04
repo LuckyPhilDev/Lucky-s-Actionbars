@@ -3,6 +3,7 @@ LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.Strings = {
     addon = {
         title = "Lucky's Actionbars",
+        prefix = "|cffffd100Lucky's Actionbars:|r",
         minimapHints = { "Left-click: Open Edit Mode", "Right-click: Open settings", "Middle-click: Toggle dev mode",
             "Drag: Move button" },
         devModeOn = "Lucky's Actionbars: Dev mode enabled.",

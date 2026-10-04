@@ -9,6 +9,18 @@ local db, charDb
 -- and spells Blizzard places itself never change the shared layout.
 local touched = {}
 local events = CreateFrame("Frame")
+local devLog
+
+-- Builds the message only in dev mode, since slot changes fire often.
+local function Log(message, ...)
+    if db.devMode then
+        devLog(message:format(...))
+    end
+end
+
+local function SpellName(id)
+    return id and C_Spell.GetSpellName(id) or "empty"
+end
 
 local function IsActive()
     return db.shareSkyriding and charDb.skyridingIncluded
@@ -26,6 +38,9 @@ local function RecordSlot(slot)
     end
     local wanted, current = db.skyridingBar[slot], SkyridingSpellIn(slot)
     if current or (wanted and IsPlayerSpell(wanted)) then
+        if wanted ~= current then
+            Log("Skyriding: saved slot %d as %s, was %s", slot, SpellName(current), SpellName(wanted))
+        end
         db.skyridingBar[slot] = current
     end
 end
@@ -36,6 +51,7 @@ local function Apply()
         return
     end
     if InCombatLockdown() then
+        Log("Skyriding: in combat, applying the layout afterwards")
         events:RegisterEvent("PLAYER_REGEN_ENABLED")
         return
     end
@@ -43,6 +59,7 @@ local function Apply()
     for slot = FIRST_SLOT, LAST_SLOT do
         local wanted, current = db.skyridingBar[slot], SkyridingSpellIn(slot)
         if wanted ~= current then
+            Log("Skyriding: applying slot %d, %s replaces %s", slot, SpellName(wanted), SpellName(current))
             if wanted and IsPlayerSpell(wanted) then
                 C_Spell.PickupSpell(wanted)
                 PlaceAction(slot)
@@ -98,6 +115,7 @@ end
 
 function LuckyActionbars.SkyridingBar:Init(database, characterDatabase)
     db, charDb = database, characterDatabase
+    devLog = LuckyLog:New(LuckyActionbars.Strings.addon.prefix, function() return db.devMode end)
     hooksecurefunc("PickupAction", OnDrag)
     hooksecurefunc("PlaceAction", OnDrag)
     -- The main bar is the one that pages to the skyriding bar.

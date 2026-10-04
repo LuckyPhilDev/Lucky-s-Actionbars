@@ -1,5 +1,5 @@
 -- luacheck: globals hooksecurefunc CreateFrame GetActionInfo ClearCursor PickupAction PlaceAction IsPlayerSpell InCombatLockdown C_Spell
--- luacheck: globals GetCursorInfo
+-- luacheck: globals GetCursorInfo LuckyLog
 
 local script = arg[0]:gsub("\\", "/")
 local root = script:match("^(.*)/tests/[^/]+$") .. "/"
@@ -31,7 +31,12 @@ function IsPlayerSpell(id) return known[id] end
 function InCombatLockdown() return inCombat end
 local hooks = {}
 function hooksecurefunc(name, fn) hooks[name] = fn end
-C_Spell = { PickupSpell = function(id) if known[id] then cursor = id end end }
+C_Spell = {
+    PickupSpell = function(id) if known[id] then cursor = id end end,
+    GetSpellName = function(id) return "spell " .. id end,
+}
+local logged = {}
+LuckyLog = { New = function() return function(message) logged[#logged + 1] = message end end }
 function GetCursorInfo() if cursor then return "spell", cursor end end
 local buttons = {}
 for index = 1, 12 do
@@ -40,6 +45,7 @@ for index = 1, 12 do
 end
 
 dofile(root .. "src/Constants.lua")
+dofile(root .. "src/Strings.lua")
 
 -- Each login reloads the file, as the game does, so every character gets a fresh events frame.
 local function Login(db, charDb, actions, knows)
@@ -81,7 +87,7 @@ local function Push(slot, spell)
 end
 
 local all = { [SURGE] = true, [ASCENT] = true, [WHIRL] = true, [HALT] = true, [FIREBALL] = true }
-local db = { shareSkyriding = false }
+local db = { shareSkyriding = false, devMode = true }
 
 Login(db, { skyridingIncluded = true }, { [121] = SURGE, [123] = FIREBALL }, all)
 Push(122, ASCENT)
@@ -147,5 +153,6 @@ inCombat = false
 Fire("PLAYER_REGEN_ENABLED")
 check(bars[121] == HALT, "then applies the layout")
 
+check(#logged > 0, "dev mode logs what is saved and applied")
 
 print(string.format("SkyridingBarTest: %d/%d assertions passed", passed, tests))
