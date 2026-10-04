@@ -1,3 +1,9 @@
+## [0.3.0] - 2026-10-04
+
+### Added
+- **WoW Forever support** Lucky's Actionbars now loads in WoW Forever as well as Retail.
+- **Shared skyriding bar** Surge Forward, Skyward Ascent and the other skyriding abilities sit in the same slots on every character's skyriding bar. Set them up on one character and turn on Share Skyriding Bar layout there, then rearrange them on any character and the rest follow at their next login. Anything else on that bar stays per character. Leave one character out with Include this character. Both settings are under Bars in `/luckybars`.
+
 ## [0.2.0] - 2026-10-04
 
 ### Added

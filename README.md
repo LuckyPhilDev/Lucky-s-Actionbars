@@ -2,6 +2,8 @@
 
 Keep Blizzard's action bars and make them do more. Lucky's Actionbars builds on the stock bars instead of replacing them, so your layout, keybinds, Edit Mode and other addons keep working as they always have.
 
+Supports Retail and WoW Forever.
+
 ## Why Lucky's Actionbars
 
 - **No bar replacement**: the bars you see are Blizzard's own. Nothing to rebuild and no new look to get used to.
