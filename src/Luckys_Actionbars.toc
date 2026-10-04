@@ -1,9 +1,10 @@
-## Interface: 120100
+## Interface: 120100, 16001
 ## Title: Lucky's Actionbars
 ## Notes: Hold a modifier to page Action Bars 1 to 8, plus four extra bars, all set up in Edit Mode.
 ## Version: 0.2.0
 ## Author: Lucky Phil
 ## SavedVariables: LuckyActionbarsDB, LuckySettingsDB, LuckyRosterDB
+## SavedVariablesPerCharacter: LuckyActionbarsCharDB
 ## OptionalDeps: Luckys_Utils, Masque
 ## X-Curse-Project-ID: 1724904
 
@@ -28,5 +29,6 @@ features\SidePanel.lua
 features\BarFlyout.lua
 features\PagingFlyout.lua
 features\EditModePanel.lua
+features\SkyridingBar.lua
 Settings.lua
 Core.lua

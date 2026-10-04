@@ -11,3 +11,12 @@ function LuckyActionbars.PlayerFormPages()
     local _, class = UnitClass("player")
     return LuckyActionbars.CLASS_FORM_PAGES[class] or {}
 end
+
+-- Skyriding abilities shared on page 11 across characters. Spells not listed here stay per character.
+LuckyActionbars.SKYRIDING_SPELLS = {
+    [372608] = true, -- Surge Forward
+    [372610] = true, -- Skyward Ascent
+    [361584] = true, -- Whirling Surge
+    [403092] = true, -- Aerial Halt
+    [425782] = true, -- Second Wind
+}
