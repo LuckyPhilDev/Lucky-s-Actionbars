@@ -46,7 +46,12 @@ Turn one bar into several. Hold a modifier and a bar swaps to another page, then
 
 ## Installation
 
-Install `Luckys_Actionbars` in `World of Warcraft/_retail_/Interface/AddOns`. Lucky's Utils is bundled.
+Install `Luckys_Actionbars` in the `Interface/AddOns` folder for your game:
+
+- **Retail**: `World of Warcraft/_retail_/Interface/AddOns`
+- **WoW Forever**: `World of Warcraft/_classic_beta_/Interface/AddOns` during the beta
+
+Lucky's Utils is bundled.
 
 ## Usage
 
