@@ -12,7 +12,8 @@ Adds hold-to-page and extra bars to the stock action bars, no bar replacement ne
 - **Out-of-range icons**: the whole icon turns red while your target is out of range, on every action bar.
 - **Hide button text**: remove keybind text or macro names from every action button.
 - **Button tooltips**: show action button tooltips always, out of combat only, with a modifier held, or never.
-- **Hidden until hovered**: any action bar can fade out until you point at it, set per bar in its Edit Mode settings. Its keybinds keep working, and how quickly it appears and hides is set under Bars in `/luckybars`.
+- **Hidden until hovered**: any action bar, the Micro Menu or the Bags bar can fade out until you point at it, set per bar in its Edit Mode settings. Its keybinds keep working, and how quickly it appears and hides is set under Bars in `/luckybars`.
+- **Tidier menu and bags**: remove any Micro Menu buttons you never click, and shrink the Bags bar down to just the backpack, from their Edit Mode settings.
 - **Works in combat**: paging runs through the game's secure state system.
 - **Stays out of the way**: vehicles, override bars, possession and pet battles are never paged.
 

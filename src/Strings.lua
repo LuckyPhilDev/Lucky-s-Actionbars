@@ -19,6 +19,7 @@ LuckyActionbars.Strings = {
         fade = {
             label = "Hidden until hovered",
             desc = "This bar stays invisible until you point at it\nor drag something to place. Its keybinds\nstill work while it is invisible.",
+            descNoKeybinds = "This bar stays invisible until you point at it\nor drag something to place.",
         },
         -- Edit Mode tooltips don't wrap, so these carry their own line breaks.
         flyoutButton = "Show/Hide Action Bars",
@@ -68,6 +69,35 @@ LuckyActionbars.Strings = {
             [12] = "Action Bar 12",
         },
         buttonName = "%s Button %d",
+    },
+    bags = {
+        backpackOnly = {
+            label = "Backpack only",
+            desc = "Hide the other bag slots and the arrow\nthat shows them, leaving just the backpack.",
+        },
+    },
+    menu = {
+        hiddenButtons = {
+            label = "Hidden buttons",
+            none = NONE,
+            unhideAll = "Unhide all",
+            desc = "Pick which buttons to remove from the menu.\nThe rest close up to fill the gap.",
+        },
+        -- Blizzard's own names for the buttons, so they read the same as their tooltips in every locale.
+        buttons = {
+            CharacterMicroButton = CHARACTER_BUTTON,
+            ProfessionMicroButton = PROFESSIONS_BUTTON,
+            PlayerSpellsMicroButton = PLAYERSPELLS_BUTTON,
+            AchievementMicroButton = ACHIEVEMENT_BUTTON,
+            QuestLogMicroButton = QUESTLOG_BUTTON,
+            HousingMicroButton = HOUSING_MICRO_BUTTON,
+            GuildMicroButton = GUILD_AND_COMMUNITIES,
+            LFDMicroButton = DUNGEONS_BUTTON,
+            EJMicroButton = ADVENTURE_JOURNAL,
+            CollectionsMicroButton = COLLECTIONS,
+            MainMenuMicroButton = MAINMENU_BUTTON,
+            StoreMicroButton = BLIZZARD_STORE,
+        },
     },
     settings = {
         groups = { whatsNew = "What's New", bars = "Bars", buttons = "Buttons" },
