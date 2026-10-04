@@ -42,6 +42,8 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.RowDirection:Init(db)
     LuckyActionbars.BagsBar:Init(db)
     LuckyActionbars.MicroMenu:Init(db)
+    LuckyActionbarsCharDB = LuckyActionbarsCharDB or { skyridingIncluded = true }
+    LuckyActionbars.SkyridingBar:Init(db, LuckyActionbarsCharDB)
     LuckyActionbars.EditModePanel:Init()
     LuckyActionbars.Settings:Init(db)
     LuckyActionbars.minimapButton = LuckyMinimap:Create({

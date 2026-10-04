@@ -33,6 +33,18 @@ local function BuildBarRows(group, S)
             return #numbers > 0 and table.concat(numbers, ", ") or S.bars.none
         end,
     })
+    group:Section(S.sections.skyriding)
+    group:Toggle({
+        S.shareSkyriding,
+        checked = function() return LuckyActionbars.SkyridingBar:IsSharing() end,
+        onToggle = function(checked) LuckyActionbars.SkyridingBar:SetSharing(checked) end,
+    })
+    group:Toggle({
+        S.includeSkyriding,
+        parent = S.shareSkyriding,
+        checked = function() return LuckyActionbars.SkyridingBar:IsIncluded() end,
+        onToggle = function(checked) LuckyActionbars.SkyridingBar:SetIncluded(checked) end,
+    })
 end
 
 local function BuildFadeRows(group, S, db)
