@@ -1,4 +1,5 @@
 -- luacheck: globals hooksecurefunc CreateFrame GetActionInfo ClearCursor PickupAction PlaceAction IsPlayerSpell InCombatLockdown C_Spell
+-- luacheck: globals GetCursorInfo
 
 local script = arg[0]:gsub("\\", "/")
 local root = script:match("^(.*)/tests/[^/]+$") .. "/"
@@ -31,6 +32,12 @@ function InCombatLockdown() return inCombat end
 local hooks = {}
 function hooksecurefunc(name, fn) hooks[name] = fn end
 C_Spell = { PickupSpell = function(id) if known[id] then cursor = id end end }
+function GetCursorInfo() if cursor then return "spell", cursor end end
+local buttons = {}
+for index = 1, 12 do
+    buttons[index] = { action = 120 + index, HookScript = function(self, _, fn) self.PreClick = fn end }
+    _G["ActionButton" .. index] = buttons[index]
+end
 
 dofile(root .. "src/Constants.lua")
 
@@ -45,6 +52,25 @@ local function Fire(event, slot) if events[event] then frame.OnEvent(frame, even
 local function Place(slot, spell)
     hooks.PlaceAction(slot)
     bars[slot] = spell
+    Fire("ACTIONBAR_SLOT_CHANGED", slot)
+end
+-- The player dragging a spell off a slot, leaving it on the cursor.
+local function Pickup(slot)
+    PickupAction(slot)
+    hooks.PickupAction(slot)
+    Fire("ACTIONBAR_SLOT_CHANGED", slot)
+end
+-- The player releasing the drag over another slot, picking up whatever was there.
+local function Drop(slot)
+    PlaceAction(slot)
+    hooks.PlaceAction(slot)
+    Fire("ACTIONBAR_SLOT_CHANGED", slot)
+end
+-- The player dropping the cursor's spell on a slot by clicking it, which goes through UseAction, not PlaceAction.
+local function ClickPlace(slot)
+    local button = buttons[slot - 120]
+    button.PreClick(button)
+    PlaceAction(slot)
     Fire("ACTIONBAR_SLOT_CHANGED", slot)
 end
 -- Blizzard placing a spell itself, with no drag.
@@ -79,6 +105,13 @@ Push(126, WHIRL)
 check(db.skyridingBar[126] == nil and bars[126] == nil, "a spell Blizzard places is not shared, and is put back")
 Place(125, nil)
 check(db.skyridingBar[125] == nil, "removing a shared spell removes it for everyone")
+Pickup(121)
+Drop(122)
+ClickPlace(121)
+check(db.skyridingBar[121] == ASCENT and db.skyridingBar[122] == SURGE, "swapping two spells shares both halves")
+Pickup(121)
+Drop(122)
+ClickPlace(121)
 Place(124, nil)
 Place(124, FIREBALL)
 check(db.skyridingBar[124] == nil, "moving its own spells shares nothing")

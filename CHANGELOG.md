@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Fixed
+- **Shared skyriding bar** Swapping two skyriding abilities now saves both of them. Before, the one you clicked back into the empty slot was dropped from the shared layout and moved back at your next login.
+
 ## [0.3.0] - 2026-10-04
 
 ### Added

@@ -62,6 +62,15 @@ local function OnDrag(slot)
     end
 end
 
+-- Clicking a held spell into a slot places it through UseAction, which the drag hooks never see.
+-- That is the second half of every swap, so without this the displaced spell is lost from the layout.
+local function OnPreClick(button)
+    local slot = button.action
+    if GetCursorInfo() and slot and slot >= FIRST_SLOT and slot <= LAST_SLOT then
+        touched[slot] = true
+    end
+end
+
 function LuckyActionbars.SkyridingBar:IsSharing()
     return db.shareSkyriding
 end
@@ -91,6 +100,10 @@ function LuckyActionbars.SkyridingBar:Init(database, characterDatabase)
     db, charDb = database, characterDatabase
     hooksecurefunc("PickupAction", OnDrag)
     hooksecurefunc("PlaceAction", OnDrag)
+    -- The main bar is the one that pages to the skyriding bar.
+    for index = 1, 12 do
+        _G["ActionButton" .. index]:HookScript("PreClick", OnPreClick)
+    end
     -- Not PLAYER_ENTERING_WORLD: the skyriding spells are not known yet then, so none could be placed.
     events:RegisterEvent("SPELLS_CHANGED")
     -- Blizzard places skyriding spells itself on a new character, sometimes after the layout went on.
