@@ -12,6 +12,7 @@ Libs\LibEditMode\embed.xml
 Constants.lua
 Strings.lua
 Defaults.lua
+Utils.lua
 features\Paging.lua
 features\StockBars.lua
 features\Snapping.lua
@@ -20,7 +21,9 @@ features\RangeIndicator.lua
 features\ButtonText.lua
 features\Tooltips.lua
 features\MouseoverFade.lua
+features\SidePanel.lua
+features\BarFlyout.lua
+features\PagingFlyout.lua
 features\EditModePanel.lua
-features\EditModePaging.lua
 Settings.lua
 Core.lua

@@ -14,9 +14,15 @@ LuckyActionbars.Strings = {
     bars = {
         fade = {
             label = "Hidden until hovered",
-            desc = "This bar stays invisible until you point at it or drag something to place. Its keybinds still work while it is invisible.",
+            desc = "This bar stays invisible until you point at it\nor drag something to place. Its keybinds\nstill work while it is invisible.",
         },
-        extraBarsDivider = "Extra bars",
+        -- Edit Mode tooltips don't wrap, so these carry their own line breaks.
+        flyoutButton = "Show/Hide Action Bars",
+        flyoutDesc = "Turn Action Bars 2 to 12 on and off\nfrom a list beside this window.",
+        flyoutTitle = "Action Bars",
+        pagingButton = "Paging",
+        pagingDesc = "Make this bar show another bar's buttons\nwhile you hold a modifier key, change form\nor target someone friendly.",
+        pagingTitle = "Action Bar %d Paging",
         -- Blizzard's own strings, so these read exactly like the stock bars' settings in every locale.
         orientation = {
             label = HUD_EDIT_MODE_SETTING_ACTION_BAR_ORIENTATION,
@@ -105,7 +111,6 @@ LuckyActionbars.Strings = {
             },
         },
         off = "Off",
-        paging = { expander = "Paging" },
         modifiers = {
             CTRL = {
                 label = "Ctrl",

@@ -259,7 +259,8 @@ local function CreateBar(number)
     end
     ApplyLayout(bar)
     ApplyPosition(bar)
-    LibEditMode:AddFrame(bar, OnPositionChanged, DefaultPosition(number), LuckyActionbars.Strings.bars.names[number])
+    LibEditMode:AddFrame(bar, OnPositionChanged, DefaultPosition(number),
+        LuckyActionbars.Utils.Mark(LuckyActionbars.Strings.bars.names[number]))
     LibEditMode.frameSelections[bar]:HookScript("OnDragStop", function() SnapAfterDrag(bar) end)
     bar.editModeSettings = {}
     LuckyActionbars.ExtraBars:AddEditModeSettings(bar, LayoutSettings(bar))

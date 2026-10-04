@@ -9,4 +9,5 @@ LuckyActionbars.DB_DEFAULTS = {
     tooltipMode = "always",
     fadeInMs = 50,
     fadeOutMs = 400,
+    markAdditions = true,
 }

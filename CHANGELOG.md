@@ -4,6 +4,11 @@
 - **Keybinds for Action Bars 9 to 12** Bind their buttons in Quick Keybind mode, the same way as the stock bars.
 - **More Edit Mode settings for Action Bars 9 to 12** Orientation, Bar Visible and Always Show Buttons work just like they do on the stock bars. Bars with more than one row now stack upwards, as the stock bars do.
 
+### Improved
+- **Show/Hide Action Bars** A button in every action bar's Edit Mode settings opens a list beside the dialog, where you turn Action Bars 2 to 12 on and off.
+- **Paging panel** Paging moved out of the bar's Edit Mode settings into its own panel beside the dialog, opened with the Paging button. It follows you from bar to bar, and only one of it and Show/Hide Action Bars is open at a time.
+- **Lucky's Actionbars icon in Edit Mode** Settings and buttons this addon adds to Edit Mode carry its icon, so you can tell them apart from Blizzard's.
+
 ## [0.1] - 2026-10-03
 
 ### Added
