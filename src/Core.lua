@@ -46,10 +46,23 @@ loader:SetScript("OnEvent", function()
         dbKey = "minimap",
         db = db,
         defaultAngle = 280,
-        onClick = function() LuckyActionbars.Settings:Open() end,
+        onClick = function(_, mouseButton)
+            if mouseButton == "RightButton" then
+                LuckyActionbars.Settings:Open()
+            elseif mouseButton == "MiddleButton" then
+                db.devMode = not db.devMode
+                print(LuckyActionbars.Strings.addon[db.devMode and "devModeOn" or "devModeOff"])
+            elseif EditModeManagerFrame:IsShown() then
+                HideUIPanel(EditModeManagerFrame)
+            elseif EditModeManagerFrame:CanEnterEditMode() then
+                ShowUIPanel(EditModeManagerFrame)
+            end
+        end,
         tooltip = function(tooltip)
             tooltip:AddLine(LuckyActionbars.Strings.addon.title)
-            tooltip:AddLine(LuckyActionbars.Strings.addon.minimapHint, 0.8, 0.8, 0.8)
+            for _, hint in ipairs(LuckyActionbars.Strings.addon.minimapHints) do
+                tooltip:AddLine(hint, 0.8, 0.8, 0.8)
+            end
         end,
     })
 end)
