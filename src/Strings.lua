@@ -60,8 +60,8 @@ LuckyActionbars.Strings = {
         buttonName = "%s Button %d",
     },
     settings = {
-        groups = { bars = "Bars", buttons = "Buttons" },
-        sections = { stockBars = "Stock bars", extraBars = "Extra bars", fade = "Hidden until hovered", paging = "Paging" },
+        groups = { whatsNew = "What's New", bars = "Bars", buttons = "Buttons" },
+        sections = { paging = "Paging", fade = "Hidden until hovered", bars = "Bars" },
         fadeInMs = {
             label = "Time to appear",
             desc = "How long a hidden bar takes to appear when you point at it. Set to 0 to show it instantly.",
@@ -100,19 +100,14 @@ LuckyActionbars.Strings = {
             },
         },
         bars = {
-            [1] = {
-                label = "Action Bar 1",
-                desc = "Action Bar 1 is always shown. Use its Bar Visible setting in Edit Mode to hide it.",
+            stock = { label = "Action Bar %d" },
+            shown = {
+                label = "Shown bars",
+                desc = "Pick which of Action Bars 2 to 12 to show. Action Bar 1 is always shown, so use its Bar Visible setting in Edit Mode to hide it. Action Bars 9 to 12 show spare pages, and you move them in Edit Mode like any other bar.",
             },
-            stock = {
-                label = "Action Bar %d",
-                desc = "Same as the Action Bar %d checkbox in Options, Action Bars.",
-            },
-            formNote = "Unavailable: page %d is already used by your %s on Action Bar 1.",
-            extra = {
-                label = "Action Bar %d",
-                desc = "Shows page %d as a bar of its own. Move it in Edit Mode like any other bar.",
-            },
+            formNote = "Action Bar %d is left out because your %s already uses its page.",
+            all = "All",
+            none = "None",
         },
         off = "Off",
         triggers = {

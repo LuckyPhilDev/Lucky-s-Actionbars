@@ -3,40 +3,36 @@ LuckyActionbars.Settings = {}
 
 local panel
 
-local function BarToggle(group, strings, number, module, ...)
-    group:Toggle({
-        label = strings.label:format(number),
-        desc = strings.desc:format(...),
-        checked = function() return module:IsShown(number) end,
-        onToggle = function(checked) module:SetShown(number, checked) end,
-    })
+local function BarModule(number)
+    return number > LuckyActionbars.Paging.BAR_COUNT and LuckyActionbars.ExtraBars or LuckyActionbars.StockBars
 end
 
-local function ExtraBarToggle(group, S, number)
-    local extraBars = LuckyActionbars.ExtraBars
-    local page = extraBars:Page(number)
-    local form = extraBars:FormOnPage(number)
-    local note = form and S.bars.formNote:format(page, LuckyActionbars.Strings.forms[form])
-        or LuckyActionbars.Strings.bars.pageUsers[page]
-    group:Toggle({
-        label = S.bars.extra.label:format(number),
-        desc = S.bars.extra.desc:format(page) .. " " .. note,
-        disabled = form ~= nil,
-        checked = function() return extraBars:IsShown(number) end,
-        onToggle = function(checked) extraBars:SetShown(number, checked) end,
-    })
-end
-
+-- Extra bars whose page a form already uses can't be shown, so they're left out and named in the description.
 local function BuildBarRows(group, S)
-    group:Section(S.sections.stockBars)
-    group:Toggle({ S.bars[1], checked = true, disabled = true })
-    for number = 2, 8 do
-        BarToggle(group, S.bars.stock, number, LuckyActionbars.StockBars, number)
+    local extraBars = LuckyActionbars.ExtraBars
+    local options, notes = {}, { S.bars.shown.desc }
+    for number = 2, 12 do
+        local form = number > LuckyActionbars.Paging.BAR_COUNT and extraBars:FormOnPage(number)
+        if form then
+            notes[#notes + 1] = S.bars.formNote:format(number, LuckyActionbars.Strings.forms[form])
+        else
+            options[#options + 1] = { key = number, label = S.bars.stock.label:format(number) }
+        end
     end
-    group:Section(S.sections.extraBars)
-    for number = 9, 12 do
-        ExtraBarToggle(group, S, number)
-    end
+    group:Section(S.sections.bars)
+    group:MultiSelect({
+        label = S.bars.shown.label,
+        desc = table.concat(notes, " "),
+        options = options,
+        isChecked = function(number) return BarModule(number):IsShown(number) end,
+        onToggle = function(number, checked) BarModule(number):SetShown(number, checked) end,
+        summarize = function(labels)
+            if #labels == #options then return S.bars.all end
+            local numbers = {}
+            for index, label in ipairs(labels) do numbers[index] = label:match("%d+") end
+            return #numbers > 0 and table.concat(numbers, ", ") or S.bars.none
+        end,
+    })
 end
 
 local function BuildFadeRows(group, S, db)
@@ -59,16 +55,27 @@ function LuckyActionbars.Settings:Init(db)
     local S = LuckyActionbars.Strings.settings
     panel = LuckySettings:NewRichPanel(LuckyActionbars.Strings.addon.title, {
         addonFolder = "Luckys_Actionbars",
+        devMode = {
+            checked = function() return db.devMode end,
+            onToggle = function(checked) db.devMode = checked end,
+        },
+        -- The minimap button seeds db.minimap after this panel is created, so a first run reads as shown.
+        minimapButton = {
+            checked = function() return not (db.minimap or {}).hide end,
+            onToggle = function(checked) LuckyActionbars.minimapButton:SetShown_Persisted(checked) end,
+        },
     }, function(builder)
+        builder:Group(S.groups.whatsNew)
         builder:Group(S.groups.bars, function(group)
-            BuildBarRows(group, S)
-            BuildFadeRows(group, S, db)
             group:Section(S.sections.paging)
             group:Toggle({
                 S.morePaging,
+                since = "0.2",
                 checked = function() return db.morePaging end,
                 onToggle = function(checked) LuckyActionbars.Paging:SetMorePaging(checked) end,
             })
+            BuildFadeRows(group, S, db)
+            BuildBarRows(group, S)
         end)
         builder:Group(S.groups.buttons, function(group)
             group:Toggle({
@@ -95,6 +102,9 @@ function LuckyActionbars.Settings:Init(db)
                 onSelect = function(mode) LuckyActionbars.Tooltips:SetMode(mode) end,
             })
         end)
+        -- Finalize lays out What's New, which the promo row must sit below; the automatic call after this is a no-op.
+        builder:Finalize()
+        LuckyPromo:AddToRichGroup(builder.whatsNewGroup, "Luckys_Actionbars")
     end)
 end
 

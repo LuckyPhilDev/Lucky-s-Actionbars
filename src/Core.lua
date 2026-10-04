@@ -39,7 +39,7 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.MouseoverFade:Init(db)
     LuckyActionbars.EditModePanel:Init()
     LuckyActionbars.Settings:Init(db)
-    LuckyMinimap:Create({
+    LuckyActionbars.minimapButton = LuckyMinimap:Create({
         name = "LuckyActionbarsMinimapButton",
         tocname = "Luckys_Actionbars",
         icon = "Interface\\Icons\\INV_Misc_Gear_01",
