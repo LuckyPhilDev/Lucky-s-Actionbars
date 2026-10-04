@@ -4,7 +4,7 @@
 ## Version: 0.1
 ## Author: Lucky Phil
 ## SavedVariables: LuckyActionbarsDB, LuckySettingsDB, LuckyRosterDB
-## OptionalDeps: Luckys_Utils
+## OptionalDeps: Luckys_Utils, Masque
 ## X-Curse-Project-ID: 1724904
 
 Libs\LuckysUtils\embeds.xml

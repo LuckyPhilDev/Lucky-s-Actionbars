@@ -2,6 +2,7 @@ LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.ExtraBars = {}
 
 local LibEditMode = LibStub("LibEditMode")
+local Masque = LibStub("Masque", true)
 
 local BAR_PAGES = { [9] = 7, [10] = 8, [11] = 9, [12] = 10 }
 local BUTTON_COUNT = 12
@@ -254,8 +255,12 @@ local function CreateBar(number)
     bar.layouts = db.bars[number].layouts
     bar:SetClampedToScreen(true)
     bar:SetDontSavePosition(true)
+    local masqueGroup = Masque and Masque:Group("Lucky's Actionbars", LuckyActionbars.Strings.bars.names[number])
     for index = 1, BUTTON_COUNT do
         CreateButton(bar, index)
+        if masqueGroup then
+            masqueGroup:AddButton(bar.buttons[index])
+        end
     end
     ApplyLayout(bar)
     ApplyPosition(bar)
