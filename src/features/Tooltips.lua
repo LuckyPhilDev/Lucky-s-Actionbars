@@ -17,8 +17,12 @@ local function IsAllowed()
     return mode ~= "never"
 end
 
-local function HideIfNotAllowed()
-    if not IsAllowed() then
+-- SetTooltip leaves the tooltip owned by the button but empty on an empty slot, so the slot line shows there too.
+local function OnSetTooltip(button)
+    if db.devMode then
+        GameTooltip:AddLine(LuckyActionbars.Strings.addon.actionSlot:format(button.action), 0.5, 0.8, 1)
+        GameTooltip:Show()
+    elseif not IsAllowed() then
         GameTooltip:Hide()
     end
 end
@@ -34,13 +38,8 @@ end
 -- Pressing the modifier while already pointing at a button shows its tooltip there and then.
 local function OnModifierChanged()
     local button = HoveredButton()
-    if not button then
-        return
-    end
-    if IsAllowed() then
+    if button then
         button:SetTooltip()
-    else
-        GameTooltip:Hide()
     end
 end
 
@@ -56,7 +55,7 @@ end
 function LuckyActionbars.Tooltips:Init(database)
     db = database
     for _, button in pairs(ActionBarButtonEventsFrame.frames) do
-        hooksecurefunc(button, "SetTooltip", HideIfNotAllowed)
+        hooksecurefunc(button, "SetTooltip", OnSetTooltip)
         hookedButtons[button] = true
     end
     modifierWatcher:RegisterEvent("MODIFIER_STATE_CHANGED")

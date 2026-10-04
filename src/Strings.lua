@@ -7,6 +7,7 @@ LuckyActionbars.Strings = {
             "Drag: Move button" },
         devModeOn = "Lucky's Actionbars: Dev mode enabled.",
         devModeOff = "Lucky's Actionbars: Dev mode disabled.",
+        actionSlot = "Action slot: %d",
     },
     forms = {
         cat = "Cat Form",
