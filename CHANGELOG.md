@@ -3,6 +3,7 @@
 ### Added
 - **Keybinds for Action Bars 9 to 12** Bind their buttons in Quick Keybind mode, the same way as the stock bars.
 - **More Edit Mode settings for Action Bars 9 to 12** Orientation, Bar Visible and Always Show Buttons work just like they do on the stock bars. Bars with more than one row now stack upwards, as the stock bars do.
+- **Rows Grow** A new Edit Mode setting on horizontal action bars, including Action Bars 1 to 8, picks whether extra rows stack upwards or downwards, so your first button can sit top left.
 
 ### Improved
 - **Show/Hide Action Bars** A button in every action bar's Edit Mode settings opens a list beside the dialog, where you turn Action Bars 2 to 12 on and off.

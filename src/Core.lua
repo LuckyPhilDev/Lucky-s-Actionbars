@@ -17,6 +17,7 @@ local function LoadDatabase()
         db.paging[number] = db.paging[number] or {}
     end
     db.fade = db.fade or {}
+    db.rowsDown = db.rowsDown or {}
     db.bars = db.bars or {}
     for _, number in ipairs(LuckyActionbars.DB_DEFAULTS.extraBars) do
         db.bars[number] = db.bars[number] or { shown = false }
@@ -37,6 +38,7 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.ButtonText:Init(db)
     LuckyActionbars.Tooltips:Init(db)
     LuckyActionbars.MouseoverFade:Init(db)
+    LuckyActionbars.RowDirection:Init(db)
     LuckyActionbars.EditModePanel:Init()
     LuckyActionbars.Settings:Init(db)
     LuckyActionbars.minimapButton = LuckyMinimap:Create({

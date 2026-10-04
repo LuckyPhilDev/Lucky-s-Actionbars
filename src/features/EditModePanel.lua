@@ -29,6 +29,23 @@ local function BarSettings(number)
     return { FadeSetting(number) }
 end
 
+local function RowsGrowSetting(number)
+    local S = LuckyActionbars.Strings.bars.rowsGrow
+    return {
+        kind = LibEditMode.SettingType.Dropdown,
+        name = LuckyActionbars.Utils.Mark(S.label),
+        default = "up",
+        values = { { text = S.up, value = "up" }, { text = S.down, value = "down" } },
+        hidden = function() return not LuckyActionbars.RowDirection:IsHorizontal(number) end,
+        get = function() return LuckyActionbars.RowDirection:Get(number) end,
+        set = function(_, direction) LuckyActionbars.RowDirection:Set(number, direction) end,
+    }
+end
+
+local function StockBarSettings(number)
+    return { RowsGrowSetting(number), FadeSetting(number) }
+end
+
 local function ToggleFlyout(flyout, dialog)
     return function() flyout:Toggle(dialog) end
 end
@@ -147,7 +164,7 @@ end
 function LuckyActionbars.EditModePanel:Init()
     local stockDialog, extraDialog = EditModeSystemSettingsDialog, LibEditMode.internal.dialog
     for number, subSystem in ipairs(STOCK_BAR_SYSTEMS) do
-        LibEditMode:AddSystemSettings(Enum.EditModeSystem.ActionBar, BarSettings(number), subSystem)
+        LibEditMode:AddSystemSettings(Enum.EditModeSystem.ActionBar, StockBarSettings(number), subSystem)
     end
     MergeExtensionIntoDialog()
     for number, bar in pairs(LuckyActionbars.ExtraBars:Frames()) do

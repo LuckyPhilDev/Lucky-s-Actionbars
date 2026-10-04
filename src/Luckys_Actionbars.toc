@@ -21,6 +21,7 @@ features\RangeIndicator.lua
 features\ButtonText.lua
 features\Tooltips.lua
 features\MouseoverFade.lua
+features\RowDirection.lua
 features\SidePanel.lua
 features\BarFlyout.lua
 features\PagingFlyout.lua

@@ -9,7 +9,7 @@ local BUTTON_COUNT = 12
 local BUTTON_SIZE = 45
 
 local LAYOUT_DEFAULTS = {
-    orientation = "horizontal", rows = 1, icons = 12, size = 100, padding = 2,
+    orientation = "horizontal", rowsGrow = "up", rows = 1, icons = 12, size = 100, padding = 2,
     visibility = "always", alwaysShowButtons = true,
 }
 
@@ -108,18 +108,19 @@ local function ApplyVisibility(bar)
     end
 end
 
--- Mirrors Blizzard's grid: horizontal bars fill rows left to right and stack them upwards,
--- vertical bars fill columns top to bottom and stack them rightwards.
+-- Mirrors Blizzard's grid: horizontal bars fill rows left to right and stack them upwards
+-- (or downwards, by choice), vertical bars fill columns top to bottom and stack them rightwards.
 local function ApplyLayout(bar)
     local icons, lines = LayoutValue(bar, "icons"), LayoutValue(bar, "rows")
     local scale, padding = LayoutValue(bar, "size") / 100, LayoutValue(bar, "padding")
     local horizontal = LayoutValue(bar, "orientation") == "horizontal"
+    local rowsUp = horizontal and LayoutValue(bar, "rowsGrow") == "up"
     local stride = math.ceil(icons / lines)
     local step = BUTTON_SIZE * scale + padding
-    local anchor = horizontal and "BOTTOMLEFT" or "TOPLEFT"
+    local anchor = rowsUp and "BOTTOMLEFT" or "TOPLEFT"
     for index, button in ipairs(bar.buttons) do
         local along, across = (index - 1) % stride, math.floor((index - 1) / stride)
-        local x, y = along, across
+        local x, y = along, rowsUp and across or -across
         if not horizontal then
             x, y = across, -along
         end
@@ -232,8 +233,11 @@ end
 
 local function LayoutSettings(bar)
     local rows, columns = LineSliders(bar)
+    local rowsGrow = LayoutDropdown(bar, "rowsGrow", { "up", "down" })
+    rowsGrow.hidden = function(layoutName) return IsVertical(layoutName, bar) end
     return {
         LayoutDropdown(bar, "orientation", { "horizontal", "vertical" }),
+        rowsGrow,
         rows,
         columns,
         LayoutSlider(bar, "icons", 6, 12, 1),
