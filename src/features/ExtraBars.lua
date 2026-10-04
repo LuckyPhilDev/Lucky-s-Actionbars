@@ -45,7 +45,20 @@ local function CreateButton(bar, index)
     local button = CreateFrame("CheckButton", bar:GetName() .. "Button" .. index, bar, "ActionBarButtonTemplate")
     button:SetID(0)
     button:SetAttribute("action", (BAR_PAGES[bar.number] - 1) * BUTTON_COUNT + index)
+    -- The stock hotkey text already looks this binding up, and the secure click handler honours key-down casting for it.
+    button.commandName = "CLICK " .. button:GetName() .. ":LeftButton"
+    _G["BINDING_NAME_" .. button.commandName] = LuckyActionbars.Strings.bars.buttonName:format(
+        LuckyActionbars.Strings.bars.names[bar.number], index)
     bar.buttons[index] = button
+end
+
+-- Blizzard only lights up the buttons it knows by name when Quick Keybind mode toggles.
+local function SetQuickKeybindHighlights(_, shown)
+    for _, bar in pairs(bars) do
+        for _, button in ipairs(bar.buttons) do
+            button:DoModeChange(shown)
+        end
+    end
 end
 
 local function LayoutValue(bar, key)
@@ -214,6 +227,8 @@ function LuckyActionbars.ExtraBars:Init(database)
     hooksecurefunc(LibEditMode.internal.dialog, "Update", StyleSliders)
     LibEditMode:RegisterCallback("layout", OnLayoutChanged)
     LibEditMode:RegisterCallback("rename", OnLayoutRenamed)
+    EventRegistry:RegisterCallback("QuickKeybindFrame.QuickKeybindModeEnabled", SetQuickKeybindHighlights, bars, true)
+    EventRegistry:RegisterCallback("QuickKeybindFrame.QuickKeybindModeDisabled", SetQuickKeybindHighlights, bars, false)
     layoutFrame:SetScript("OnEvent", function(frame, event)
         frame:UnregisterEvent(event)
         ApplyAllLayouts()

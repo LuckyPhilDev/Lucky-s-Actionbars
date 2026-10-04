@@ -36,6 +36,7 @@ LuckyActionbars.Strings = {
             [11] = "Action Bar 11",
             [12] = "Action Bar 12",
         },
+        buttonName = "%s Button %d",
     },
     settings = {
         groups = { bars = "Bars", buttons = "Buttons" },

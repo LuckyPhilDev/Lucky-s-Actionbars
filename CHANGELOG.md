@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Added
+- **Keybinds for Action Bars 9 to 12** Bind their buttons in Quick Keybind mode, the same way as the stock bars.
+
 ## [0.1] - 2026-10-03
 
 ### Added
