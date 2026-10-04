@@ -1,7 +1,8 @@
 LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.RangeIndicator = {}
 
-local OUT_OF_RANGE_COLOR = { 0.8, 0.1, 0.1 }
+-- A red tint of roughly the strength of Blizzard's out-of-mana blue (0.5, 0.5, 1), so the icon stays readable.
+local OUT_OF_RANGE_COLOR = { 1, 0.4, 0.4 }
 
 local db
 -- Kept here rather than as a field on Blizzard's buttons, so nothing of ours is written onto them.
