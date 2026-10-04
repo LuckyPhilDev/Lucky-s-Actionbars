@@ -10,4 +10,5 @@ LuckyActionbars.DB_DEFAULTS = {
     fadeInMs = 50,
     fadeOutMs = 400,
     markAdditions = true,
+    morePaging = false,
 }

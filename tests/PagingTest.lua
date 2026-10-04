@@ -24,6 +24,11 @@ local drivers, bindings, boundKeys = {}, {}, {}
 local inCombat = false
 function RegisterStateDriver(frame, _, conditions) drivers[frame] = conditions end
 function UnregisterStateDriver(frame) drivers[frame] = nil end
+function tInvert(t)
+    local inverted = {}
+    for k, v in pairs(t) do inverted[v] = k end
+    return inverted
+end
 function InCombatLockdown() return inCombat end
 function UnitClass() return "Druid", "DRUID" end
 function GetBindingKey(command) return table.unpack(boundKeys[command] or {}) end
@@ -54,6 +59,8 @@ check(bindings["CTRL-SHIFT-F"] == nil, "a key that already has a modifier is not
 check(bindings["CTRL-2"] == nil, "a modified key the player bound themselves is left alone")
 
 Paging:SetPage(1, "CTRL-SHIFT", 3)
+check(not drivers[bar1]:find("mod:shift"), "combination pages need More paging options")
+Paging:SetMorePaging(true)
 check(drivers[bar1] == "[vehicleui][overridebar][possessbar][petbattle] 0; [mod:ctrl,mod:shift] 3; [mod:ctrl] 2; 0",
     "combinations come before single modifiers so Ctrl+Shift is not taken as Ctrl")
 
@@ -66,6 +73,13 @@ check(drivers[bar2] ~= nil, "a second bar pages independently")
 Paging:SetPage(2, "SHIFT", 0)
 check(drivers[bar2] == nil and bar2.attributes["state-page"] == "0" and db.paging[2].SHIFT == nil,
     "clearing a bar's last page returns it to its home page and forgets the setting")
+
+Paging:SetPage(3, "cat", 8)
+check(drivers[frames[4]]:find("%[bonusbar:1%] 8"), "a druid can page another bar in Cat Form")
+Paging:SetPage(3, "stealth", 9)
+check(not drivers[frames[4]]:find("9"), "another class's form never pages")
+Paging:SetPage(1, "cat", 8)
+check(not drivers[bar1]:find("bonusbar"), "Action Bar 1 is left to Blizzard's own form paging")
 
 inCombat = true
 Paging:SetPage(2, "SHIFT", 4)

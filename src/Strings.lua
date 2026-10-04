@@ -21,7 +21,7 @@ LuckyActionbars.Strings = {
         flyoutDesc = "Turn Action Bars 2 to 12 on and off\nfrom a list beside this window.",
         flyoutTitle = "Action Bars",
         pagingButton = "Paging",
-        pagingDesc = "Make this bar show another bar's buttons\nwhile you hold a modifier key, change form\nor target someone friendly.",
+        pagingDesc = "Make this bar show another bar's buttons\nwhile you hold a modifier key or change form.",
         pagingTitle = "Action Bar %d Paging",
         -- Blizzard's own strings, so these read exactly like the stock bars' settings in every locale.
         orientation = {
@@ -61,7 +61,7 @@ LuckyActionbars.Strings = {
     },
     settings = {
         groups = { bars = "Bars", buttons = "Buttons" },
-        sections = { stockBars = "Stock bars", extraBars = "Extra bars", fade = "Hidden until hovered" },
+        sections = { stockBars = "Stock bars", extraBars = "Extra bars", fade = "Hidden until hovered", paging = "Paging" },
         fadeInMs = {
             label = "Time to appear",
             desc = "How long a hidden bar takes to appear when you point at it. Set to 0 to show it instantly.",
@@ -71,6 +71,10 @@ LuckyActionbars.Strings = {
             desc = "How long a hidden bar takes to disappear once you stop pointing at it. Set to 0 to hide it instantly.",
         },
         milliseconds = " ms",
+        morePaging = {
+            label = "More paging options",
+            desc = "Adds Ctrl+Shift, Ctrl+Alt, Alt+Shift and Friendly target to each bar's Paging panel in Edit Mode.",
+        },
         rangeIndicator = {
             label = "Red icon when out of range",
             desc = "Action buttons turn their whole icon red while the target is out of range, instead of only the keybind text.",
@@ -111,7 +115,7 @@ LuckyActionbars.Strings = {
             },
         },
         off = "Off",
-        modifiers = {
+        triggers = {
             CTRL = {
                 label = "Ctrl",
                 desc = "While Ctrl is held, this bar shows the chosen page and its keys press the paged buttons.",
@@ -136,24 +140,41 @@ LuckyActionbars.Strings = {
                 label = "Alt+Shift",
                 desc = "While Alt and Shift are both held, this bar shows the chosen page. This wins over the Alt and Shift pages.",
             },
+            cat = {
+                label = "Cat Form",
+                desc = "While you are in Cat Form, this bar shows the chosen page. A held modifier with a page of its own wins over this.",
+            },
+            bear = {
+                label = "Bear Form",
+                desc = "While you are in Bear Form, this bar shows the chosen page. A held modifier with a page of its own wins over this.",
+            },
+            moonkin = {
+                label = "Moonkin Form",
+                desc = "While you are in Moonkin Form, this bar shows the chosen page. A held modifier with a page of its own wins over this.",
+            },
+            stealth = {
+                label = "Stealth",
+                desc = "While you are stealthed, this bar shows the chosen page. A held modifier with a page of its own wins over this.",
+            },
             HELP = {
                 label = "Friendly target",
                 desc = "While your target is friendly, this bar shows the chosen page. Any held modifier with a page of its own wins over this.",
             },
         },
+        -- Named for the bar that shows each page. Pages 7 to 10 are Action Bars 9 to 12.
         pageLabels = {
-            [1] = "Page 1: Action Bar 1",
-            [2] = "Page 2: Action Bar 1, second page",
-            [3] = "Page 3: Action Bar 4",
-            [4] = "Page 4: Action Bar 5",
-            [5] = "Page 5: Action Bar 3",
-            [7] = "Page 7: spare",
-            [8] = "Page 8: spare",
-            [9] = "Page 9: spare",
-            [10] = "Page 10: spare",
-            [13] = "Page 13: Action Bar 6",
-            [14] = "Page 14: Action Bar 7",
-            [15] = "Page 15: Action Bar 8",
+            [1] = "Action Bar 1",
+            [2] = "Action Bar 1, page 2",
+            [3] = "Action Bar 4",
+            [4] = "Action Bar 5",
+            [5] = "Action Bar 3",
+            [7] = "Action Bar 9",
+            [8] = "Action Bar 10",
+            [9] = "Action Bar 11",
+            [10] = "Action Bar 12",
+            [13] = "Action Bar 6",
+            [14] = "Action Bar 7",
+            [15] = "Action Bar 8",
         },
     },
 }

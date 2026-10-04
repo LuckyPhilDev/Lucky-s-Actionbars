@@ -63,6 +63,12 @@ function LuckyActionbars.Settings:Init(db)
         builder:Group(S.groups.bars, function(group)
             BuildBarRows(group, S)
             BuildFadeRows(group, S, db)
+            group:Section(S.sections.paging)
+            group:Toggle({
+                S.morePaging,
+                checked = function() return db.morePaging end,
+                onToggle = function(checked) LuckyActionbars.Paging:SetMorePaging(checked) end,
+            })
         end)
         builder:Group(S.groups.buttons, function(group)
             group:Toggle({

@@ -3,15 +3,21 @@ LuckyActionbars.Paging = {}
 
 -- Combinations come first: a state driver takes the first match, and [mod:ctrl] also matches Ctrl+Shift.
 local TRIGGERS = {
-    { key = "ALT-CTRL", condition = "mod:alt,mod:ctrl", keyPrefix = "ALT-CTRL-" },
-    { key = "ALT-SHIFT", condition = "mod:alt,mod:shift", keyPrefix = "ALT-SHIFT-" },
-    { key = "CTRL-SHIFT", condition = "mod:ctrl,mod:shift", keyPrefix = "CTRL-SHIFT-" },
+    { key = "ALT-CTRL", condition = "mod:alt,mod:ctrl", keyPrefix = "ALT-CTRL-", more = true },
+    { key = "ALT-SHIFT", condition = "mod:alt,mod:shift", keyPrefix = "ALT-SHIFT-", more = true },
+    { key = "CTRL-SHIFT", condition = "mod:ctrl,mod:shift", keyPrefix = "CTRL-SHIFT-", more = true },
     { key = "CTRL", condition = "mod:ctrl", keyPrefix = "CTRL-" },
     { key = "ALT", condition = "mod:alt", keyPrefix = "ALT-" },
     { key = "SHIFT", condition = "mod:shift", keyPrefix = "SHIFT-" },
-    { key = "HELP", condition = "help" },
+    -- A form's bonus bar N is the page 6 + N it puts on Action Bar 1, as in CLASS_FORM_PAGES.
+    { key = "cat", condition = "bonusbar:1", form = true },
+    { key = "stealth", condition = "bonusbar:1", form = true },
+    { key = "bear", condition = "bonusbar:3", form = true },
+    { key = "moonkin", condition = "bonusbar:4", form = true },
+    { key = "HELP", condition = "help", more = true },
 }
-local SETTINGS_ORDER = { "CTRL", "ALT", "SHIFT", "CTRL-SHIFT", "ALT-CTRL", "ALT-SHIFT", "HELP" }
+local SETTINGS_ORDER = { "CTRL", "ALT", "SHIFT", "CTRL-SHIFT", "ALT-CTRL", "ALT-SHIFT",
+    "cat", "bear", "moonkin", "stealth", "HELP" }
 -- Bar 1 has no home page: Blizzard picks it from forms and vehicles, which ON_PAGE mirrors.
 local BARS = {
     { frame = "MainActionBar", buttons = "ActionButton", command = "ACTIONBUTTON" },
@@ -68,11 +74,29 @@ local function HasModifier(key)
     return false
 end
 
+local triggersByKey = {}
+for _, trigger in ipairs(TRIGGERS) do
+    triggersByKey[trigger.key] = trigger
+end
+
+-- Pages behind More paging options stay saved while it is off, they just stop applying.
+-- Form triggers are only for your own class's forms, and not on Action Bar 1, which Blizzard
+-- already pages for them.
+local function IsOffered(number, trigger)
+    if trigger.more then
+        return db.morePaging
+    end
+    if trigger.form then
+        return number ~= 1 and tInvert(LuckyActionbars.PlayerFormPages())[trigger.key] ~= nil
+    end
+    return true
+end
+
 local function ActiveTriggers(number)
     local active = {}
     for _, trigger in ipairs(TRIGGERS) do
         local page = db.paging[number][trigger.key]
-        if isAllowed[page] then
+        if isAllowed[page] and IsOffered(number, trigger) then
             active[#active + 1] = { trigger = trigger, page = page }
         end
     end
@@ -153,6 +177,15 @@ end
 
 function LuckyActionbars.Paging:HomePage(number)
     return BARS[number].homePage
+end
+
+function LuckyActionbars.Paging:IsTriggerOffered(number, triggerKey)
+    return IsOffered(number, triggersByKey[triggerKey])
+end
+
+function LuckyActionbars.Paging:SetMorePaging(enabled)
+    db.morePaging = enabled
+    self:Apply()
 end
 
 function LuckyActionbars.Paging:GetPage(number, triggerKey)

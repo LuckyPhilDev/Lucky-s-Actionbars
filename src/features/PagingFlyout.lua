@@ -9,11 +9,15 @@ local panel
 local rows = {}
 local barNumber
 
+-- Pages in the order of the bars that show them, so the menu reads Action Bar 1 to 12.
+local PAGE_ORDER = { 1, 2, 5, 3, 4, 13, 14, 15, 7, 8, 9, 10 }
+
 local function PageValues(number)
     local S = LuckyActionbars.Strings.settings
     local values = { { text = S.off, value = 0 } }
-    for _, page in ipairs(LuckyActionbars.Paging:AllowedPages()) do
-        if page ~= LuckyActionbars.Paging:HomePage(number) then
+    local allowed = tInvert(LuckyActionbars.Paging:AllowedPages())
+    for _, page in ipairs(PAGE_ORDER) do
+        if allowed[page] and page ~= LuckyActionbars.Paging:HomePage(number) then
             values[#values + 1] = { text = S.pageLabels[page], value = page }
         end
     end
@@ -32,7 +36,7 @@ local function SetupMenu(row)
 end
 
 local function CreateRow(index, trigger)
-    local S = LuckyActionbars.Strings.settings.modifiers[trigger]
+    local S = LuckyActionbars.Strings.settings.triggers[trigger]
     local row = CreateFrame("Frame", nil, panel.List)
     row:SetSize(LABEL_WIDTH + DROPDOWN_WIDTH + 5, ROW_HEIGHT)
     row.layoutIndex = index
@@ -58,6 +62,7 @@ local function Refresh(systemFrame)
     barNumber = systemFrame.systemIndex
     panel.Title:SetText(LuckyActionbars.Utils.Mark(LuckyActionbars.Strings.bars.pagingTitle:format(barNumber)))
     for _, row in ipairs(rows) do
+        row:SetShown(LuckyActionbars.Paging:IsTriggerOffered(barNumber, row.trigger))
         row.Dropdown:GenerateMenu()
     end
 end
