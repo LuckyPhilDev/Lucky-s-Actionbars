@@ -233,11 +233,8 @@ end
 
 local function LayoutSettings(bar)
     local rows, columns = LineSliders(bar)
-    local rowsGrow = LayoutDropdown(bar, "rowsGrow", { "up", "down" })
-    rowsGrow.hidden = function(layoutName) return IsVertical(layoutName, bar) end
     return {
         LayoutDropdown(bar, "orientation", { "horizontal", "vertical" }),
-        rowsGrow,
         rows,
         columns,
         LayoutSlider(bar, "icons", 6, 12, 1),
@@ -317,6 +314,15 @@ function LuckyActionbars.ExtraBars:AddEditModeSettings(bar, settings)
         bar.editModeSettings[#bar.editModeSettings + 1] = setting
     end
     LibEditMode:AddFrameSettings(bar, bar.editModeSettings)
+end
+
+-- Built here for the layout it reads, but added by EditModePanel so it sits under Hidden until hovered.
+function LuckyActionbars.ExtraBars:RowsGrowSetting(bar)
+    local setting = LayoutDropdown(bar, "rowsGrow", { "up", "down" })
+    setting.name = LuckyActionbars.Utils.Mark(setting.name)
+    setting.desc = LuckyActionbars.Strings.bars.rowsGrow.desc
+    setting.hidden = function(layoutName) return IsVertical(layoutName, bar) end
+    return setting
 end
 
 function LuckyActionbars.ExtraBars:Page(number)

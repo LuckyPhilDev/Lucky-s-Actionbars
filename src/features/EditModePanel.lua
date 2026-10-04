@@ -25,15 +25,12 @@ local function FadeSetting(number)
     }
 end
 
-local function BarSettings(number)
-    return { FadeSetting(number) }
-end
-
 local function RowsGrowSetting(number)
     local S = LuckyActionbars.Strings.bars.rowsGrow
     return {
         kind = LibEditMode.SettingType.Dropdown,
         name = LuckyActionbars.Utils.Mark(S.label),
+        desc = S.desc,
         default = "up",
         values = { { text = S.up, value = "up" }, { text = S.down, value = "down" } },
         hidden = function() return not LuckyActionbars.RowDirection:IsHorizontal(number) end,
@@ -43,7 +40,7 @@ local function RowsGrowSetting(number)
 end
 
 local function StockBarSettings(number)
-    return { RowsGrowSetting(number), FadeSetting(number) }
+    return { FadeSetting(number), RowsGrowSetting(number) }
 end
 
 local function ToggleFlyout(flyout, dialog)
@@ -168,7 +165,8 @@ function LuckyActionbars.EditModePanel:Init()
     end
     MergeExtensionIntoDialog()
     for number, bar in pairs(LuckyActionbars.ExtraBars:Frames()) do
-        LuckyActionbars.ExtraBars:AddEditModeSettings(bar, BarSettings(number))
+        LuckyActionbars.ExtraBars:AddEditModeSettings(bar,
+            { FadeSetting(number), LuckyActionbars.ExtraBars:RowsGrowSetting(bar) })
     end
     local S = LuckyActionbars.Strings.bars
     AddStockFlyoutButton(stockDialog, LuckyActionbars.BarFlyout, S.flyoutButton, S.flyoutDesc, 3.5)

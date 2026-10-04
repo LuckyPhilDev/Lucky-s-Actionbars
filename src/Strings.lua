@@ -41,7 +41,12 @@ LuckyActionbars.Strings = {
             hidden = HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_HIDDEN,
         },
         alwaysShowButtons = HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS,
-        rowsGrow = { label = "Rows Grow", up = "Up", down = "Down" },
+        rowsGrow = {
+            label = "Rows Grow",
+            desc = "Which way extra rows stack on a bar with\nmore than one row. Down puts the first\nbutton in the top left corner.",
+            up = "Up",
+            down = "Down",
+        },
         layout = {
             rows = "# of Rows",
             columns = HUD_EDIT_MODE_SETTING_ACTION_BAR_NUM_COLUMNS,
