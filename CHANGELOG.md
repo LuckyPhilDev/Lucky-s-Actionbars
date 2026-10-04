@@ -1,7 +1,10 @@
-## [Unreleased]
+## [0.3.1] - 2026-10-04
 
 ### Fixed
 - **Shared skyriding bar** Swapping two skyriding abilities now saves both of them. Before, the one you clicked back into the empty slot was dropped from the shared layout and moved back at your next login.
+
+### Improved
+- **Out-of-range icons** The red tint is softer, matching the out-of-mana tint, so the icon stays readable while you're out of range.
 
 ## [0.3.0] - 2026-10-04
 
