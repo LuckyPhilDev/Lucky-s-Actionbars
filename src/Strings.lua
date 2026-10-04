@@ -17,8 +17,23 @@ LuckyActionbars.Strings = {
             desc = "This bar stays invisible until you point at it or drag something to place. Its keybinds still work while it is invisible.",
         },
         extraBarsDivider = "Extra bars",
+        -- Blizzard's own strings, so these read exactly like the stock bars' settings in every locale.
+        orientation = {
+            label = HUD_EDIT_MODE_SETTING_ACTION_BAR_ORIENTATION,
+            horizontal = HUD_EDIT_MODE_SETTING_ACTION_BAR_ORIENTATION_HORIZONTAL,
+            vertical = HUD_EDIT_MODE_SETTING_ACTION_BAR_ORIENTATION_VERTICAL,
+        },
+        visibility = {
+            label = HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING,
+            always = HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS,
+            inCombat = HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_IN_COMBAT,
+            outOfCombat = HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_OUT_OF_COMBAT,
+            hidden = HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_HIDDEN,
+        },
+        alwaysShowButtons = HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS,
         layout = {
             rows = "# of Rows",
+            columns = HUD_EDIT_MODE_SETTING_ACTION_BAR_NUM_COLUMNS,
             icons = "# of Icons",
             size = "Icon Size",
             padding = "Icon Padding",
