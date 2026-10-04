@@ -19,6 +19,7 @@ LuckyActionbars.Strings = {
         fade = {
             label = "Hidden until hovered",
             desc = "This bar stays invisible until you point at it\nor drag something to place. Its keybinds\nstill work while it is invisible.",
+            descNoKeybinds = "This bar stays invisible until you point at it\nor drag something to place.",
         },
         -- Edit Mode tooltips don't wrap, so these carry their own line breaks.
         flyoutButton = "Show/Hide Action Bars",

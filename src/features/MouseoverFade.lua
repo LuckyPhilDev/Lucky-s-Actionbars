@@ -1,10 +1,13 @@
 LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.MouseoverFade = {}
 
+-- Action bars are keyed by their number, other Edit Mode bars by name.
 local BAR_FRAMES = {
     "MainActionBar", "MultiBarBottomLeft", "MultiBarBottomRight", "MultiBarRight",
     "MultiBarLeft", "MultiBar5", "MultiBar6", "MultiBar7",
     "LuckyActionbarsBar9", "LuckyActionbarsBar10", "LuckyActionbarsBar11", "LuckyActionbarsBar12",
+    menu = "MicroMenuContainer",
+    bags = "BagsBar",
 }
 
 local db
@@ -26,30 +29,25 @@ end
 
 local function OnUpdate(_, elapsed)
     local showAll = ShowEverything()
-    for number, name in ipairs(BAR_FRAMES) do
-        local bar = _G[name]
-        if bar and db.fade[number] then
+    for key in pairs(db.fade) do
+        local bar = _G[BAR_FRAMES[key]]
+        if bar then
             StepTowards(bar, (showAll or bar:IsMouseOver()) and 1 or 0, elapsed)
         end
     end
 end
 
 local function HasFadedBar()
-    for number in ipairs(BAR_FRAMES) do
-        if db.fade[number] then
-            return true
-        end
-    end
-    return false
+    return next(db.fade) ~= nil
 end
 
-function LuckyActionbars.MouseoverFade:IsFaded(number)
-    return db.fade[number] == true
+function LuckyActionbars.MouseoverFade:IsFaded(key)
+    return db.fade[key] == true
 end
 
-function LuckyActionbars.MouseoverFade:SetFaded(number, faded)
-    db.fade[number] = faded or nil
-    local bar = _G[BAR_FRAMES[number]]
+function LuckyActionbars.MouseoverFade:SetFaded(key, faded)
+    db.fade[key] = faded or nil
+    local bar = _G[BAR_FRAMES[key]]
     if bar and not faded then
         bar:SetAlpha(1)
     end

@@ -14,14 +14,15 @@ local STOCK_BAR_SYSTEMS = {
     Enum.EditModeActionBarSystemIndices.ExtraBar3,
 }
 
-local function FadeSetting(number)
+local function FadeSetting(key, desc)
+    local S = LuckyActionbars.Strings.bars.fade
     return {
         kind = LibEditMode.SettingType.Checkbox,
-        name = LuckyActionbars.Utils.Mark(LuckyActionbars.Strings.bars.fade.label),
-        desc = LuckyActionbars.Strings.bars.fade.desc,
+        name = LuckyActionbars.Utils.Mark(S.label),
+        desc = desc or S.desc,
         default = false,
-        get = function() return LuckyActionbars.MouseoverFade:IsFaded(number) end,
-        set = function(_, faded) LuckyActionbars.MouseoverFade:SetFaded(number, faded) end,
+        get = function() return LuckyActionbars.MouseoverFade:IsFaded(key) end,
+        set = function(_, faded) LuckyActionbars.MouseoverFade:SetFaded(key, faded) end,
     }
 end
 
@@ -163,6 +164,9 @@ function LuckyActionbars.EditModePanel:Init()
     for number, subSystem in ipairs(STOCK_BAR_SYSTEMS) do
         LibEditMode:AddSystemSettings(Enum.EditModeSystem.ActionBar, StockBarSettings(number), subSystem)
     end
+    local fadeDesc = LuckyActionbars.Strings.bars.fade.descNoKeybinds
+    LibEditMode:AddSystemSettings(Enum.EditModeSystem.MicroMenu, { FadeSetting("menu", fadeDesc) })
+    LibEditMode:AddSystemSettings(Enum.EditModeSystem.Bags, { FadeSetting("bags", fadeDesc) })
     MergeExtensionIntoDialog()
     for number, bar in pairs(LuckyActionbars.ExtraBars:Frames()) do
         LuckyActionbars.ExtraBars:AddEditModeSettings(bar,
