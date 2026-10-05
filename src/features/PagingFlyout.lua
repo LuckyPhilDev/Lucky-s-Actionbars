@@ -25,8 +25,12 @@ local function PageValues(number)
 end
 
 -- The menu is rebuilt on every open, so it always lists the pages for the bar shown now.
+-- SetupMenu also builds it once straight away, before any bar is shown, so that build is left empty.
 local function SetupMenu(row)
     row.Dropdown:SetupMenu(function(_, root)
+        if not barNumber then
+            return
+        end
         for _, entry in ipairs(PageValues(barNumber)) do
             root:CreateRadio(entry.text,
                 function() return LuckyActionbars.Paging:GetPage(barNumber, row.trigger) == entry.value end,
