@@ -45,20 +45,37 @@ local function RecordSlot(slot)
     end
 end
 
+-- A slot wanting a spell this character can't learn already matches, since applying can't change it.
+local function NeedsChange(wanted, current)
+    return wanted ~= current and (current ~= nil or IsPlayerSpell(wanted))
+end
+
+local function LayoutMatches()
+    for slot = FIRST_SLOT, LAST_SLOT do
+        if NeedsChange(db.skyridingBar[slot], SkyridingSpellIn(slot)) then
+            return false
+        end
+    end
+    return true
+end
+
 -- The shared layout wins over this character's skyriding spells, and over its own spell in a slot the layout claims.
 local function Apply()
-    if not IsActive() or not db.skyridingBar then
+    if not IsActive() or not db.skyridingBar or LayoutMatches() then
         return
     end
+    -- SPELLS_CHANGED fires repeatedly in combat, so only the first wait is logged.
     if InCombatLockdown() then
-        Log("Skyriding: in combat, applying the layout afterwards")
-        events:RegisterEvent("PLAYER_REGEN_ENABLED")
+        if not events:IsEventRegistered("PLAYER_REGEN_ENABLED") then
+            Log("Skyriding: in combat, applying the layout afterwards")
+            events:RegisterEvent("PLAYER_REGEN_ENABLED")
+        end
         return
     end
     ClearCursor()
     for slot = FIRST_SLOT, LAST_SLOT do
         local wanted, current = db.skyridingBar[slot], SkyridingSpellIn(slot)
-        if wanted ~= current then
+        if NeedsChange(wanted, current) then
             Log("Skyriding: applying slot %d, %s replaces %s", slot, SpellName(wanted), SpellName(current))
             if wanted and IsPlayerSpell(wanted) then
                 C_Spell.PickupSpell(wanted)
