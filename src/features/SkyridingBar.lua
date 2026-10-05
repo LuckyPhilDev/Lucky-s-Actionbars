@@ -64,12 +64,9 @@ local function Apply()
     if not IsActive() or not db.skyridingBar or LayoutMatches() then
         return
     end
-    -- SPELLS_CHANGED fires repeatedly in combat, so only the first wait is logged.
     if InCombatLockdown() then
-        if not events:IsEventRegistered("PLAYER_REGEN_ENABLED") then
-            Log("Skyriding: in combat, applying the layout afterwards")
-            events:RegisterEvent("PLAYER_REGEN_ENABLED")
-        end
+        Log("Skyriding: in combat, applying the layout afterwards")
+        events:RegisterEvent("PLAYER_REGEN_ENABLED")
         return
     end
     ClearCursor()
@@ -140,7 +137,10 @@ function LuckyActionbars.SkyridingBar:Init(database, characterDatabase)
         _G["ActionButton" .. index]:HookScript("PreClick", OnPreClick)
     end
     -- Not PLAYER_ENTERING_WORLD: the skyriding spells are not known yet then, so none could be placed.
+    -- SPELLS_CHANGED is heard once after login and once after each spec or talent change, as it fires constantly in combat.
     events:RegisterEvent("SPELLS_CHANGED")
+    events:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
+    events:RegisterEvent("TRAIT_CONFIG_UPDATED")
     -- Blizzard places skyriding spells itself on a new character, sometimes after the layout went on.
     events:RegisterEvent("SPELL_PUSHED_TO_ACTIONBAR")
     events:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
@@ -152,7 +152,11 @@ function LuckyActionbars.SkyridingBar:Init(database, characterDatabase)
             end
             return
         end
-        if event == "PLAYER_REGEN_ENABLED" then
+        if event == "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" or event == "TRAIT_CONFIG_UPDATED" then
+            events:RegisterEvent("SPELLS_CHANGED")
+            return
+        end
+        if event == "SPELLS_CHANGED" or event == "PLAYER_REGEN_ENABLED" then
             events:UnregisterEvent(event)
         end
         Apply()

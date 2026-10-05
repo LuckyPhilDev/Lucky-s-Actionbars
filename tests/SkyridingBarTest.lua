@@ -19,7 +19,6 @@ function CreateFrame()
     frame = {
         RegisterEvent = function(_, event) events[event] = true end,
         UnregisterEvent = function(_, event) events[event] = nil end,
-        IsEventRegistered = function(_, event) return events[event] == true end,
         SetScript = function(self, _, fn) self.OnEvent = fn end,
     }
     return frame
@@ -150,17 +149,20 @@ inCombat = true
 Login(db, { skyridingIncluded = true }, {}, all)
 Fire("SPELLS_CHANGED")
 check(bars[121] == nil and events.PLAYER_REGEN_ENABLED, "a login in combat waits for combat to end")
-local loggedBefore = #logged
-Fire("SPELLS_CHANGED")
-check(#logged == loggedBefore, "spells changing again in combat does not log the wait again")
+check(not events.SPELLS_CHANGED, "spells changing again after login are ignored")
 inCombat = false
 Fire("PLAYER_REGEN_ENABLED")
 check(bars[121] == HALT, "then applies the layout")
-inCombat = true
-loggedBefore = #logged
+
+bars[121] = nil
+Fire("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
+check(bars[121] == nil, "a spec change waits for its spells to arrive")
 Fire("SPELLS_CHANGED")
-check(not events.PLAYER_REGEN_ENABLED and #logged == loggedBefore, "spells changing in combat with the layout in place does nothing")
-inCombat = false
+check(bars[121] == HALT and not events.SPELLS_CHANGED, "then applies the layout once")
+bars[121] = nil
+Fire("TRAIT_CONFIG_UPDATED")
+Fire("SPELLS_CHANGED")
+check(bars[121] == HALT, "so does a talent change")
 
 check(#logged > 0, "dev mode logs what is saved and applied")
 
