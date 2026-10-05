@@ -175,6 +175,10 @@ function LuckyActionbars.Paging:AllowedPages()
     return allowedPages
 end
 
+function LuckyActionbars.Paging:BindingCommand(number, index)
+    return BARS[number].command .. index
+end
+
 function LuckyActionbars.Paging:HomePage(number)
     return BARS[number].homePage
 end

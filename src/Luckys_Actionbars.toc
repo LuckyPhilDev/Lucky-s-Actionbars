@@ -30,5 +30,7 @@ features\BarFlyout.lua
 features\PagingFlyout.lua
 features\EditModePanel.lua
 features\SkyridingBar.lua
+features\ImportSources.lua
+features\Import.lua
 Settings.lua
 Core.lua

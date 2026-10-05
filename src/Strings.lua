@@ -71,6 +71,28 @@ LuckyActionbars.Strings = {
         },
         buttonName = "%s Button %d",
     },
+    import = {
+        layoutName = "Imported from %s",
+        dominosBar = "Dominos bar %d",
+        ellesmereBar = "EllesmereUI Action Bar %d",
+        dominosBarCount = "Dominos is set to a bar count other than 14, so its buttons don't line up with action bar pages. Set it back to 14 bars in Dominos to import.",
+        combat = "Importing has to wait until you leave combat.",
+        notReady = "Edit Mode is still loading. Try again in a moment.",
+        layoutsFull = "You already have the most account-wide Edit Mode layouts allowed. Delete one in Edit Mode to make room for the imported one.",
+        done = "Imported your %s bars into the Edit Mode layout \"%s\".",
+        moved = "%s is now Action Bar %d, and its spells moved with it.",
+        noBar = "%s was left out: every bar here is already taken.",
+        notMeasured = "%s was left out: its buttons have no position on screen.",
+        pagingSkipped = "%s: paging for %s was left out.",
+        keybinds = "Moved %d keybinds onto the matching buttons.",
+        undone = "Spells moved by the last import are back where they were.",
+        offer = "Lucky's Actionbars can copy your %s bars: where they sit, their size, paging and keybinds, and the spells on them. Import now?",
+        importNow = "Import",
+        notNow = "Not now",
+        disablePrompt = "Import done. Disable %s and reload to see your new bars?",
+        disableAndReload = "Disable and reload",
+        later = "Later",
+    },
     bags = {
         backpackOnly = {
             label = "Backpack only",
@@ -102,7 +124,16 @@ LuckyActionbars.Strings = {
     },
     settings = {
         groups = { whatsNew = "What's New", bars = "Bars", buttons = "Buttons" },
-        sections = { paging = "Paging", fade = "Hidden until hovered", bars = "Bars", skyriding = "Skyriding" },
+        sections = { paging = "Paging", fade = "Hidden until hovered", bars = "Bars", skyriding = "Skyriding",
+            import = "Import" },
+        importFrom = {
+            label = "Import from %s",
+            desc = "Copies your %s bars into a new Edit Mode layout: where they sit, their size, paging, keybinds, hidden until hovered and button text. Each bar keeps its number where it can, and its spells move with it. Run it while %s is still loaded.",
+        },
+        undoImport = {
+            label = "Undo spell moves",
+            desc = "Puts back any spells the last import moved to another bar on this character.",
+        },
         shareSkyriding = {
             label = "Share Skyriding Bar layout",
             desc = "Keeps Surge Forward, Skyward Ascent and the other skyriding abilities in the same slots on the skyriding bar of every included character. Turning this on shares the layout on the character you are playing, and your other included characters pick it up at their next login. Anything else you put on that bar stays with each character.",

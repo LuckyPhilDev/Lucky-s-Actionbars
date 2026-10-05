@@ -63,6 +63,27 @@ local function BuildFadeRows(group, S, db)
     end
 end
 
+-- Only the addons loaded right now can be read, and that can't change without a reload.
+local function BuildImportRows(group, S)
+    local Import = LuckyActionbars.Import
+    local sources = Import:LoadedSources()
+    if #sources == 0 and not Import:CanUndo() then
+        return
+    end
+    group:Section(S.sections.import)
+    for _, source in ipairs(sources) do
+        group:Button({
+            label = S.importFrom.label:format(source.title),
+            desc = S.importFrom.desc:format(source.title, source.title),
+            width = 200,
+            onClick = function() Import:Run(source) end,
+        })
+    end
+    if Import:CanUndo() then
+        group:Button({ S.undoImport, width = 200, onClick = function() Import:Undo() end })
+    end
+end
+
 function LuckyActionbars.Settings:Init(db)
     local S = LuckyActionbars.Strings.settings
     panel = LuckySettings:NewRichPanel(LuckyActionbars.Strings.addon.title, {
@@ -88,6 +109,7 @@ function LuckyActionbars.Settings:Init(db)
             })
             BuildFadeRows(group, S, db)
             BuildBarRows(group, S)
+            BuildImportRows(group, S)
         end)
         builder:Group(S.groups.buttons, function(group)
             group:Toggle({

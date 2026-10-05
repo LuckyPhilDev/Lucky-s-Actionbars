@@ -45,6 +45,7 @@ loader:SetScript("OnEvent", function()
     LuckyActionbarsCharDB = LuckyActionbarsCharDB or { skyridingIncluded = true }
     LuckyActionbars.SkyridingBar:Init(db, LuckyActionbarsCharDB)
     LuckyActionbars.EditModePanel:Init()
+    LuckyActionbars.Import:Init(db, LuckyActionbarsCharDB)
     LuckyActionbars.Settings:Init(db)
     LuckyActionbars.minimapButton = LuckyMinimap:Create({
         name = "LuckyActionbarsMinimapButton",
