@@ -194,6 +194,18 @@ local function SwapPages(a, b)
     return true
 end
 
+-- Dev mode check of what each page holds, to find spells a swap put somewhere unexpected.
+function LuckyActionbars.Import:DumpPages(pages)
+    for _, page in ipairs(pages) do
+        for index = 1, BUTTON_COUNT do
+            local slot = (page - 1) * BUTTON_COUNT + index
+            local line = ("page %d button %d (slot %d): %s"):format(page, index, slot, DescribeSlot(slot))
+            Print(line)
+            Keep(line)
+        end
+    end
+end
+
 -- A swap that fails stays on record, so the spells it holds can still be found and put back.
 local function UndoSwaps()
     local swaps = charDb.importSwaps or {}
@@ -477,6 +489,15 @@ end
 
 -- Every key is read before any is moved, since binding a key takes it off its old command.
 -- A button with no keys of its own leaves ours alone, in case its addon binds through ours.
+-- The first binding each key had before any import, so Reverse can put it back.
+local function RebindKey(key, command)
+    local saved = charDb.importBackup.keybinds
+    if saved[key] == nil then
+        saved[key] = GetBindingAction(key)
+    end
+    SetBinding(key, command)
+end
+
 local function ImportKeybinds(taken, report)
     local moves = {}
     for number = 1, 12 do
@@ -491,13 +512,13 @@ local function ImportKeybinds(taken, report)
     end
     for _, move in ipairs(moves) do
         for _, key in ipairs({ GetBindingKey(move.to) }) do
-            SetBinding(key)
+            RebindKey(key)
         end
     end
     local count = 0
     for _, move in ipairs(moves) do
         for _, key in ipairs(move.keys) do
-            SetBinding(key, move.to)
+            RebindKey(key, move.to)
             count = count + 1
             Log("bound %s to %s", key, move.to)
         end
@@ -540,6 +561,91 @@ local function CanImport(name)
     return true
 end
 
+-- Kept from the first import until reversed, so importing again still reverses to before any import.
+local function Backup(source)
+    if charDb.importBackup then
+        return
+    end
+    local layout = EditModeManagerFrame:GetActiveLayoutInfo()
+    local stockShown, extraShown = {}, {}
+    for number = 2, LuckyActionbars.Paging.BAR_COUNT do
+        stockShown[number] = LuckyActionbars.StockBars:IsShown(number)
+    end
+    for number in pairs(LuckyActionbars.ExtraBars:Frames()) do
+        extraShown[number] = db.bars[number].shown
+    end
+    charDb.importBackup = {
+        addon = source.addon,
+        layoutName = layout.layoutName,
+        layoutType = layout.layoutType,
+        paging = CopyTable(db.paging),
+        morePaging = db.morePaging,
+        fade = CopyTable(db.fade),
+        rowsDown = CopyTable(db.rowsDown),
+        hideKeybinds = db.hideKeybinds,
+        hideMacroNames = db.hideMacroNames,
+        stockShown = stockShown,
+        extraShown = extraShown,
+        keybinds = {},
+    }
+end
+
+local function RestoreLayout(name, layoutType)
+    local layouts = EditModePresetLayoutManager:GetCopyOfPresetLayouts()
+    tAppendAll(layouts, C_EditMode.GetLayouts().layouts)
+    for index, layout in ipairs(layouts) do
+        if layout.layoutName == name and layout.layoutType == layoutType then
+            C_EditMode.SetActiveLayout(index)
+            return
+        end
+    end
+end
+
+local function RestoreSettings(backup)
+    db.paging, db.morePaging = backup.paging, backup.morePaging
+    LuckyActionbars.Paging:Apply()
+    for number = 1, 12 do
+        LuckyActionbars.MouseoverFade:SetFaded(number, backup.fade[number] or false)
+        if number <= LuckyActionbars.Paging.BAR_COUNT then
+            LuckyActionbars.RowDirection:Set(number, backup.rowsDown[number] and "down" or "up")
+        end
+    end
+    for number, shown in pairs(backup.stockShown) do
+        LuckyActionbars.StockBars:SetShown(number, shown)
+    end
+    for number, shown in pairs(backup.extraShown) do
+        LuckyActionbars.ExtraBars:SetShown(number, shown)
+    end
+    LuckyActionbars.ButtonText:SetHidden("hideKeybinds", backup.hideKeybinds)
+    LuckyActionbars.ButtonText:SetHidden("hideMacroNames", backup.hideMacroNames)
+end
+
+function LuckyActionbars.Import:Reverse()
+    local S = LuckyActionbars.Strings.import
+    local backup = charDb.importBackup
+    if InCombatLockdown() then
+        Print(S.combat)
+        return
+    elseif not backup then
+        Print(S.nothingToReverse)
+        return
+    end
+    if not UndoSwaps() then
+        Print(S.moveFailed)
+        return
+    end
+    for key, command in pairs(backup.keybinds) do
+        SetBinding(key, command ~= "" and command or nil)
+        Log("restored %s to %s", key, command ~= "" and command or "nothing")
+    end
+    SaveBindings(GetCurrentBindingSet())
+    RestoreSettings(backup)
+    RestoreLayout(backup.layoutName, backup.layoutType)
+    C_AddOns.EnableAddOn(backup.addon)
+    charDb.importBackup = nil
+    Print(S.reversed, backup.layoutName, backup.addon)
+end
+
 function LuckyActionbars.Import:Run(source)
     local S = LuckyActionbars.Strings.import
     local name = S.layoutName:format(source.title)
@@ -560,6 +666,7 @@ function LuckyActionbars.Import:Run(source)
         lines[#lines + 1] = message:format(...)
     end
     -- Starting from the original pages, or a second import would move spells already moved.
+    Backup(source)
     local taken, pageMap
     if UndoSwaps() then
         taken, pageMap = Pair(MeasuredBars(data.bars, report), report)

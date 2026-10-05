@@ -76,6 +76,15 @@ loader:SetScript("OnEvent", function()
 end)
 
 SLASH_LUCKYACTIONBARS1 = "/luckybars"
-SlashCmdList.LUCKYACTIONBARS = function()
+SlashCmdList.LUCKYACTIONBARS = function(message)
+    local pages = message:match("^pages%s+(.+)")
+    if pages then
+        local numbers = {}
+        for page in pages:gmatch("%d+") do
+            numbers[#numbers + 1] = tonumber(page)
+        end
+        LuckyActionbars.Import:DumpPages(numbers)
+        return
+    end
     LuckyActionbars.Settings:Open()
 end

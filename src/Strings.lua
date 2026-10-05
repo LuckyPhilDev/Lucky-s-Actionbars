@@ -85,6 +85,9 @@ LuckyActionbars.Strings = {
         notMeasured = "%s was left out: its buttons have no position on screen.",
         pagingSkipped = "%s: paging for %s was left out.",
         keybinds = "Moved %d keybinds onto the matching buttons.",
+        nothingToReverse = "There is no import on this character to reverse.",
+        reversed = "Import reversed: spells, keybinds and settings are back, Edit Mode is on \"%s\" again and %s is enabled. Reload to load it.",
+        moveFailed = "A spell didn't move as expected, so moving stopped there and nothing else was changed. Undo spell moves in /luckybars puts back the ones that did move.",
         undone = "Spells moved by the last import are back where they were.",
         offer = "Lucky's Actionbars can copy your %s bars: where they sit, their size, paging and keybinds, and the spells on them. Import now?",
         importNow = "Import",
@@ -129,6 +132,10 @@ LuckyActionbars.Strings = {
         importFrom = {
             label = "Import from %s",
             desc = "Copies your %s bars into a new Edit Mode layout: where they sit, their size, paging, keybinds, hidden until hovered and button text. Each bar keeps its number where it can, and its spells move with it. Run it while %s is still loaded.",
+        },
+        reverseImport = {
+            label = "Reverse import",
+            desc = "Dev mode only. Puts back everything the import changed on this character: spells, keybinds, paging, which bars show, hidden until hovered, button text and the Edit Mode layout, then enables the addon you imported from again.",
         },
         undoImport = {
             label = "Undo spell moves",
