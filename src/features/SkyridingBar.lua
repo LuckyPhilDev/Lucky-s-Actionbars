@@ -45,9 +45,23 @@ local function RecordSlot(slot)
     end
 end
 
+-- A slot wanting a spell this character can't learn already matches, since applying can't change it.
+local function NeedsChange(wanted, current)
+    return wanted ~= current and (current ~= nil or IsPlayerSpell(wanted))
+end
+
+local function LayoutMatches()
+    for slot = FIRST_SLOT, LAST_SLOT do
+        if NeedsChange(db.skyridingBar[slot], SkyridingSpellIn(slot)) then
+            return false
+        end
+    end
+    return true
+end
+
 -- The shared layout wins over this character's skyriding spells, and over its own spell in a slot the layout claims.
 local function Apply()
-    if not IsActive() or not db.skyridingBar then
+    if not IsActive() or not db.skyridingBar or LayoutMatches() then
         return
     end
     if InCombatLockdown() then
@@ -58,7 +72,7 @@ local function Apply()
     ClearCursor()
     for slot = FIRST_SLOT, LAST_SLOT do
         local wanted, current = db.skyridingBar[slot], SkyridingSpellIn(slot)
-        if wanted ~= current then
+        if NeedsChange(wanted, current) then
             Log("Skyriding: applying slot %d, %s replaces %s", slot, SpellName(wanted), SpellName(current))
             if wanted and IsPlayerSpell(wanted) then
                 C_Spell.PickupSpell(wanted)
@@ -123,7 +137,10 @@ function LuckyActionbars.SkyridingBar:Init(database, characterDatabase)
         _G["ActionButton" .. index]:HookScript("PreClick", OnPreClick)
     end
     -- Not PLAYER_ENTERING_WORLD: the skyriding spells are not known yet then, so none could be placed.
+    -- SPELLS_CHANGED is heard once after login and once after each spec or talent change, as it fires constantly in combat.
     events:RegisterEvent("SPELLS_CHANGED")
+    events:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
+    events:RegisterEvent("TRAIT_CONFIG_UPDATED")
     -- Blizzard places skyriding spells itself on a new character, sometimes after the layout went on.
     events:RegisterEvent("SPELL_PUSHED_TO_ACTIONBAR")
     events:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
@@ -135,7 +152,11 @@ function LuckyActionbars.SkyridingBar:Init(database, characterDatabase)
             end
             return
         end
-        if event == "PLAYER_REGEN_ENABLED" then
+        if event == "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" or event == "TRAIT_CONFIG_UPDATED" then
+            events:RegisterEvent("SPELLS_CHANGED")
+            return
+        end
+        if event == "SPELLS_CHANGED" or event == "PLAYER_REGEN_ENABLED" then
             events:UnregisterEvent(event)
         end
         Apply()
