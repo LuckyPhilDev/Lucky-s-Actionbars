@@ -1,3 +1,12 @@
+## [0.3.2] - 2026-10-05
+
+### Fixed
+- Fixed an error with the settings panel.
+- **Paging menus** No longer try to build themselves at login before a bar is selected.
+
+### Improved
+- **Shared skyriding bar** The layout is applied once after login and after a spec or talent change, instead of every time your spells update, so it no longer waits for combat to end when nothing needs changing.
+
 ## [0.3.1] - 2026-10-04
 
 ### Fixed
