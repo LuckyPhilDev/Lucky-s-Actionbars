@@ -98,7 +98,10 @@ LuckyActionbars.Strings = {
         later = "Later",
         switchBackPrompt = "Another addon switched Edit Mode away from \"%s\" as you logged in. Switch back to your imported bars?",
         switchBack = "Switch back",
-        switchBackCombat = "Leave combat, then pick \"%s\" in Edit Mode to see your imported bars.",
+        reviewPrompt = "Your %s bars are now Lucky's Actionbars. Keep them, or revert to how everything was before the import?",
+        revert = "Revert",
+        keep = "Keep",
+        switchBackCombat ="Leave combat, then pick \"%s\" in Edit Mode to see your imported bars.",
     },
     bags = {
         backpackOnly = {

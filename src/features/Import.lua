@@ -673,6 +673,7 @@ function LuckyActionbars.Import:Reverse()
     C_AddOns.EnableAddOn(backup.addon)
     charDb.importBackup = nil
     Print(S.reversed, backup.layoutName, backup.addon)
+    return true
 end
 
 function LuckyActionbars.Import:Run(source)
@@ -707,6 +708,7 @@ function LuckyActionbars.Import:Run(source)
     SaveExtraBars(name, taken)
     SaveLayout(name, taken)
     charDb.importedLayout = name
+    charDb.importReview = source.title
     ImportKeybinds(taken, report)
     ImportPaging(taken, pageMap, report)
     ImportBarSettings(data, taken)
@@ -779,6 +781,29 @@ local function DefinePopups()
         whileDead = true,
         hideOnEscape = true,
     }
+    -- Revert is the first button so Escape keeps the import rather than undoing it.
+    StaticPopupDialogs.LUCKY_ACTIONBARS_IMPORT_REVIEW = {
+        text = S.reviewPrompt,
+        button1 = S.revert,
+        button2 = S.keep,
+        OnAccept = function()
+            if LuckyActionbars.Import:Reverse() then
+                ReloadUI()
+            end
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+    }
+end
+
+-- Asked once, at the first login after an import, while the backup can still put everything back.
+local function OfferReview()
+    local title = charDb.importReview
+    charDb.importReview = nil
+    if title and charDb.importBackup then
+        StaticPopup_Show("LUCKY_ACTIONBARS_IMPORT_REVIEW", title)
+    end
 end
 
 -- Offered once per addon, the first time we see it loaded alongside us; every login in dev mode.
@@ -788,6 +813,7 @@ function LuckyActionbars.Import:Init(database, characterDatabase)
     devLog = LuckyLog:New(LuckyActionbars.Strings.addon.prefix, function() return db.devMode end)
     DefinePopups()
     WatchImportedLayout()
+    OfferReview()
     local source = self:LoadedSources()[1]
     Log("loaded source %s, offered before %s, spell swaps on record %s", source and source.title or "none",
         tostring(source and db.importOffered[source.key]), tostring(charDb.importSwaps and #charDb.importSwaps or 0))
