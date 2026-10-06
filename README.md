@@ -44,6 +44,14 @@ Turn one bar into several. Hold a modifier and a bar swaps to another page, then
 - **Keybinds follow the page**: while a modifier is held, a paged bar's keys press its paged buttons. Any modifier key you have already bound to something else is left alone.
 - **Form paging**: druids can page Action Bars 2 to 8 in Cat, Bear or Moonkin Form, and rogues while stealthed.
 
+### Import from Dominos, EllesmereUI or Bartender4
+
+Switch over in one click. Your bars land where they were, at the same size and shape, with the same spells, keybinds and Ctrl, Alt, Shift and form paging, in a new Edit Mode layout of their own.
+
+- You're offered it the first time Lucky's Actionbars loads next to one of them, or press **Import** under Bars in `/luckybars`.
+- Afterwards it can turn the other addon off and reload for you.
+- Keep your new bars, or revert everything to how it was. **Revert import** under Bars in `/luckybars` undoes it any time later.
+
 ## Installation
 
 Install `Luckys_Actionbars` in the `Interface/AddOns` folder for your game:
@@ -64,6 +72,7 @@ Lucky's Utils is bundled.
 | Command | Action |
 |---|---|
 | `/luckybars` | Opens the settings |
+| `/luckybars revert` | Reverts an import from another action bar addon |
 
 ## Settings
 
