@@ -67,7 +67,7 @@ end
 local function BuildImportRows(group, S, db)
     local Import = LuckyActionbars.Import
     local sources = Import:LoadedSources()
-    if #sources == 0 and not Import:CanUndo() and not db.devMode then
+    if #sources == 0 and not Import:CanUndo() and not Import:CanReverse() then
         return
     end
     group:Section(S.sections.import)
@@ -82,8 +82,7 @@ local function BuildImportRows(group, S, db)
     if Import:CanUndo() then
         group:Button({ S.undoImport, width = 200, onClick = function() Import:Undo() end })
     end
-    -- Read once when the panel is built, so turning dev mode on shows it after a reload.
-    if db.devMode then
+    if Import:CanReverse() then
         group:Button({ S.reverseImport, width = 200, onClick = function() Import:Reverse() end })
     end
 end

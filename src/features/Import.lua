@@ -672,8 +672,11 @@ function LuckyActionbars.Import:Reverse()
     RestoreLayout(backup.layoutName, backup.layoutType)
     C_AddOns.EnableAddOn(backup.addon)
     charDb.importBackup = nil
-    Print(S.reversed, backup.layoutName, backup.addon)
-    return true
+    ReloadUI()
+end
+
+function LuckyActionbars.Import:CanReverse()
+    return charDb.importBackup ~= nil
 end
 
 function LuckyActionbars.Import:Run(source)
@@ -743,6 +746,16 @@ function LuckyActionbars.Import:LoadedSources()
     return loaded
 end
 
+local REVIEW_DELAY = 8
+local pendingReview
+
+local function ShowReview()
+    if pendingReview and not StaticPopup_Visible("LUCKY_ACTIONBARS_IMPORT_SWITCH_BACK") then
+        StaticPopup_Show("LUCKY_ACTIONBARS_IMPORT_REVIEW", pendingReview)
+        pendingReview = nil
+    end
+end
+
 local function DefinePopups()
     local S = LuckyActionbars.Strings.import
     StaticPopupDialogs.LUCKY_ACTIONBARS_IMPORT_OFFER = {
@@ -777,6 +790,7 @@ local function DefinePopups()
             end
             RestoreLayout(name, Enum.EditModeLayoutType.Account)
         end,
+        OnHide = function() C_Timer.After(0, ShowReview) end,
         timeout = 0,
         whileDead = true,
         hideOnEscape = true,
@@ -786,11 +800,7 @@ local function DefinePopups()
         text = S.reviewPrompt,
         button1 = S.revert,
         button2 = S.keep,
-        OnAccept = function()
-            if LuckyActionbars.Import:Reverse() then
-                ReloadUI()
-            end
-        end,
+        OnAccept = function() LuckyActionbars.Import:Reverse() end,
         timeout = 0,
         whileDead = true,
         hideOnEscape = true,
@@ -798,12 +808,19 @@ local function DefinePopups()
 end
 
 -- Asked once, at the first login after an import, while the backup can still put everything back.
+-- Waits out AccWideUILayoutSelection, which switches layouts 5 seconds after the loading screen,
+-- so the switch-back prompt comes first. ponytail: a slower layout addon still stacks the two.
 local function OfferReview()
-    local title = charDb.importReview
-    charDb.importReview = nil
-    if title and charDb.importBackup then
-        StaticPopup_Show("LUCKY_ACTIONBARS_IMPORT_REVIEW", title)
+    pendingReview, charDb.importReview = charDb.importBackup and charDb.importReview, nil
+    if not pendingReview then
+        return
     end
+    local waiter = CreateFrame("Frame")
+    waiter:RegisterEvent("LOADING_SCREEN_DISABLED")
+    waiter:SetScript("OnEvent", function()
+        waiter:UnregisterAllEvents()
+        C_Timer.After(REVIEW_DELAY, ShowReview)
+    end)
 end
 
 -- Offered once per addon, the first time we see it loaded alongside us; every login in dev mode.

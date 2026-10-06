@@ -87,7 +87,6 @@ LuckyActionbars.Strings = {
         pagingSkipped = "%s: paging for %s was left out.",
         keybinds = "Moved %d keybinds onto the matching buttons.",
         nothingToReverse = "There is no import on this character to reverse.",
-        reversed = "Import reversed: spells, keybinds and settings are back, Edit Mode is on \"%s\" again and %s is enabled. Reload to load it.",
         moveFailed = "A spell didn't move as expected, so moving stopped there and nothing else was changed. Undo spell moves in /luckybars puts back the ones that did move.",
         undone = "Spells moved by the last import are back where they were.",
         offer = "Lucky's Actionbars can copy your %s bars: where they sit, their size, paging and keybinds, and the spells on them. Import now?",
@@ -101,7 +100,7 @@ LuckyActionbars.Strings = {
         reviewPrompt = "Your %s bars are now Lucky's Actionbars. Keep them, or revert to how everything was before the import?",
         revert = "Revert",
         keep = "Keep",
-        switchBackCombat ="Leave combat, then pick \"%s\" in Edit Mode to see your imported bars.",
+        switchBackCombat = "Leave combat, then pick \"%s\" in Edit Mode to see your imported bars.",
     },
     bags = {
         backpackOnly = {
@@ -141,8 +140,8 @@ LuckyActionbars.Strings = {
             desc = "Copies your %s bars into a new Edit Mode layout: where they sit, their size, paging, keybinds, hidden until hovered and button text. Each bar keeps its number where it can, and its spells move with it. Run it while %s is still loaded.",
         },
         reverseImport = {
-            label = "Reverse import",
-            desc = "Dev mode only. Puts back everything the import changed on this character: spells, keybinds, paging, which bars show, hidden until hovered, button text and the Edit Mode layout, then enables the addon you imported from again.",
+            label = "Revert import",
+            desc = "Puts back everything the import changed on this character: spells, keybinds, paging, which bars show, hidden until hovered, button text and the Edit Mode layout. Then turns the addon you imported from back on and reloads. Also /luckybars revert.",
         },
         undoImport = {
             label = "Undo spell moves",

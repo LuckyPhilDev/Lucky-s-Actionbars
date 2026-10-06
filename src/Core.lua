@@ -85,6 +85,9 @@ SlashCmdList.LUCKYACTIONBARS = function(message)
         end
         LuckyActionbars.Import:DumpPages(numbers)
         return
+    elseif message == "revert" then
+        LuckyActionbars.Import:Reverse()
+        return
     end
     LuckyActionbars.Settings:Open()
 end
