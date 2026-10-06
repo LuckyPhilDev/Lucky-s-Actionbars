@@ -75,6 +75,7 @@ LuckyActionbars.Strings = {
         layoutName = "Imported from %s",
         dominosBar = "Dominos bar %d",
         ellesmereBar = "EllesmereUI Action Bar %d",
+        bartenderBar = "Bartender4 %s",
         dominosBarCount = "Dominos is set to a bar count other than 14, so its buttons don't line up with action bar pages. Set it back to 14 bars in Dominos to import.",
         combat = "Importing has to wait until you leave combat.",
         notReady = "Edit Mode is still loading. Try again in a moment.",

@@ -1,7 +1,8 @@
 LuckyActionbars = LuckyActionbars or {}
 
 -- Each source reads the bars its addon is showing right now, as
--- { label, number, page, buttons, faded, paging = { [Paging trigger] = page }, skipped = { state names } }.
+-- { label, number, page, buttons, faded, paging = { [Paging trigger] = page }, skipped = { state names } },
+-- plus commands = { binding command per button } when the buttons don't carry their own.
 -- Pages are Blizzard's action pages (slot = (page - 1) * 12 + button).
 
 -- Both addons name their paging states the same way; anything not here has no Lucky's trigger.
@@ -15,7 +16,7 @@ local PAGING_KEYS = {
 local NATIVE_ON_BAR_ONE = {
     page2 = true, page3 = true, page4 = true, page5 = true, page6 = true, dragonriding = true,
     cat = true, bear = true, moonkin = true, tree = true, prowl = true, stealth = true,
-    shadowdance = true, soar = true,
+    shadowdance = true, soar = true, actionbar = true, possess = true,
 }
 
 local function ConvertPaging(bar, states, isMainBar, toPage)
@@ -121,9 +122,63 @@ local function ReadEllesmere()
     return { bars = bars, hideKeybinds = mainBar.hideKeybind, hideMacroNames = mainBar.hideMacroText }
 end
 
+local BARTENDER_BARS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15 }
+
+-- Bar N shows page N unless its paging sets another default. Paging values are pages, 0 for none.
+local function BartenderPaging(config)
+    local states = config.states
+    local paging = {}
+    if not states.enabled then
+        return paging
+    elseif states.customEnabled then
+        return { custom = true }
+    end
+    for _, key in ipairs({ "ctrl", "alt", "shift", "actionbar", "possess" }) do
+        paging[key] = states[key] ~= 0 and states[key] or nil
+    end
+    for stance, page in pairs(states.stance[select(2, UnitClass("player"))] or {}) do
+        paging[stance] = page ~= 0 and page or nil
+    end
+    return paging
+end
+
+-- Bars Bartender names after Blizzard's keep that number; its Bonus and Class Bars have none here.
+local function ReadBartender()
+    local module = _G.Bartender4:GetModule("ActionBars")
+    local bars = {}
+    for _, id in ipairs(BARTENDER_BARS) do
+        local frame = module.actionbars[id]
+        local config = frame and frame.config
+        if frame and not frame.disabled and not config.visibility.always then
+            local states = config.states
+            local bar = {
+                label = LuckyActionbars.Strings.import.bartenderBar:format(module:GetBarName(id)),
+                number = id == 1 and 1 or module.BLIZZARD_BAR_MAP[id],
+                page = states.enabled and tonumber(states.default) ~= 0 and tonumber(states.default) or id,
+                buttons = {},
+                commands = {},
+                faded = config.fadeout,
+            }
+            for index = 1, frame.numbuttons do
+                bar.buttons[index] = frame.buttons[index]
+                bar.commands[index] = frame.buttons[index]:GetBindingAction()
+            end
+            ConvertPaging(bar, BartenderPaging(config), id == 1, tonumber)
+            bars[#bars + 1] = bar
+        end
+    end
+    local mainBar = module.actionbars[1]
+    return {
+        bars = bars,
+        hideKeybinds = mainBar and mainBar.config.hidehotkey,
+        hideMacroNames = mainBar and mainBar.config.hidemacrotext,
+    }
+end
+
 -- addon is what gets disabled after importing; EllesmereUI's other modules keep working without it.
 LuckyActionbars.ImportSources = {
     { key = "dominos", title = "Dominos", addon = "Dominos", Read = ReadDominos },
     { key = "ellesmere", title = "EllesmereUI", addon = "EllesmereUIActionBars", Read = ReadEllesmere },
+    { key = "bartender", title = "Bartender4", addon = "Bartender4", Read = ReadBartender },
 }
 LuckyActionbars.ImportSources.DominosPage = DominosPage

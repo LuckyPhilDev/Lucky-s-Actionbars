@@ -503,7 +503,7 @@ local function ImportKeybinds(taken, report)
     for number = 1, 12 do
         local bar = taken[number]
         for index, button in ipairs(bar and bar.buttons or {}) do
-            local from, to = SourceCommand(button), TargetCommand(number, index)
+            local from, to = bar.commands and bar.commands[index] or SourceCommand(button), TargetCommand(number, index)
             local keys = { GetBindingKey(from) }
             if from ~= to and #keys > 0 then
                 moves[#moves + 1] = { to = to, keys = keys }
