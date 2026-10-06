@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Added
+- **Import from Dominos or EllesmereUI** Switch over in one click. Your bars land where they were, at the same size and shape, with the same numbers, spells and keybinds, and the same Ctrl, Alt, Shift and form paging, in a new Edit Mode layout of their own. You're offered it the first time Lucky's Actionbars loads next to one of them, or press Import under Bars in `/luckybars`. Afterwards it can turn the other addon off and reload for you.
+
 ## [0.3.2] - 2026-10-05
 
 ### Fixed

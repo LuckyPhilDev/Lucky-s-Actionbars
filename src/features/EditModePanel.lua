@@ -13,6 +13,7 @@ local STOCK_BAR_SYSTEMS = {
     Enum.EditModeActionBarSystemIndices.ExtraBar2,
     Enum.EditModeActionBarSystemIndices.ExtraBar3,
 }
+LuckyActionbars.EditModePanel.STOCK_BAR_SYSTEMS = STOCK_BAR_SYSTEMS
 
 local function FadeSetting(key, desc)
     local S = LuckyActionbars.Strings.bars.fade
