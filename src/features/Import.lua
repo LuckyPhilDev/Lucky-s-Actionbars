@@ -601,6 +601,34 @@ local function RestoreLayout(name, layoutType)
     end
 end
 
+local function ActiveLayoutName()
+    local layoutInfo = C_EditMode.GetLayouts()
+    local layouts = EditModePresetLayoutManager:GetCopyOfPresetLayouts()
+    tAppendAll(layouts, layoutInfo.layouts)
+    return layouts[layoutInfo.activeLayout].layoutName
+end
+
+-- Layout-sync addons such as AccWideUILayoutSelection pick their own layout a few seconds into
+-- the login after an import, so for that one session offer to switch back the first time it changes.
+local importedLayout
+
+local function WatchImportedLayout()
+    importedLayout, charDb.importedLayout = charDb.importedLayout, nil
+    if not importedLayout then
+        return
+    end
+    local watcher = CreateFrame("Frame")
+    watcher:RegisterEvent("EDIT_MODE_LAYOUTS_UPDATED")
+    watcher:SetScript("OnEvent", function()
+        local active = ActiveLayoutName()
+        if importedLayout and active ~= importedLayout and not EditModeManagerFrame:IsShown() then
+            watcher:UnregisterAllEvents()
+            Log("layout switched to \"%s\" after the import, offering \"%s\" back", active, importedLayout)
+            StaticPopup_Show("LUCKY_ACTIONBARS_IMPORT_SWITCH_BACK", importedLayout, nil, importedLayout)
+        end
+    end)
+end
+
 local function RestoreSettings(backup)
     db.paging, db.morePaging = backup.paging, backup.morePaging
     LuckyActionbars.Paging:Apply()
@@ -640,6 +668,7 @@ function LuckyActionbars.Import:Reverse()
     end
     SaveBindings(GetCurrentBindingSet())
     RestoreSettings(backup)
+    importedLayout, charDb.importedLayout = nil, nil
     RestoreLayout(backup.layoutName, backup.layoutType)
     C_AddOns.EnableAddOn(backup.addon)
     charDb.importBackup = nil
@@ -677,6 +706,7 @@ function LuckyActionbars.Import:Run(source)
     end
     SaveExtraBars(name, taken)
     SaveLayout(name, taken)
+    charDb.importedLayout = name
     ImportKeybinds(taken, report)
     ImportPaging(taken, pageMap, report)
     ImportBarSettings(data, taken)
@@ -734,6 +764,21 @@ local function DefinePopups()
         whileDead = true,
         hideOnEscape = true,
     }
+    StaticPopupDialogs.LUCKY_ACTIONBARS_IMPORT_SWITCH_BACK = {
+        text = S.switchBackPrompt,
+        button1 = S.switchBack,
+        button2 = S.notNow,
+        OnAccept = function(_, name)
+            if InCombatLockdown() then
+                Print(S.switchBackCombat, name)
+                return
+            end
+            RestoreLayout(name, Enum.EditModeLayoutType.Account)
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+    }
 end
 
 -- Offered once per addon, the first time we see it loaded alongside us; every login in dev mode.
@@ -742,6 +787,7 @@ function LuckyActionbars.Import:Init(database, characterDatabase)
     db.importOffered = db.importOffered or {}
     devLog = LuckyLog:New(LuckyActionbars.Strings.addon.prefix, function() return db.devMode end)
     DefinePopups()
+    WatchImportedLayout()
     local source = self:LoadedSources()[1]
     Log("loaded source %s, offered before %s, spell swaps on record %s", source and source.title or "none",
         tostring(source and db.importOffered[source.key]), tostring(charDb.importSwaps and #charDb.importSwaps or 0))

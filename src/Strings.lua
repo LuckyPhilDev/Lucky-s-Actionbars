@@ -95,6 +95,9 @@ LuckyActionbars.Strings = {
         disablePrompt = "Import done. Disable %s and reload to see your new bars?",
         disableAndReload = "Disable and reload",
         later = "Later",
+        switchBackPrompt = "Another addon switched Edit Mode away from \"%s\" as you logged in. Switch back to your imported bars?",
+        switchBack = "Switch back",
+        switchBackCombat = "Leave combat, then pick \"%s\" in Edit Mode to see your imported bars.",
     },
     bags = {
         backpackOnly = {
