@@ -14,8 +14,9 @@ local function Recolor(button)
     end
 end
 
+-- Pet buttons share Blizzard's range function but have no UpdateUsable to take the red back off.
 local function OnRangeUpdate(button, checksRange, inRange)
-    if issecretvalue(checksRange) or issecretvalue(inRange) then
+    if not button.UpdateUsable or issecretvalue(checksRange) or issecretvalue(inRange) then
         return
     end
     local wasOutOfRange = outOfRange[button]
