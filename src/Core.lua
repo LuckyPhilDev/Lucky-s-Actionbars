@@ -50,7 +50,7 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.minimapButton = LuckyMinimap:Create({
         name = "LuckyActionbarsMinimapButton",
         tocname = "Luckys_Actionbars",
-        icon = "Interface\\Icons\\INV_Misc_Gear_01",
+        icon = "Interface\\AddOns\\Luckys_Actionbars\\media\\icon",
         dbKey = "minimap",
         db = db,
         defaultAngle = 280,
