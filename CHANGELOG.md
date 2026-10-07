@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Added
+- **More from Lucky Phil** The row at the bottom of the What's New page now includes Lucky's Loadouts, with a CurseForge link.
+
 ## [0.4.0] - 2026-10-06
 
 ### Added
