@@ -16,6 +16,7 @@ Strings.lua
 Defaults.lua
 Utils.lua
 features\Paging.lua
+features\ButtonDriver.lua
 features\StockBars.lua
 features\Snapping.lua
 features\ExtraBars.lua
