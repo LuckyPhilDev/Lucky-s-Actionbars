@@ -1,3 +1,9 @@
+## [0.4.2] - 2026-10-07
+
+### Fixed
+- **Cooldown errors on the stock bars** Action Bars 9 to 12 no longer cause "Secret values are only allowed during untainted execution" errors on Blizzard's own buttons, including the vehicle and quest bars. Cooldown swipes on bars 9 to 12 work in combat again.
+- **Out-of-range tint** No longer errors on the pet bar.
+
 ## [0.4.1] - 2026-10-07
 
 ### Added
