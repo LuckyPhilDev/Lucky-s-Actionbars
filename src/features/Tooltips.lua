@@ -54,10 +54,10 @@ end
 -- Hooked on SetTooltip, which Blizzard also re-runs every tooltip refresh, so a hidden tooltip stays hidden.
 function LuckyActionbars.Tooltips:Init(database)
     db = database
-    for _, button in pairs(ActionBarButtonEventsFrame.frames) do
+    LuckyActionbars.ButtonDriver:ForEachButton(function(button)
         hooksecurefunc(button, "SetTooltip", OnSetTooltip)
         hookedButtons[button] = true
-    end
+    end)
     modifierWatcher:RegisterEvent("MODIFIER_STATE_CHANGED")
     modifierWatcher:SetScript("OnEvent", OnModifierChanged)
 end

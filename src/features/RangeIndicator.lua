@@ -37,8 +37,8 @@ end
 -- UpdateUsable resets the icon colour, so each button is hooked to paint the red back on afterwards.
 function LuckyActionbars.RangeIndicator:Init(database)
     db = database
-    for _, button in pairs(ActionBarButtonEventsFrame.frames) do
+    LuckyActionbars.ButtonDriver:ForEachButton(function(button)
         hooksecurefunc(button, "UpdateUsable", Recolor)
-    end
+    end)
     hooksecurefunc("ActionButton_UpdateRangeIndicator", OnRangeUpdate)
 end

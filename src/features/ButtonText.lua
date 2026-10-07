@@ -8,14 +8,14 @@ local db
 
 -- Not every frame registered with the events frame has both regions, so skip the missing ones.
 local function Apply()
-    for _, button in pairs(ActionBarButtonEventsFrame.frames) do
+    LuckyActionbars.ButtonDriver:ForEachButton(function(button)
         for setting, region in pairs(REGIONS) do
             local text = button[region]
             if text then
                 text:SetAlpha(db[setting] and 0 or 1)
             end
         end
-    end
+    end)
 end
 
 function LuckyActionbars.ButtonText:IsHidden(setting)

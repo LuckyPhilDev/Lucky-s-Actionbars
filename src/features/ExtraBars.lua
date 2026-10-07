@@ -57,6 +57,7 @@ end
 -- Buttons get a fixed "action" and ID 0, as Dominos does, so the stock paging and bar 1 keybinds never touch them.
 local function CreateButton(bar, index)
     local button = CreateFrame("CheckButton", bar:GetName() .. "Button" .. index, bar, "ActionBarButtonTemplate")
+    LuckyActionbars.ButtonDriver:Adopt(button)
     button:SetID(0)
     button:SetAttribute("action", (BAR_PAGES[bar.number] - 1) * BUTTON_COUNT + index)
     -- The stock hotkey text already looks this binding up, and the secure click handler honours key-down casting for it.
