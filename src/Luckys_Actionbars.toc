@@ -11,12 +11,14 @@
 
 Libs\LuckysUtils\embeds.xml
 Libs\LibEditMode\embed.xml
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
+Libs\LibActionButton-1.0\LibActionButton-1.0.lua
 Constants.lua
 Strings.lua
 Defaults.lua
 Utils.lua
 features\Paging.lua
-features\ButtonDriver.lua
 features\StockBars.lua
 features\Snapping.lua
 features\ExtraBars.lua

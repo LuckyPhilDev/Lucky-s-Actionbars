@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Fixed
+- **Classic beta crash** The game no longer crashes a couple of seconds after you log in on the Classic beta.
+
 ## [0.4.2] - 2026-10-07
 
 ### Fixed

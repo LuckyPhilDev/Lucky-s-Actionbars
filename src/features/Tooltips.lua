@@ -4,7 +4,7 @@ LuckyActionbars.Tooltips = {}
 LuckyActionbars.Tooltips.MODES = { "always", "outOfCombat", "modifier", "never" }
 
 local db
-local hookedButtons = {}
+local actionButtons = {}
 local modifierWatcher = CreateFrame("Frame")
 
 local function IsAllowed()
@@ -17,8 +17,13 @@ local function IsAllowed()
     return mode ~= "never"
 end
 
--- SetTooltip leaves the tooltip owned by the button but empty on an empty slot, so the slot line shows there too.
-local function OnSetTooltip(button)
+-- Hooked on SetAction, which Blizzard's buttons and the extra bars' library both call for every tooltip and
+-- refresh, empty slots included, so a hidden tooltip stays hidden and the slot line shows on empty slots too.
+local function OnSetAction(tooltip)
+    local button = tooltip:GetOwner()
+    if not actionButtons[button] then
+        return
+    end
     if db.devMode then
         GameTooltip:AddLine(LuckyActionbars.Strings.addon.actionSlot:format(button.action), 0.5, 0.8, 1)
         GameTooltip:Show()
@@ -29,16 +34,18 @@ end
 
 local function HoveredButton()
     for _, frame in ipairs(GetMouseFoci()) do
-        if hookedButtons[frame] then
+        if actionButtons[frame] then
             return frame
         end
     end
 end
 
 -- Pressing the modifier while already pointing at a button shows its tooltip there and then.
+-- The library's SetTooltip, unlike Blizzard's, does not anchor the tooltip itself.
 local function OnModifierChanged()
     local button = HoveredButton()
     if button then
+        GameTooltip_SetDefaultAnchor(GameTooltip, button)
         button:SetTooltip()
     end
 end
@@ -51,13 +58,17 @@ function LuckyActionbars.Tooltips:SetMode(mode)
     db.tooltipMode = mode
 end
 
--- Hooked on SetTooltip, which Blizzard also re-runs every tooltip refresh, so a hidden tooltip stays hidden.
+local function Track(button)
+    actionButtons[button] = true
+end
+
 function LuckyActionbars.Tooltips:Init(database)
     db = database
-    LuckyActionbars.ButtonDriver:ForEachButton(function(button)
-        hooksecurefunc(button, "SetTooltip", OnSetTooltip)
-        hookedButtons[button] = true
-    end)
+    for _, button in ipairs(ActionBarButtonEventsFrame.frames) do
+        Track(button)
+    end
+    LuckyActionbars.ExtraBars:ForEachButton(Track)
+    hooksecurefunc(GameTooltip, "SetAction", OnSetAction)
     modifierWatcher:RegisterEvent("MODIFIER_STATE_CHANGED")
     modifierWatcher:SetScript("OnEvent", OnModifierChanged)
 end

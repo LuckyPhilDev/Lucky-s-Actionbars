@@ -4,3 +4,6 @@
 .claude/
 AGENTS.md
 src/Libs/LuckysUtils/
+src/Libs/CallbackHandler-1.0/
+src/Libs/LibButtonGlow-1.0/
+src/Libs/LibActionButton-1.0/
