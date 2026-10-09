@@ -2,6 +2,7 @@ LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.ExtraBars = {}
 
 local LibEditMode = LibStub("LibEditMode")
+local LAB = LibStub("LibActionButton-1.0")
 local Masque = LibStub("Masque", true)
 
 local BAR_PAGES = { [9] = 7, [10] = 8, [11] = 9, [12] = 10 }
@@ -26,6 +27,7 @@ local activeLayoutName
 local editModeActive = false
 -- Bit flags of why empty slots are on show (a drag, the spellbook, Quick Keybind), as Blizzard's bars track them.
 local gridReasons = 0
+local configPending = false
 local layoutFrame = CreateFrame("Frame")
 
 local function DefaultPosition(number)
@@ -54,14 +56,43 @@ local function SnapAfterDrag(bar)
     OnPositionChanged(bar, LibEditMode:GetActiveLayoutName(), point, x + dx, y + dy)
 end
 
--- Buttons get a fixed "action" and ID 0, as Dominos does, so the stock paging and bar 1 keybinds never touch them.
+-- Stock bars mark range on the hotkey; with the range indicator on, the icon is tinted instead.
+local function ButtonConfig()
+    return {
+        -- Empty slots are faded by UpdateEmptyButtons, which also follows the spellbook and Quick Keybind.
+        showGrid = true,
+        actionButtonUI = true,
+        spellCastVFX = true,
+        outOfRangeColoring = db.rangeIndicator and "button" or "hotkey",
+        colors = { range = LuckyActionbars.RangeIndicator.OUT_OF_RANGE_COLOR, mana = { 0.5, 0.5, 1 } },
+    }
+end
+
+-- The library's buttons lack Blizzard's Quick Keybind template, so it is wired on the way Blizzard's bars wire it.
+local function AddQuickKeybind(button)
+    Mixin(button, QuickKeybindButtonTemplateMixin)
+    local highlight = button:CreateTexture(nil, "OVERLAY")
+    highlight:SetAllPoints()
+    highlight:SetBlendMode("ADD")
+    highlight:SetAlpha(0.4)
+    highlight:Hide()
+    button.QuickKeybindHighlightTexture = highlight
+    button:HookScript("OnEnter", button.QuickKeybindButtonOnEnter)
+    button:HookScript("OnLeave", button.QuickKeybindButtonOnLeave)
+    button:HookScript("OnShow", button.QuickKeybindButtonOnShow)
+    button:HookScript("OnHide", button.QuickKeybindButtonOnHide)
+    button:HookScript("OnClick", button.QuickKeybindButtonOnClick)
+    button:QuickKeybindButtonOnShow()
+end
+
+-- LibActionButton rather than Blizzard's ActionBarButtonTemplate, whose OnLoad registers slot 1 for range
+-- checks before a slot can be given, which hard-crashes the Classic beta client.
 local function CreateButton(bar, index)
-    local button = CreateFrame("CheckButton", bar:GetName() .. "Button" .. index, bar, "ActionBarButtonTemplate")
-    LuckyActionbars.ButtonDriver:Adopt(button)
-    button:SetID(0)
-    button:SetAttribute("action", (BAR_PAGES[bar.number] - 1) * BUTTON_COUNT + index)
-    -- The stock hotkey text already looks this binding up, and the secure click handler honours key-down casting for it.
-    button.commandName = "CLICK " .. button:GetName() .. ":LeftButton"
+    local button = LAB:CreateButton(index, bar:GetName() .. "Button" .. index, bar, ButtonConfig())
+    button:SetState(0, "action", (BAR_PAGES[bar.number] - 1) * BUTTON_COUNT + index)
+    -- The library binds and shows hotkeys for this command, and Quick Keybind and Import read it.
+    button.commandName = button:GetBindingAction()
+    AddQuickKeybind(button)
     _G["BINDING_NAME_" .. button.commandName] = LuckyActionbars.Strings.bars.buttonName:format(
         LuckyActionbars.Strings.bars.names[bar.number], index)
     bar.buttons[index] = button
@@ -88,7 +119,7 @@ end
 local function UpdateEmptyButtons(bar)
     local showEmpty = LayoutValue(bar, "alwaysShowButtons") or gridReasons > 0
     for _, button in ipairs(bar.buttons) do
-        button:SetAlpha((showEmpty or HasAction(button:GetAttribute("action"))) and 1 or 0)
+        button:SetAlpha((showEmpty or button:HasAction()) and 1 or 0)
     end
 end
 
@@ -141,6 +172,23 @@ local function ApplyLayout(bar)
     ApplyVisibility(bar)
 end
 
+-- Updating a config re-sets secure attributes, so in combat it waits for the fight to end.
+local function ApplyButtonConfig()
+    if InCombatLockdown() then
+        configPending = true
+        layoutFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+        return
+    end
+    configPending = false
+    for _, bar in pairs(bars) do
+        for _, button in ipairs(bar.buttons) do
+            button:UpdateConfig(ButtonConfig())
+        end
+        -- The config shows every slot again.
+        UpdateEmptyButtons(bar)
+    end
+end
+
 local function ApplyAllLayouts()
     if InCombatLockdown() then
         layoutFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -172,6 +220,9 @@ local EVENT_HANDLERS = {
     PLAYER_REGEN_ENABLED = function(frame, event)
         frame:UnregisterEvent(event)
         ApplyAllLayouts()
+        if configPending then
+            ApplyButtonConfig()
+        end
     end,
     ACTIONBAR_SLOT_CHANGED = function()
         for _, bar in pairs(bars) do
@@ -250,7 +301,8 @@ local function LayoutSettings(bar)
 end
 
 local function CreateBar(number)
-    local bar = CreateFrame("Frame", "LuckyActionbarsBar" .. number, UIParent)
+    -- The library drives its buttons' secure snippets through their parent, so the bar is a secure handler.
+    local bar = CreateFrame("Frame", "LuckyActionbarsBar" .. number, UIParent, "SecureHandlerStateTemplate")
     bar.number = number
     bar.buttons = {}
     bar.positions = db.bars[number].positions
@@ -261,7 +313,7 @@ local function CreateBar(number)
     for index = 1, BUTTON_COUNT do
         CreateButton(bar, index)
         if masqueGroup then
-            masqueGroup:AddButton(bar.buttons[index])
+            bar.buttons[index]:AddToMasque(masqueGroup)
         end
     end
     ApplyLayout(bar)
@@ -307,6 +359,18 @@ end
 
 function LuckyActionbars.ExtraBars:Frames()
     return bars
+end
+
+function LuckyActionbars.ExtraBars:ForEachButton(fn)
+    for _, bar in pairs(bars) do
+        for _, button in ipairs(bar.buttons) do
+            fn(button)
+        end
+    end
+end
+
+function LuckyActionbars.ExtraBars:ApplyButtonConfig()
+    ApplyButtonConfig()
 end
 
 -- The library keeps one settings list per frame, so every module adds to this shared one.

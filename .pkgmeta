@@ -11,6 +11,10 @@ externals:
   src/Libs/LuckysUtils:
     url: https://github.com/LuckyPhilDev/LuckyUtils
     tag: latest
+  src/Libs/CallbackHandler-1.0: https://repos.wowace.com/wow/callbackhandler/trunk/CallbackHandler-1.0
+  src/Libs/LibButtonGlow-1.0: https://repos.wowace.com/wow/libbuttonglow-1-0
+  # Untagged on purpose: Midnight fixes land on master weeks before a tag.
+  src/Libs/LibActionButton-1.0: https://github.com/Nevcairiel/LibActionButton-1.0
 
 ignore:
   - tests

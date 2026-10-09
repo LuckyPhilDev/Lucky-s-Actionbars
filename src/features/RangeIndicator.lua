@@ -3,6 +3,7 @@ LuckyActionbars.RangeIndicator = {}
 
 -- A red tint of roughly the strength of Blizzard's out-of-mana blue (0.5, 0.5, 1), so the icon stays readable.
 local OUT_OF_RANGE_COLOR = { 1, 0.4, 0.4 }
+LuckyActionbars.RangeIndicator.OUT_OF_RANGE_COLOR = OUT_OF_RANGE_COLOR
 
 local db
 -- Kept here rather than as a field on Blizzard's buttons, so nothing of ours is written onto them.
@@ -33,13 +34,15 @@ function LuckyActionbars.RangeIndicator:SetEnabled(enabled)
     for button in pairs(outOfRange) do
         button:UpdateUsable()
     end
+    LuckyActionbars.ExtraBars:ApplyButtonConfig()
 end
 
--- UpdateUsable resets the icon colour, so each button is hooked to paint the red back on afterwards.
+-- UpdateUsable resets the icon colour, so each stock button is hooked to paint the red back on afterwards.
+-- The extra bars tint through their library config instead.
 function LuckyActionbars.RangeIndicator:Init(database)
     db = database
-    LuckyActionbars.ButtonDriver:ForEachButton(function(button)
+    for _, button in ipairs(ActionBarButtonEventsFrame.frames) do
         hooksecurefunc(button, "UpdateUsable", Recolor)
-    end)
+    end
     hooksecurefunc("ActionButton_UpdateRangeIndicator", OnRangeUpdate)
 end

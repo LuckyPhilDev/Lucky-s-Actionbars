@@ -7,15 +7,20 @@ local REGIONS = { hideKeybinds = "HotKey", hideMacroNames = "Name" }
 local db
 
 -- Not every frame registered with the events frame has both regions, so skip the missing ones.
-local function Apply()
-    LuckyActionbars.ButtonDriver:ForEachButton(function(button)
-        for setting, region in pairs(REGIONS) do
-            local text = button[region]
-            if text then
-                text:SetAlpha(db[setting] and 0 or 1)
-            end
+local function ApplyTo(button)
+    for setting, region in pairs(REGIONS) do
+        local text = button[region]
+        if text then
+            text:SetAlpha(db[setting] and 0 or 1)
         end
-    end)
+    end
+end
+
+local function Apply()
+    for _, button in ipairs(ActionBarButtonEventsFrame.frames) do
+        ApplyTo(button)
+    end
+    LuckyActionbars.ExtraBars:ForEachButton(ApplyTo)
 end
 
 function LuckyActionbars.ButtonText:IsHidden(setting)
