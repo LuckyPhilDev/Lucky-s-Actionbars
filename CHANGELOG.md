@@ -1,4 +1,4 @@
-## [0.4.3] - 2026-10-10
+## [0.4.4] - 2026-10-10
 
 ### Fixed
 - **Classic beta crash** The game no longer crashes a couple of seconds after you log in on the Classic beta.
