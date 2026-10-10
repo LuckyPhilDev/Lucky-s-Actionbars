@@ -2,7 +2,7 @@
 ## Title: Lucky's Actionbars
 ## IconTexture: Interface\AddOns\Luckys_Actionbars\media\icon
 ## Notes: Actionbar enhancements, not replacements
-## Version: 0.4.2
+## Version: 0.4.3
 ## Author: Lucky Phil
 ## SavedVariables: LuckyActionbarsDB, LuckySettingsDB, LuckyRosterDB
 ## SavedVariablesPerCharacter: LuckyActionbarsCharDB
