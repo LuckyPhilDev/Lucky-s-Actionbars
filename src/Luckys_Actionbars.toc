@@ -1,8 +1,8 @@
-## Interface: 120100, 16001
+## Interface: 120100, 120105, 16001
 ## Title: Lucky's Actionbars
 ## IconTexture: Interface\AddOns\Luckys_Actionbars\media\icon
 ## Notes: Actionbar enhancements, not replacements
-## Version: 0.4.4
+## Version: 0.4.5
 ## Author: Lucky Phil
 ## SavedVariables: LuckyActionbarsDB, LuckySettingsDB, LuckyRosterDB
 ## SavedVariablesPerCharacter: LuckyActionbarsCharDB
