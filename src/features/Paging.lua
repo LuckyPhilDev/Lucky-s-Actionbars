@@ -41,7 +41,8 @@ local appliedSignature
 
 -- State 0 returns the bar to its home page. Bar 1 has none, so it and the vehicle, possess and form states
 -- take the page ActionBarController_UpdateAll would pick.
--- The buttons are not the header's children, they sit in Blizzard's slots, so each is updated by reference.
+-- Keys still press Blizzard's hidden buttons, the only way Press and Hold Casting works, and those read the
+-- bar's actionpage. The buttons on show are not the header's children, so each is updated by reference.
 local ON_PAGE = ([[
     local page = tonumber(newstate)
     if page == 0 then
@@ -60,6 +61,7 @@ local ON_PAGE = ([[
             page = GetActionBarPage()
         end
     end
+    self:GetFrameRef("bar"):SetAttribute("actionpage", page)
     for i = 1, %d do
         local button = self:GetFrameRef("button" .. i)
         button:RunAttribute("UpdateState", page)
@@ -120,22 +122,19 @@ local function BuildConditions(number, active)
     return table.concat(parts, "; ")
 end
 
-local function Want(wanted, signature, key, buttonName)
-    wanted[#wanted + 1] = { key, buttonName }
-    signature[#signature + 1] = key .. buttonName
-end
-
--- Each key bound to a stock button's command clicks the button that replaces it. Holding a modifier turns
--- "1" into "CTRL-1", so a paged bar's keys are mirrored onto their modified twins too.
-local function AddBindings(wanted, signature, bar, pager, active)
-    for i = 1, BUTTON_COUNT do
-        local buttonName = pager.buttons[i]:GetName()
-        for _, key in ipairs({ GetBindingKey(bar.command .. i) }) do
-            Want(wanted, signature, key, buttonName)
-            for _, entry in ipairs(active) do
-                local modifiedKey = entry.trigger.keyPrefix and entry.trigger.keyPrefix .. key
-                if modifiedKey and not HasModifier(key) and GetBindingAction(modifiedKey) == "" then
-                    Want(wanted, signature, modifiedKey, buttonName)
+-- Holding a modifier turns "1" into "CTRL-1", so mirror each paged bar's keys onto their modified twins.
+local function AddModifierBindings(wanted, signature, bar, active)
+    for _, entry in ipairs(active) do
+        local keyPrefix = entry.trigger.keyPrefix
+        if keyPrefix then
+            for i = 1, BUTTON_COUNT do
+                local command = bar.command .. i
+                for _, key in ipairs({ GetBindingKey(command) }) do
+                    local modifiedKey = keyPrefix .. key
+                    if not HasModifier(key) and GetBindingAction(modifiedKey) == "" then
+                        wanted[#wanted + 1] = { modifiedKey, command }
+                        signature[#signature + 1] = modifiedKey .. command
+                    end
                 end
             end
         end
@@ -152,13 +151,13 @@ local function ApplyBindings(wanted, signature)
 
     ClearOverrideBindings(eventFrame)
     for _, binding in ipairs(wanted) do
-        -- The library's Keybind click casts on key down or up as Blizzard's buttons do, never picking the action up.
-        SetOverrideBindingClick(eventFrame, false, binding[1], binding[2], "Keybind")
+        SetOverrideBinding(eventFrame, false, binding[1], binding[2])
     end
 end
 
 local function CreatePager(number, bar)
     local pager = LuckyActionbars.StockButtons:Create(number, bar)
+    pager:SetFrameRef("bar", _G[bar.frame])
     for i, button in ipairs(pager.buttons) do
         pager:SetFrameRef("button" .. i, button)
     end
@@ -221,7 +220,7 @@ function LuckyActionbars.Paging:Apply()
     for number, bar in ipairs(BARS) do
         local active = ActiveTriggers(number)
         RegisterStateDriver(pagers[number], "page", BuildConditions(number, active))
-        AddBindings(wanted, signature, bar, pagers[number], active)
+        AddModifierBindings(wanted, signature, bar, active)
     end
     ApplyBindings(wanted, signature)
 end

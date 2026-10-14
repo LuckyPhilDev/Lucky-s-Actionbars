@@ -34,7 +34,7 @@ function UnitClass() return "Druid", "DRUID" end
 function GetBindingKey(command) return table.unpack(boundKeys[command] or {}) end
 function GetBindingAction(key) return key == "CTRL-2" and "SOMETHING_ELSE" or "" end
 function ClearOverrideBindings() bindings = {} end
-function SetOverrideBindingClick(_, _, key, buttonName) bindings[key] = buttonName end
+function SetOverrideBinding(_, _, key, command) bindings[key] = command end
 
 local headers = {}
 LuckyActionbars = { StockButtons = {} }
@@ -69,9 +69,8 @@ check(drivers[bar1] == BAR1_OVERRIDES .. "; [mod:ctrl] 2; " .. BAR1_PAGES,
     "Action Bar 1 follows Blizzard's vehicle, page and form changes, and pages on its trigger in between")
 check(drivers[bar2] == "[vehicleui][overridebar][possessbar][petbattle] 0; 0", "a bar with no pages set stays on its home page")
 
-check(bindings["1"] == "ActionButton1" and bindings["SHIFT-F"] == "ActionButton1",
-    "every key bound to a stock button clicks the button that replaces it")
-check(bindings["CTRL-1"] == "ActionButton1", "a paged bar's keys are mirrored onto the held modifier")
+check(bindings["1"] == nil, "unmodified keys keep Blizzard's own bindings, so Press and Hold Casting works")
+check(bindings["CTRL-1"] == "ACTIONBUTTON1", "a paged bar's keys are mirrored onto the held modifier")
 check(bindings["CTRL-SHIFT-F"] == nil, "a key that already has a modifier is not mirrored")
 check(bindings["CTRL-2"] == nil, "a modified key the player bound themselves is left alone")
 

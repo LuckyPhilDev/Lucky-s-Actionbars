@@ -8,6 +8,8 @@ local PAGE_COUNT = 18
 -- Blizzard's buttons stay on their bars for Edit Mode's layout, but out of sight and out of reach.
 local hiddenParent = CreateFrame("Frame")
 hiddenParent:Hide()
+-- Blizzard's button to the one shown in its place.
+local replacements = {}
 
 -- Each button sits in the slot Blizzard lays out for the stock button, so Edit Mode's rows, icons, size,
 -- padding and visibility, and the row direction setting, all move it. Showing empty slots follows the stock
@@ -23,8 +25,17 @@ local function CreateButton(number, bar, header, index)
     button:SetParent(stock.container)
     button:SetAllPoints(stock.container)
     stock:SetParent(hiddenParent)
+    replacements[stock] = button
     return button
 end
+
+-- Key presses go to Blizzard's hidden button, so the press shows on the one in its place.
+hooksecurefunc("TryUseActionButton", function(stock, down)
+    local button = replacements[stock]
+    if button then
+        button:SetButtonState(down and "PUSHED" or "NORMAL")
+    end
+end)
 
 -- Returns the secure header that pages the bar's buttons, with them listed as header.buttons.
 function LuckyActionbars.StockButtons:Create(number, bar)
