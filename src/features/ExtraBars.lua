@@ -2,8 +2,6 @@ LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.ExtraBars = {}
 
 local LibEditMode = LibStub("LibEditMode")
-local LAB = LibStub("LibActionButton-1.0")
-local Masque = LibStub("Masque", true)
 
 local BAR_PAGES = { [9] = 7, [10] = 8, [11] = 9, [12] = 10 }
 local BUTTON_COUNT = 12
@@ -27,7 +25,6 @@ local activeLayoutName
 local editModeActive = false
 -- Bit flags of why empty slots are on show (a drag, the spellbook, Quick Keybind), as Blizzard's bars track them.
 local gridReasons = 0
-local configPending = false
 local layoutFrame = CreateFrame("Frame")
 
 local function DefaultPosition(number)
@@ -56,57 +53,6 @@ local function SnapAfterDrag(bar)
     OnPositionChanged(bar, LibEditMode:GetActiveLayoutName(), point, x + dx, y + dy)
 end
 
--- Stock bars mark range on the hotkey; with the range indicator on, the icon is tinted instead.
-local function ButtonConfig()
-    return {
-        -- Empty slots are faded by UpdateEmptyButtons, which also follows the spellbook and Quick Keybind.
-        showGrid = true,
-        actionButtonUI = true,
-        spellCastVFX = true,
-        outOfRangeColoring = db.rangeIndicator and "button" or "hotkey",
-        colors = { range = LuckyActionbars.RangeIndicator.OUT_OF_RANGE_COLOR, mana = { 0.5, 0.5, 1 } },
-    }
-end
-
--- The library's buttons lack Blizzard's Quick Keybind template, so it is wired on the way Blizzard's bars wire it.
-local function AddQuickKeybind(button)
-    Mixin(button, QuickKeybindButtonTemplateMixin)
-    local highlight = button:CreateTexture(nil, "OVERLAY")
-    highlight:SetAllPoints()
-    highlight:SetBlendMode("ADD")
-    highlight:SetAlpha(0.4)
-    highlight:Hide()
-    button.QuickKeybindHighlightTexture = highlight
-    button:HookScript("OnEnter", button.QuickKeybindButtonOnEnter)
-    button:HookScript("OnLeave", button.QuickKeybindButtonOnLeave)
-    button:HookScript("OnShow", button.QuickKeybindButtonOnShow)
-    button:HookScript("OnHide", button.QuickKeybindButtonOnHide)
-    button:HookScript("OnClick", button.QuickKeybindButtonOnClick)
-    button:QuickKeybindButtonOnShow()
-end
-
--- LibActionButton rather than Blizzard's ActionBarButtonTemplate, whose OnLoad registers slot 1 for range
--- checks before a slot can be given, which hard-crashes the Classic beta client.
-local function CreateButton(bar, index)
-    local button = LAB:CreateButton(index, bar:GetName() .. "Button" .. index, bar, ButtonConfig())
-    button:SetState(0, "action", (BAR_PAGES[bar.number] - 1) * BUTTON_COUNT + index)
-    -- The library binds and shows hotkeys for this command, and Quick Keybind and Import read it.
-    button.commandName = button:GetBindingAction()
-    AddQuickKeybind(button)
-    _G["BINDING_NAME_" .. button.commandName] = LuckyActionbars.Strings.bars.buttonName:format(
-        LuckyActionbars.Strings.bars.names[bar.number], index)
-    bar.buttons[index] = button
-end
-
--- Blizzard only lights up the buttons it knows by name when Quick Keybind mode toggles.
-local function SetQuickKeybindHighlights(_, shown)
-    for _, bar in pairs(bars) do
-        for _, button in ipairs(bar.buttons) do
-            button:DoModeChange(shown)
-        end
-    end
-end
-
 local function LayoutValue(bar, key, layoutName)
     local layout = bar.layouts[layoutName or activeLayoutName]
     if layout and layout[key] ~= nil then
@@ -115,12 +61,20 @@ local function LayoutValue(bar, key, layoutName)
     return LAYOUT_DEFAULTS[key]
 end
 
--- Alpha rather than Hide, so it can change in combat; the slot keeps its place as Blizzard's spacers do.
 local function UpdateEmptyButtons(bar)
-    local showEmpty = LayoutValue(bar, "alwaysShowButtons") or gridReasons > 0
     for _, button in ipairs(bar.buttons) do
-        button:SetAlpha((showEmpty or button:HasAction()) and 1 or 0)
+        LuckyActionbars.ActionButtons:UpdateEmpty(button)
     end
+end
+
+local function CreateButton(bar, index)
+    local button = LuckyActionbars.ActionButtons:Create(index, bar:GetName() .. "Button" .. index, bar, nil,
+        function() return LayoutValue(bar, "alwaysShowButtons") or gridReasons > 0 end,
+        LuckyActionbars.Strings.bars.names[bar.number])
+    button:SetState(0, "action", (BAR_PAGES[bar.number] - 1) * BUTTON_COUNT + index)
+    _G["BINDING_NAME_" .. button.commandName] = LuckyActionbars.Strings.bars.buttonName:format(
+        LuckyActionbars.Strings.bars.names[bar.number], index)
+    bar.buttons[index] = button
 end
 
 local function VisibilityDriver(bar)
@@ -172,23 +126,6 @@ local function ApplyLayout(bar)
     ApplyVisibility(bar)
 end
 
--- Updating a config re-sets secure attributes, so in combat it waits for the fight to end.
-local function ApplyButtonConfig()
-    if InCombatLockdown() then
-        configPending = true
-        layoutFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
-        return
-    end
-    configPending = false
-    for _, bar in pairs(bars) do
-        for _, button in ipairs(bar.buttons) do
-            button:UpdateConfig(ButtonConfig())
-        end
-        -- The config shows every slot again.
-        UpdateEmptyButtons(bar)
-    end
-end
-
 local function ApplyAllLayouts()
     if InCombatLockdown() then
         layoutFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -220,14 +157,6 @@ local EVENT_HANDLERS = {
     PLAYER_REGEN_ENABLED = function(frame, event)
         frame:UnregisterEvent(event)
         ApplyAllLayouts()
-        if configPending then
-            ApplyButtonConfig()
-        end
-    end,
-    ACTIONBAR_SLOT_CHANGED = function()
-        for _, bar in pairs(bars) do
-            UpdateEmptyButtons(bar)
-        end
     end,
     ACTIONBAR_SHOWGRID = function() SetGridShown(true, ACTION_BUTTON_SHOW_GRID_REASON_EVENT) end,
     ACTIONBAR_HIDEGRID = function() SetGridShown(false, ACTION_BUTTON_SHOW_GRID_REASON_EVENT) end,
@@ -309,12 +238,8 @@ local function CreateBar(number)
     bar.layouts = db.bars[number].layouts
     bar:SetClampedToScreen(true)
     bar:SetDontSavePosition(true)
-    local masqueGroup = Masque and Masque:Group("Lucky's Actionbars", LuckyActionbars.Strings.bars.names[number])
     for index = 1, BUTTON_COUNT do
         CreateButton(bar, index)
-        if masqueGroup then
-            bar.buttons[index]:AddToMasque(masqueGroup)
-        end
     end
     ApplyLayout(bar)
     ApplyPosition(bar)
@@ -359,18 +284,6 @@ end
 
 function LuckyActionbars.ExtraBars:Frames()
     return bars
-end
-
-function LuckyActionbars.ExtraBars:ForEachButton(fn)
-    for _, bar in pairs(bars) do
-        for _, button in ipairs(bar.buttons) do
-            fn(button)
-        end
-    end
-end
-
-function LuckyActionbars.ExtraBars:ApplyButtonConfig()
-    ApplyButtonConfig()
 end
 
 -- The library keeps one settings list per frame, so every module adds to this shared one.
@@ -427,15 +340,12 @@ function LuckyActionbars.ExtraBars:Init(database)
     hooksecurefunc(LibEditMode.internal.dialog, "Update", StyleSliders)
     LibEditMode:RegisterCallback("layout", OnLayoutChanged)
     LibEditMode:RegisterCallback("rename", OnLayoutRenamed)
-    EventRegistry:RegisterCallback("QuickKeybindFrame.QuickKeybindModeEnabled", SetQuickKeybindHighlights, bars, true)
-    EventRegistry:RegisterCallback("QuickKeybindFrame.QuickKeybindModeDisabled", SetQuickKeybindHighlights, bars, false)
     LibEditMode:RegisterCallback("enter", function() SetEditModeActive(true) end)
     LibEditMode:RegisterCallback("exit", function() SetEditModeActive(false) end)
     -- The spellbook and Quick Keybind show empty slots through these rather than an event.
     hooksecurefunc("MultiActionBar_ShowAllGrids", function(reason) SetGridShown(true, reason) end)
     hooksecurefunc("MultiActionBar_HideAllGrids", function(reason) SetGridShown(false, reason) end)
     layoutFrame:SetScript("OnEvent", function(frame, event) EVENT_HANDLERS[event](frame, event) end)
-    layoutFrame:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
     layoutFrame:RegisterEvent("ACTIONBAR_SHOWGRID")
     layoutFrame:RegisterEvent("ACTIONBAR_HIDEGRID")
 end

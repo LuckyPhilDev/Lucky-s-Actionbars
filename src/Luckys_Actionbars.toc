@@ -18,6 +18,8 @@ Constants.lua
 Strings.lua
 Defaults.lua
 Utils.lua
+features\ActionButtons.lua
+features\StockButtons.lua
 features\Paging.lua
 features\StockBars.lua
 features\Snapping.lua

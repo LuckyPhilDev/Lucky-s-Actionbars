@@ -36,6 +36,18 @@ function GetBindingAction(key) return key == "CTRL-2" and "SOMETHING_ELSE" or ""
 function ClearOverrideBindings() bindings = {} end
 function SetOverrideBinding(_, _, key, command) bindings[key] = command end
 
+local headers = {}
+LuckyActionbars = { StockButtons = {} }
+function LuckyActionbars.StockButtons:Create(number, bar)
+    local header = CreateFrame()
+    header.buttons = {}
+    for i = 1, 12 do
+        header.buttons[i] = { GetName = function() return bar.buttons .. i end }
+    end
+    headers[number] = header
+    return header
+end
+
 dofile(root .. "src/Constants.lua")
 dofile(root .. "src/features/Paging.lua")
 
@@ -48,12 +60,16 @@ boundKeys.ACTIONBUTTON1 = { "1", "SHIFT-F" }
 boundKeys.ACTIONBUTTON2 = { "2" }
 
 Paging:Init(db)
-local bar1, bar2 = frames[2], frames[3]
+local bar1, bar2 = headers[1], headers[2]
+local BAR1_OVERRIDES = "[overridebar] override; [vehicleui] vehicle; [possessbar] possess; [shapeshift] shapeshift; [petbattle] 0"
+local BAR1_PAGES = "[bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6; "
+    .. "[bonusbar:1] bonus1; [bonusbar:2] bonus2; [bonusbar:3] bonus3; [bonusbar:4] bonus4; [bonusbar:5] bonus5; 1"
 
-check(drivers[bar1] == "[vehicleui][overridebar][possessbar][petbattle] 0; [mod:ctrl] 2; 0",
-    "a paged bar hands back to Blizzard in vehicles, then pages on its trigger")
-check(drivers[bar2] == nil, "a bar with no pages set gets no state driver")
+check(drivers[bar1] == BAR1_OVERRIDES .. "; [mod:ctrl] 2; " .. BAR1_PAGES,
+    "Action Bar 1 follows Blizzard's vehicle, page and form changes, and pages on its trigger in between")
+check(drivers[bar2] == "[vehicleui][overridebar][possessbar][petbattle] 0; 0", "a bar with no pages set stays on its home page")
 
+check(bindings["1"] == nil, "unmodified keys keep Blizzard's own bindings, so Press and Hold Casting works")
 check(bindings["CTRL-1"] == "ACTIONBUTTON1", "a paged bar's keys are mirrored onto the held modifier")
 check(bindings["CTRL-SHIFT-F"] == nil, "a key that already has a modifier is not mirrored")
 check(bindings["CTRL-2"] == nil, "a modified key the player bound themselves is left alone")
@@ -61,7 +77,7 @@ check(bindings["CTRL-2"] == nil, "a modified key the player bound themselves is 
 Paging:SetPage(1, "CTRL-SHIFT", 3)
 check(not drivers[bar1]:find("mod:shift"), "combination pages need More paging options")
 Paging:SetMorePaging(true)
-check(drivers[bar1] == "[vehicleui][overridebar][possessbar][petbattle] 0; [mod:ctrl,mod:shift] 3; [mod:ctrl] 2; 0",
+check(drivers[bar1] == BAR1_OVERRIDES .. "; [mod:ctrl,mod:shift] 3; [mod:ctrl] 2; " .. BAR1_PAGES,
     "combinations come before single modifiers so Ctrl+Shift is not taken as Ctrl")
 
 check(Paging:GetPage(1, "ALT") == 0, "an unset trigger reads as page 0")
@@ -69,23 +85,23 @@ Paging:SetPage(1, "ALT", 7)
 check(not drivers[bar1]:find("mod:alt"), "a page the class's forms own is never driven")
 
 Paging:SetPage(2, "SHIFT", 4)
-check(drivers[bar2] ~= nil, "a second bar pages independently")
+check(drivers[bar2]:find("%[mod:shift%] 4"), "a second bar pages independently")
 Paging:SetPage(2, "SHIFT", 0)
-check(drivers[bar2] == nil and bar2.attributes["state-page"] == "0" and db.paging[2].SHIFT == nil,
+check(drivers[bar2] == "[vehicleui][overridebar][possessbar][petbattle] 0; 0" and db.paging[2].SHIFT == nil,
     "clearing a bar's last page returns it to its home page and forgets the setting")
 
 Paging:SetPage(3, "cat", 8)
-check(drivers[frames[4]]:find("%[bonusbar:1%] 8"), "a druid can page another bar in Cat Form")
+check(drivers[headers[3]]:find("%[bonusbar:1%] 8"), "a druid can page another bar in Cat Form")
 Paging:SetPage(3, "stealth", 9)
-check(not drivers[frames[4]]:find("9"), "another class's form never pages")
+check(not drivers[headers[3]]:find("9"), "another class's form never pages")
 Paging:SetPage(1, "cat", 8)
-check(not drivers[bar1]:find("bonusbar"), "Action Bar 1 is left to Blizzard's own form paging")
+check(not drivers[bar1]:find("%[bonusbar:1%] 8"), "Action Bar 1 keeps Blizzard's own form pages")
 
 inCombat = true
 Paging:SetPage(2, "SHIFT", 4)
-check(drivers[bar2] == nil and eventFrame.events.PLAYER_REGEN_ENABLED, "changes in combat wait for combat to end")
+check(not drivers[bar2]:find("mod:shift") and eventFrame.events.PLAYER_REGEN_ENABLED, "changes in combat wait for combat to end")
 inCombat = false
 eventFrame.OnEvent(eventFrame, "PLAYER_REGEN_ENABLED")
-check(drivers[bar2] ~= nil and not eventFrame.events.PLAYER_REGEN_ENABLED, "the waiting change applies once combat ends")
+check(drivers[bar2]:find("mod:shift") and not eventFrame.events.PLAYER_REGEN_ENABLED, "the waiting change applies once combat ends")
 
 print(string.format("PagingTest: %d/%d assertions passed", passed, tests))

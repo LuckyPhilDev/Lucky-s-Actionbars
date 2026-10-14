@@ -39,8 +39,10 @@ local pagers = {}
 local eventFrame = CreateFrame("Frame")
 local appliedSignature
 
--- State 0 returns the bar to its home page, or for bar 1 to the page ActionBarController_UpdateAll would pick.
--- Touching an attribute on each button makes it re-resolve its slot, even in combat.
+-- State 0 returns the bar to its home page. Bar 1 has none, so it and the vehicle, possess and form states
+-- take the page ActionBarController_UpdateAll would pick.
+-- Keys still press Blizzard's hidden buttons, the only way Press and Hold Casting works, and those read the
+-- bar's actionpage. The buttons on show are not the header's children, so each is updated by reference.
 local ON_PAGE = ([[
     local page = tonumber(newstate)
     if page == 0 then
@@ -61,7 +63,9 @@ local ON_PAGE = ([[
     end
     self:GetFrameRef("bar"):SetAttribute("actionpage", page)
     for i = 1, %d do
-        self:GetFrameRef("button" .. i):SetAttribute("lucky-actionpage", page)
+        local button = self:GetFrameRef("button" .. i)
+        button:RunAttribute("UpdateState", page)
+        button:CallMethod("UpdateAction")
     end
 ]]):format(BUTTON_COUNT)
 
@@ -103,12 +107,18 @@ local function ActiveTriggers(number)
     return active
 end
 
-local function BuildConditions(active)
-    local parts = { "[vehicleui][overridebar][possessbar][petbattle] 0" }
+-- Bar 1 needs a distinct state for each of Blizzard's own pages, so the driver fires when one changes.
+-- Words rather than numbers fall through to the page ActionBarController_UpdateAll would pick.
+local BAR1_OVERRIDES = "[overridebar] override; [vehicleui] vehicle; [possessbar] possess; [shapeshift] shapeshift; [petbattle] 0"
+local BAR1_PAGES = "[bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6; "
+    .. "[bonusbar:1] bonus1; [bonusbar:2] bonus2; [bonusbar:3] bonus3; [bonusbar:4] bonus4; [bonusbar:5] bonus5; 1"
+
+local function BuildConditions(number, active)
+    local parts = { number == 1 and BAR1_OVERRIDES or "[vehicleui][overridebar][possessbar][petbattle] 0" }
     for _, entry in ipairs(active) do
         parts[#parts + 1] = ("[%s] %d"):format(entry.trigger.condition, entry.page)
     end
-    parts[#parts + 1] = "0"
+    parts[#parts + 1] = number == 1 and BAR1_PAGES or "0"
     return table.concat(parts, "; ")
 end
 
@@ -145,11 +155,11 @@ local function ApplyBindings(wanted, signature)
     end
 end
 
-local function CreatePager(bar)
-    local pager = CreateFrame("Frame", nil, UIParent, "SecureHandlerStateTemplate")
+local function CreatePager(number, bar)
+    local pager = LuckyActionbars.StockButtons:Create(number, bar)
     pager:SetFrameRef("bar", _G[bar.frame])
-    for i = 1, BUTTON_COUNT do
-        pager:SetFrameRef("button" .. i, _G[bar.buttons .. i])
+    for i, button in ipairs(pager.buttons) do
+        pager:SetFrameRef("button" .. i, button)
     end
     if bar.homePage then
         pager:SetAttribute("homepage", bar.homePage)
@@ -209,16 +219,7 @@ function LuckyActionbars.Paging:Apply()
     local wanted, signature = {}, {}
     for number, bar in ipairs(BARS) do
         local active = ActiveTriggers(number)
-        local pager = pagers[number]
-        if #active > 0 then
-            RegisterStateDriver(pager, "page", BuildConditions(active))
-            pager.driven = true
-        elseif pager.driven then
-            -- Bars that never paged are left alone; one that stops paging is handed back to its home page.
-            UnregisterStateDriver(pager, "page")
-            pager:SetAttribute("state-page", "0")
-            pager.driven = nil
-        end
+        RegisterStateDriver(pagers[number], "page", BuildConditions(number, active))
         AddModifierBindings(wanted, signature, bar, active)
     end
     ApplyBindings(wanted, signature)
@@ -228,7 +229,7 @@ function LuckyActionbars.Paging:Init(database)
     db = database
     CollectAllowedPages()
     for number, bar in ipairs(BARS) do
-        pagers[number] = CreatePager(bar)
+        pagers[number] = CreatePager(number, bar)
     end
     self:Apply()
     eventFrame:RegisterEvent("UPDATE_BINDINGS")

@@ -134,7 +134,7 @@ function LuckyActionbars.SkyridingBar:Init(database, characterDatabase)
     hooksecurefunc("PlaceAction", OnDrag)
     -- The main bar is the one that pages to the skyriding bar.
     for index = 1, 12 do
-        _G["ActionButton" .. index]:HookScript("PreClick", OnPreClick)
+        _G["LuckyActionbarsActionButton" .. index]:HookScript("PreClick", OnPreClick)
     end
     -- Not PLAYER_ENTERING_WORLD: the skyriding spells are not known yet then, so none could be placed.
     -- SPELLS_CHANGED is heard once after login and once after each spec or talent change, as it fires constantly in combat.

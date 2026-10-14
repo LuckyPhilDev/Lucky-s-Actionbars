@@ -34,11 +34,11 @@ function LuckyActionbars.RangeIndicator:SetEnabled(enabled)
     for button in pairs(outOfRange) do
         button:UpdateUsable()
     end
-    LuckyActionbars.ExtraBars:ApplyButtonConfig()
+    LuckyActionbars.ActionButtons:ApplyConfig()
 end
 
--- UpdateUsable resets the icon colour, so each stock button is hooked to paint the red back on afterwards.
--- The extra bars tint through their library config instead.
+-- UpdateUsable resets the icon colour, so each of Blizzard's buttons (the vehicle and override bars among them)
+-- is hooked to paint the red back on afterwards. The library's buttons tint through their config instead.
 function LuckyActionbars.RangeIndicator:Init(database)
     db = database
     for _, button in ipairs(ActionBarButtonEventsFrame.frames) do

@@ -67,7 +67,7 @@ function LuckyActionbars.Tooltips:Init(database)
     for _, button in ipairs(ActionBarButtonEventsFrame.frames) do
         Track(button)
     end
-    LuckyActionbars.ExtraBars:ForEachButton(Track)
+    LuckyActionbars.ActionButtons:ForEach(Track)
     hooksecurefunc(GameTooltip, "SetAction", OnSetAction)
     modifierWatcher:RegisterEvent("MODIFIER_STATE_CHANGED")
     modifierWatcher:SetScript("OnEvent", OnModifierChanged)
