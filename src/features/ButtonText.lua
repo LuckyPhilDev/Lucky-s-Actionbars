@@ -20,7 +20,7 @@ local function Apply()
     for _, button in ipairs(ActionBarButtonEventsFrame.frames) do
         ApplyTo(button)
     end
-    LuckyActionbars.ExtraBars:ForEachButton(ApplyTo)
+    LuckyActionbars.ActionButtons:ForEach(ApplyTo)
 end
 
 function LuckyActionbars.ButtonText:IsHidden(setting)

@@ -26,7 +26,7 @@ end
 SlashCmdList = {}
 LuckyMinimap = { Create = function() end }
 LuckyActionbars = { Paging = { BAR_COUNT = 8 }, Strings = { addon = {} } }
-for _, name in ipairs({ "Paging", "ExtraBars", "RangeIndicator", "ButtonText", "Tooltips", "MouseoverFade", "RowDirection", "BagsBar", "MicroMenu", "SkyridingBar",
+for _, name in ipairs({ "ActionButtons", "Paging", "ExtraBars", "RangeIndicator", "ButtonText", "Tooltips", "MouseoverFade", "RowDirection", "BagsBar", "MicroMenu", "SkyridingBar",
     "EditModePanel", "Import", "Settings" }) do
     LuckyActionbars[name] = LuckyActionbars[name] or {}
     LuckyActionbars[name].Init = function() end

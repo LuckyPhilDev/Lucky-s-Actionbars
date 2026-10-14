@@ -41,7 +41,7 @@ function GetCursorInfo() if cursor then return "spell", cursor end end
 local buttons = {}
 for index = 1, 12 do
     buttons[index] = { action = 120 + index, HookScript = function(self, _, fn) self.PreClick = fn end }
-    _G["ActionButton" .. index] = buttons[index]
+    _G["LuckyActionbarsActionButton" .. index] = buttons[index]
 end
 
 dofile(root .. "src/Constants.lua")
