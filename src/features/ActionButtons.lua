@@ -2,10 +2,12 @@ LuckyActionbars = LuckyActionbars or {}
 LuckyActionbars.ActionButtons = {}
 
 local LAB = LibStub("LibActionButton-1.0")
+local LBG = LibStub("LibButtonGlow-1.0")
 local Masque = LibStub("Masque", true)
 
 local db
 local buttons = {}
+local isOwnButton, spellAlerts = {}, {}
 -- Per button: the binding command it shows and Quick Keybind sets, and whether its bar shows empty slots.
 local keyBoundTargets, showEmptyTests = {}, {}
 local configPending = false
@@ -48,6 +50,46 @@ local function SetQuickKeybindHighlights(_, shown)
     end
 end
 
+-- Our own copy of Blizzard's proc animation, not ActionButtonSpellAlertManager, whose shared alert list an
+-- addon would taint.
+local function ShowSpellAlert(button)
+    local alert = spellAlerts[button]
+    if not alert then
+        alert = CreateFrame("Frame", nil, button, "ActionButtonSpellAlertTemplate")
+        local width, height = button:GetSize()
+        alert:SetSize(width * 1.4, height * 1.4)
+        alert:SetPoint("CENTER")
+        alert:SetFrameLevel(button:GetFrameLevel() + 5)
+        spellAlerts[button] = alert
+    end
+    if not alert:IsShown() then
+        alert:Show()
+        alert.ProcStartAnim:Play()
+    end
+end
+
+local function HideSpellAlert(button)
+    local alert = spellAlerts[button]
+    if alert then
+        alert:Hide()
+        alert.ProcStartAnim:Stop()
+    end
+end
+
+-- LibActionButton only glows through LibButtonGlow, whose ants predate Blizzard's current proc art, so on our
+-- buttons its overlay goes straight back to its pool, as its own fade-out would leave it.
+-- ponytail: leans on LibButtonGlow internals (__LBGoverlay, unusedOverlays); recheck when updating the library.
+local function ReplaceButtonGlow(button)
+    if not isOwnButton[button] then return end
+    local overlay = button.__LBGoverlay
+    if overlay then
+        overlay:Hide()
+        tinsert(LBG.unusedOverlays, overlay)
+        button.__LBGoverlay = nil
+    end
+    ShowSpellAlert(button)
+end
+
 local function UpdateAllEmpty()
     for _, button in ipairs(buttons) do
         LuckyActionbars.ActionButtons:UpdateEmpty(button)
@@ -82,6 +124,7 @@ end
 function LuckyActionbars.ActionButtons:Create(index, name, header, keyBoundTarget, showEmpty, masqueGroupName)
     local button = LAB:CreateButton(index, name, header)
     buttons[#buttons + 1] = button
+    isOwnButton[button] = true
     keyBoundTargets[button] = keyBoundTarget
     showEmptyTests[button] = showEmpty
     Configure(button)
@@ -111,6 +154,8 @@ end
 
 function LuckyActionbars.ActionButtons:Init(database)
     db = database
+    hooksecurefunc(LBG, "ShowOverlayGlow", ReplaceButtonGlow)
+    hooksecurefunc(LBG, "HideOverlayGlow", HideSpellAlert)
     EventRegistry:RegisterCallback("QuickKeybindFrame.QuickKeybindModeEnabled", SetQuickKeybindHighlights, buttons, true)
     EventRegistry:RegisterCallback("QuickKeybindFrame.QuickKeybindModeDisabled", SetQuickKeybindHighlights, buttons, false)
     -- Fires after a button takes a new action, which is how a page change in combat reaches the alpha.
