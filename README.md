@@ -1,12 +1,12 @@
 # Lucky's Actionbars
 
-Keep Blizzard's action bars and make them do more. Lucky's Actionbars builds on the stock bars instead of replacing them, so your layout, keybinds, Edit Mode and other addons keep working as they always have.
+Keep Blizzard's action bars and make them do more. Lucky's Actionbars builds on the stock bars instead of replacing them, so your layout, keybinds and Edit Mode keep working as they always have.
 
 Supports Retail and WoW Forever.
 
 ## Why Lucky's Actionbars
 
-- **No bar replacement**: the bars you see are Blizzard's own. Nothing to rebuild and no new look to get used to.
+- **No bar replacement**: the bars you see sit in Blizzard's own layout, with the stock look. Nothing to rebuild and no new look to get used to.
 - **Set up in Edit Mode**: every per-bar option sits in the stock Edit Mode dialog, beside Blizzard's own settings. There is no separate config window to learn.
 - **Works in combat**: everything runs through the game's secure systems, so nothing stops working when you pull.
 - **Stays out of the way**: vehicles, override bars, possession and pet battles are never touched.
@@ -18,6 +18,7 @@ Supports Retail and WoW Forever.
 - **Out-of-range icons**: the whole icon turns red while your target is out of range, on every action bar.
 - **Hide button text**: remove keybind text or macro names from every action button.
 - **Button tooltips**: show action button tooltips always, out of combat only, with a modifier held, or never.
+- **Masque skins**: skin Action Bars 1 to 12 with Masque, each bar in its own group.
 - **Hidden until hovered**: any action bar, the Micro Menu or the Bags bar can fade out until you point at it, set per bar in its Edit Mode settings. Its keybinds keep working, and how quickly it appears and hides is set under Bars in `/luckybars`.
 - **Tidier menu and bags**: remove any Micro Menu buttons you never click, and shrink the Bags bar down to just the backpack, from their Edit Mode settings.
 - **Show and hide bars directly from Edit Mode**: turn Action Bars 2 to 12 on and off from any action bar's Edit Mode settings. Bars 2 to 8 stay in sync with the stock Action Bars options.
@@ -28,11 +29,10 @@ Surge Forward, Skyward Ascent and the other skyriding abilities sit in the same 
 
 ### Action Bars 9 to 12
 
-Four extra bars that show pages 7 to 10, built from the stock buttons, so they look and behave like the rest of your bars.
+Four extra bars that show pages 7 to 10, and look and behave like the rest of your bars.
 
 - Move them in Edit Mode, where they snap to nearby bars, with a separate position, size, padding and row count for each layout.
 - Bind their buttons in Quick Keybind mode like any stock bar.
-- Skin them with Masque, each bar in its own group.
 - Bars on a page your class's forms already use, such as a druid's Cat Form page, are not offered.
 
 ### Hold to page
