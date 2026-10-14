@@ -90,6 +90,22 @@ local function ReplaceButtonGlow(button)
     ShowSpellAlert(button)
 end
 
+-- Blizzard's Single-Button Assistant frame, which LibActionButton puts on our buttons, refreshes the slot with
+-- C_ActionBar.ForceUpdateAction, which is forbidden to addons. The button reads the next spell without it.
+local function RefreshAssistedAction(frame, elapsed)
+    frame.updateTimeLeft = frame.updateTimeLeft - elapsed
+    if frame.updateTimeLeft <= 0 then
+        frame:GetParent():OnActionBarSlotChanged()
+        frame.updateTimeLeft = AssistedCombatManager:GetUpdateRate()
+    end
+end
+
+local function TakeOverAssistedRefresh(frame)
+    if isOwnButton[frame:GetParent()] then
+        frame:SetScript("OnUpdate", RefreshAssistedAction)
+    end
+end
+
 local function UpdateAllEmpty()
     for _, button in ipairs(buttons) do
         LuckyActionbars.ActionButtons:UpdateEmpty(button)
@@ -156,6 +172,9 @@ function LuckyActionbars.ActionButtons:Init(database)
     db = database
     hooksecurefunc(LBG, "ShowOverlayGlow", ReplaceButtonGlow)
     hooksecurefunc(LBG, "HideOverlayGlow", HideSpellAlert)
+    if ActionBarButtonAssistedCombatRotationFrameMixin then
+        hooksecurefunc(ActionBarButtonAssistedCombatRotationFrameMixin, "OnLoad", TakeOverAssistedRefresh)
+    end
     EventRegistry:RegisterCallback("QuickKeybindFrame.QuickKeybindModeEnabled", SetQuickKeybindHighlights, buttons, true)
     EventRegistry:RegisterCallback("QuickKeybindFrame.QuickKeybindModeDisabled", SetQuickKeybindHighlights, buttons, false)
     -- Fires after a button takes a new action, which is how a page change in combat reaches the alpha.
