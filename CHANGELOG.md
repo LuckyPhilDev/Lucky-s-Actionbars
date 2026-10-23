@@ -1,3 +1,9 @@
+## [0.5.1] - 2026-10-23
+
+### Fixed
+- Keybinds on the action bars show the short form the default bars use, such as "a-D" for Alt-D, so they stay readable on smaller buttons instead of being cut off. (Thanks for the report Halliday)
+- Default action bars hidden behind Lucky's Actionbars no longer throw "Secret values are only allowed during untainted execution" errors from their cooldowns.
+
 ## [0.5.0] - 2026-10-14
 
 ### Added
