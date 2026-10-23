@@ -42,7 +42,8 @@ local appliedSignature
 -- State 0 returns the bar to its home page. Bar 1 has none, so it and the vehicle, possess and form states
 -- take the page ActionBarController_UpdateAll would pick.
 -- Keys still press Blizzard's hidden buttons, the only way Press and Hold Casting works, and those read the
--- bar's actionpage. The buttons on show are not the header's children, so each is updated by reference.
+-- bar's actionpage. Apply re-runs this from addon code, and a page written there taints every stock button
+-- the next time Blizzard updates them, so an unchanged page is never rewritten. The buttons on show are not the header's children, so each is updated by reference.
 local ON_PAGE = ([[
     local page = tonumber(newstate)
     if page == 0 then
@@ -61,7 +62,10 @@ local ON_PAGE = ([[
             page = GetActionBarPage()
         end
     end
-    self:GetFrameRef("bar"):SetAttribute("actionpage", page)
+    local bar = self:GetFrameRef("bar")
+    if bar:GetAttribute("actionpage") ~= page then
+        bar:SetAttribute("actionpage", page)
+    end
     for i = 1, %d do
         local button = self:GetFrameRef("button" .. i)
         button:RunAttribute("UpdateState", page)

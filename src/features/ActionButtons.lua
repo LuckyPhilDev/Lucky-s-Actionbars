@@ -133,6 +133,14 @@ local function ApplyConfig()
     UpdateAllEmpty()
 end
 
+local libGetHotkey
+
+-- The library shows the raw key ("ALT-D") unless KeyBound is loaded; stock bars abbreviate it ("a-D").
+local function GetAbbreviatedHotkey(button)
+    local key = libGetHotkey(button)
+    return (key and not KeyBound) and GetBindingText(key, true) or key
+end
+
 -- LibActionButton rather than Blizzard's ActionBarButtonTemplate, whose OnLoad registers slot 1 for range
 -- checks before a slot can be given, which hard-crashes the Classic beta client, and whose updates error on
 -- secret cooldowns when an addon pages them in combat.
@@ -143,6 +151,8 @@ function LuckyActionbars.ActionButtons:Create(index, name, header, keyBoundTarge
     isOwnButton[button] = true
     keyBoundTargets[button] = keyBoundTarget
     showEmptyTests[button] = showEmpty
+    libGetHotkey = libGetHotkey or button.GetHotkey
+    button.GetHotkey = GetAbbreviatedHotkey
     Configure(button)
     -- The library binds and shows hotkeys for this command, and Quick Keybind and Import read it.
     button.commandName = button:GetBindingAction()
