@@ -8,6 +8,7 @@
 ## SavedVariablesPerCharacter: LuckyActionbarsCharDB
 ## OptionalDeps: Luckys_Utils, Masque
 ## X-Curse-Project-ID: 1724904
+## X-Wago-ID: mNwwMWNo
 
 Libs\LuckysUtils\embeds.xml
 Libs\LibEditMode\embed.xml

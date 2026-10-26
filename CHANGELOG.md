@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Added
+- **Wago Addons** Lucky's Actionbars is now published on Wago Addons too, so you can install and update it with the Wago app.
+
 ## [0.5.1] - 2026-10-23
 
 ### Fixed
