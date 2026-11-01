@@ -10,8 +10,12 @@ local BAR_FRAMES = {
     bags = "BagsBar",
 }
 
+local IDLE_CHECK_INTERVAL = 0.05
+
 local db
 local animator = CreateFrame("Frame")
+local settled = false
+local idleElapsed = 0
 
 -- A drag in progress or an open Edit Mode needs every bar visible to drop onto or arrange.
 local function ShowEverything()
@@ -21,18 +25,30 @@ end
 local function StepTowards(bar, target, elapsed)
     local alpha = bar:GetAlpha()
     if alpha < target then
-        bar:SetAlpha(math.min(target, alpha + elapsed * 1000 / db.fadeInMs))
+        alpha = math.min(target, alpha + elapsed * 1000 / db.fadeInMs)
     elseif alpha > target then
-        bar:SetAlpha(math.max(target, alpha - elapsed * 1000 / db.fadeOutMs))
+        alpha = math.max(target, alpha - elapsed * 1000 / db.fadeOutMs)
+    else
+        return true
     end
+    bar:SetAlpha(alpha)
+    return alpha == target
 end
 
 local function OnUpdate(_, elapsed)
+    if settled then
+        idleElapsed = idleElapsed + elapsed
+        if idleElapsed < IDLE_CHECK_INTERVAL then
+            return
+        end
+        idleElapsed = 0
+    end
+    settled = true
     local showAll = ShowEverything()
     for key in pairs(db.fade) do
         local bar = _G[BAR_FRAMES[key]]
-        if bar then
-            StepTowards(bar, (showAll or bar:IsMouseOver()) and 1 or 0, elapsed)
+        if bar and not StepTowards(bar, (showAll or bar:IsMouseOver()) and 1 or 0, elapsed) then
+            settled = false
         end
     end
 end
@@ -51,6 +67,7 @@ function LuckyActionbars.MouseoverFade:SetFaded(key, faded)
     if bar and not faded then
         bar:SetAlpha(1)
     end
+    settled = false
     animator:SetScript("OnUpdate", HasFadedBar() and OnUpdate or nil)
 end
 

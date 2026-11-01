@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Improved
+- **Mouseover fade** Faded bars at rest check the mouse about 20 times a second instead of every frame, so they cost far less while you play.
+
 ## [0.5.2] - 2026-10-26
 
 ### Added
