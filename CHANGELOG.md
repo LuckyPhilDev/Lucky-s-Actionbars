@@ -1,3 +1,8 @@
+## [0.5.4] - 2026-11-05
+
+### Added
+- **Controller layout** On WoW Forever, the controller bars' Edit Mode settings can move the side groups and shoulder icons apart or closer, and raise or lower every group and the shoulder icons.
+
 ## [0.5.3] - 2026-11-01
 
 ### Improved

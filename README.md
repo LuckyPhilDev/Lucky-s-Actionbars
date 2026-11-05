@@ -44,6 +44,10 @@ Turn one bar into several. Hold a modifier and a bar swaps to another page, then
 - **Keybinds follow the page**: while a modifier is held, a paged bar's keys press its paged buttons. Any modifier key you have already bound to something else is left alone.
 - **Form paging**: druids can page Action Bars 2 to 8 in Cat, Bear or Moonkin Form, and rogues while stealthed.
 
+### Controller layout (WoW Forever)
+
+Rearrange the controller bars from their Edit Mode settings. Set the spacing and height of the side groups and the shoulder icons, and the height of the top and bottom groups. With Compact on, only the bottom group and the shoulder icons move.
+
 ### Import from Dominos, EllesmereUI or Bartender4
 
 Switch over in one click. Your bars land where they were, at the same size and shape, with the same spells, keybinds and Ctrl, Alt, Shift and form paging, in a new Edit Mode layout of their own.
