@@ -106,6 +106,26 @@ local function HiddenMicroButtonsSetting()
     }
 end
 
+local function ControllerSliders()
+    local S = LuckyActionbars.Strings.controller
+    local ControllerLayout = LuckyActionbars.ControllerLayout
+    local settings = {}
+    for _, key in ipairs(ControllerLayout.SETTINGS) do
+        settings[#settings + 1] = {
+            kind = LibEditMode.SettingType.Slider,
+            name = LuckyActionbars.Utils.Mark(S[key].label),
+            desc = S[key].desc,
+            default = 0,
+            minValue = -150,
+            maxValue = 150,
+            valueStep = 5,
+            get = function() return ControllerLayout:Get(key) end,
+            set = function(_, value) ControllerLayout:Set(key, value) end,
+        }
+    end
+    return settings
+end
+
 local function StockBarSettings(number)
     return { FadeSetting(number), RowsGrowSetting(number) }
 end
@@ -234,6 +254,9 @@ function LuckyActionbars.EditModePanel:Init()
     LibEditMode:AddSystemSettings(Enum.EditModeSystem.MicroMenu,
         { FadeSetting("menu", fadeDesc), HiddenMicroButtonsSetting() })
     LibEditMode:AddSystemSettings(Enum.EditModeSystem.Bags, { FadeSetting("bags", fadeDesc), BackpackOnlySetting() })
+    if LuckyActionbars.ControllerLayout:IsAvailable() then
+        LibEditMode:AddSystemSettings(Enum.EditModeSystem.GamepadMainActionBar, ControllerSliders())
+    end
     MergeExtensionIntoDialog()
     for number, bar in pairs(LuckyActionbars.ExtraBars:Frames()) do
         LuckyActionbars.ExtraBars:AddEditModeSettings(bar,

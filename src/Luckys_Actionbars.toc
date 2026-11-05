@@ -32,6 +32,7 @@ features\MouseoverFade.lua
 features\RowDirection.lua
 features\BagsBar.lua
 features\MicroMenu.lua
+features\ControllerLayout.lua
 features\SidePanel.lua
 features\BarFlyout.lua
 features\PagingFlyout.lua

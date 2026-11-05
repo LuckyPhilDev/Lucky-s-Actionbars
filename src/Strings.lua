@@ -108,6 +108,14 @@ LuckyActionbars.Strings = {
             desc = "Hide the other bag slots and the arrow\nthat shows them, leaving just the backpack.",
         },
     },
+    controller = {
+        sideSpacing = { label = "Side spacing", desc = "Move the left and right button groups apart, or closer with a negative value." },
+        sideHeight = { label = "Side height", desc = "Raise the left and right button groups, or lower them with a negative value." },
+        topHeight = { label = "Top height", desc = "Raise the top button group, or lower it with a negative value." },
+        bottomHeight = { label = "Bottom height", desc = "Raise the bottom button group, or lower it with a negative value." },
+        shoulderSpacing = { label = "Shoulder spacing", desc = "Move the shoulder button icons apart, or closer with a negative value." },
+        shoulderHeight = { label = "Shoulder height", desc = "Raise the shoulder button icons, or lower them with a negative value." },
+    },
     menu = {
         hiddenButtons = {
             label = "Hidden buttons",

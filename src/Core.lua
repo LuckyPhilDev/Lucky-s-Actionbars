@@ -19,6 +19,7 @@ local function LoadDatabase()
     db.fade = db.fade or {}
     db.rowsDown = db.rowsDown or {}
     db.hiddenMicroButtons = db.hiddenMicroButtons or {}
+    db.controller = db.controller or {}
     db.bars = db.bars or {}
     for _, number in ipairs(LuckyActionbars.DB_DEFAULTS.extraBars) do
         db.bars[number] = db.bars[number] or { shown = false }
@@ -43,6 +44,7 @@ loader:SetScript("OnEvent", function()
     LuckyActionbars.RowDirection:Init(db)
     LuckyActionbars.BagsBar:Init(db)
     LuckyActionbars.MicroMenu:Init(db)
+    LuckyActionbars.ControllerLayout:Init(db)
     LuckyActionbarsCharDB = LuckyActionbarsCharDB or { skyridingIncluded = true }
     LuckyActionbars.SkyridingBar:Init(db, LuckyActionbarsCharDB)
     LuckyActionbars.EditModePanel:Init()
