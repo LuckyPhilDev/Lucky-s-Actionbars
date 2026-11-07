@@ -43,6 +43,18 @@ function LuckyActionbars.BagsBar:Init(database)
             bar:SetHeight(MainMenuBarBackpackButton:GetHeight())
         end
     end)
+    -- WoW Forever draws dividers between bag slots that are still flagged shown under the hidden parent.
+    if BagsBar.UpdateDividers then
+        hooksecurefunc(BagsBar, "UpdateDividers", function(bar)
+            if db.backpackOnly then
+                for _, pool in ipairs({ bar.HorizontalDividersPool, bar.VerticalDividersPool }) do
+                    for divider in pool:EnumerateActive() do
+                        divider:Hide()
+                    end
+                end
+            end
+        end)
+    end
     if db.backpackOnly then
         Apply()
     end
