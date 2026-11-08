@@ -1,3 +1,11 @@
+## [0.5.5] - 2026-11-08
+
+### Improved
+- **Edit Mode marker** Lucky's Actionbars settings in Edit Mode are marked with a clearer icon, taken from the addon's minimap icon, that stays readable at text size.
+
+### Fixed
+- On WoW Forever, Backpack only no longer leaves the dividers between the hidden bag slots showing on the Bags bar.
+
 ## [0.5.4] - 2026-11-05
 
 ### Added
