@@ -20,6 +20,7 @@ Supports Retail and WoW Forever.
 - **Button tooltips**: show action button tooltips always, out of combat only, with a modifier held, or never.
 - **Masque skins**: skin Action Bars 1 to 12 with Masque, each bar in its own group.
 - **Hidden until hovered**: any action bar, the Micro Menu or the Bags bar can fade out until you point at it, set per bar in its Edit Mode settings. Its keybinds keep working, and how quickly it appears and hides is set under Bars in `/luckybars`.
+- **Uneven rows**: split a horizontal bar into rows of different lengths, such as 6 icons over 4, with shorter rows sitting left, center or right. Turn on **Uneven rows** under Bars in `/luckybars`, then set **First Row Icons** and **Row Alignment** in the bar's Edit Mode settings.
 - **Tidier menu and bags**: remove any Micro Menu buttons you never click, and shrink the Bags bar down to just the backpack, from their Edit Mode settings.
 - **Show and hide bars directly from Edit Mode**: turn Action Bars 2 to 12 on and off from any action bar's Edit Mode settings. Bars 2 to 8 stay in sync with the stock Action Bars options.
 
