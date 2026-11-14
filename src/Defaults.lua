@@ -12,6 +12,7 @@ LuckyActionbars.DB_DEFAULTS = {
     fadeOutMs = 400,
     markAdditions = true,
     morePaging = false,
+    rowShape = false,
     backpackOnly = false,
     devMode = false,
 }

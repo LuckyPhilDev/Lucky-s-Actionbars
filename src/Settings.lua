@@ -103,6 +103,13 @@ function LuckyActionbars.Settings:Init(db)
     }, function(builder)
         builder:Group(S.groups.whatsNew)
         builder:Group(S.groups.bars, function(group)
+            group:Section(S.sections.editMode)
+            group:Toggle({
+                S.rowShape,
+                since = "0.6",
+                checked = function() return db.rowShape end,
+                onToggle = function(checked) db.rowShape = checked end,
+            })
             group:Section(S.sections.paging)
             group:Toggle({
                 S.morePaging,

@@ -8,7 +8,7 @@ local BUTTON_COUNT = 12
 local BUTTON_SIZE = 45
 
 local LAYOUT_DEFAULTS = {
-    orientation = "horizontal", rowsGrow = "up", rows = 1, icons = 12, size = 100, padding = 2,
+    orientation = "horizontal", rowsGrow = "up", rowSplit = 0, rowAlign = "left", rows = 1, icons = 12, size = 100, padding = 2,
     visibility = "always", alwaysShowButtons = true,
 }
 
@@ -101,22 +101,33 @@ local function ApplyLayout(bar)
     local scale, padding = LayoutValue(bar, "size") / 100, LayoutValue(bar, "padding")
     local horizontal = LayoutValue(bar, "orientation") == "horizontal"
     local rowsUp = horizontal and LayoutValue(bar, "rowsGrow") == "up"
-    local stride = math.ceil(icons / lines)
+    local first = horizontal and LayoutValue(bar, "rowSplit") or 0
+    local lengths = LuckyActionbars.RowDirection.RowLengths(icons, lines, first > 0 and first or nil)
+    local widest = math.max(unpack(lengths))
+    local shift = horizontal and LuckyActionbars.RowDirection.ALIGN_SHIFT[LayoutValue(bar, "rowAlign")] or 0
     local step = BUTTON_SIZE * scale + padding
     local anchor = rowsUp and "BOTTOMLEFT" or "TOPLEFT"
-    for index, button in ipairs(bar.buttons) do
-        local along, across = (index - 1) % stride, math.floor((index - 1) / stride)
-        local x, y = along, rowsUp and across or -across
-        if not horizontal then
-            x, y = across, -along
+    local index = 1
+    for across, length in ipairs(lengths) do
+        for position = 0, length - 1 do
+            local along = position + shift * (widest - length)
+            local x, y = along, rowsUp and across - 1 or 1 - across
+            if not horizontal then
+                x, y = across - 1, -along
+            end
+            local button = bar.buttons[index]
+            button:SetScale(scale)
+            button:ClearAllPoints()
+            -- Offsets are in the button's own scaled units.
+            button:SetPoint(anchor, bar, anchor, x * step / scale, y * step / scale)
+            button:SetShown(true)
+            index = index + 1
         end
-        button:SetScale(scale)
-        button:ClearAllPoints()
-        -- Offsets are in the button's own scaled units.
-        button:SetPoint(anchor, bar, anchor, x * step / scale, y * step / scale)
-        button:SetShown(index <= icons)
     end
-    local long, short = stride * step - padding, math.ceil(icons / stride) * step - padding
+    for hidden = index, #bar.buttons do
+        bar.buttons[hidden]:Hide()
+    end
+    local long, short = widest * step - padding, #lengths * step - padding
     if horizontal then
         bar:SetSize(long, short)
     else
@@ -300,6 +311,24 @@ function LuckyActionbars.ExtraBars:RowsGrowSetting(bar)
     setting.name = LuckyActionbars.Utils.Mark(setting.name)
     setting.desc = LuckyActionbars.Strings.bars.rowsGrow.desc
     setting.hidden = function(layoutName) return IsVertical(layoutName, bar) end
+    return setting
+end
+
+function LuckyActionbars.ExtraBars:RowSplitSetting(bar)
+    local S = LuckyActionbars.Strings.bars.rowSplit
+    local setting = LayoutSlider(bar, "rowSplit", 0, 12, 1, function(value) return value == 0 and S.even or value end)
+    setting.name = LuckyActionbars.Utils.Mark(S.label)
+    setting.desc = S.desc
+    setting.hidden = function(layoutName) return IsVertical(layoutName, bar) or not db.rowShape end
+    return setting
+end
+
+function LuckyActionbars.ExtraBars:RowAlignSetting(bar)
+    local S = LuckyActionbars.Strings.bars.rowAlign
+    local setting = LayoutDropdown(bar, "rowAlign", { "left", "center", "right" })
+    setting.name = LuckyActionbars.Utils.Mark(S.label)
+    setting.desc = S.desc
+    setting.hidden = function(layoutName) return IsVertical(layoutName, bar) or not db.rowShape end
     return setting
 end
 

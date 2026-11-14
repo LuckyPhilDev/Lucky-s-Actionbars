@@ -41,6 +41,41 @@ local function RowsGrowSetting(number)
     }
 end
 
+local function RowSplitSetting(number)
+    local S = LuckyActionbars.Strings.bars.rowSplit
+    return {
+        kind = LibEditMode.SettingType.Slider,
+        name = LuckyActionbars.Utils.Mark(S.label),
+        desc = S.desc,
+        default = 0,
+        minValue = 0,
+        maxValue = 12,
+        valueStep = 1,
+        formatter = function(value) return value == 0 and S.even or value end,
+        hidden = function() return not LuckyActionbars.RowDirection:IsShapeOffered(number) end,
+        get = function() return LuckyActionbars.RowDirection:GetSplit(number) end,
+        set = function(_, first) LuckyActionbars.RowDirection:SetSplit(number, first) end,
+    }
+end
+
+local function RowAlignSetting(number)
+    local S = LuckyActionbars.Strings.bars.rowAlign
+    return {
+        kind = LibEditMode.SettingType.Dropdown,
+        name = LuckyActionbars.Utils.Mark(S.label),
+        desc = S.desc,
+        default = "left",
+        values = {
+            { text = S.left, value = "left" },
+            { text = S.center, value = "center" },
+            { text = S.right, value = "right" },
+        },
+        hidden = function() return not LuckyActionbars.RowDirection:IsShapeOffered(number) end,
+        get = function() return LuckyActionbars.RowDirection:GetAlign(number) end,
+        set = function(_, align) LuckyActionbars.RowDirection:SetAlign(number, align) end,
+    }
+end
+
 local function BackpackOnlySetting()
     local S = LuckyActionbars.Strings.bags.backpackOnly
     return {
@@ -127,7 +162,7 @@ local function ControllerSliders()
 end
 
 local function StockBarSettings(number)
-    return { FadeSetting(number), RowsGrowSetting(number) }
+    return { FadeSetting(number), RowsGrowSetting(number), RowSplitSetting(number), RowAlignSetting(number) }
 end
 
 local function ToggleFlyout(flyout, dialog)
@@ -260,7 +295,12 @@ function LuckyActionbars.EditModePanel:Init()
     MergeExtensionIntoDialog()
     for number, bar in pairs(LuckyActionbars.ExtraBars:Frames()) do
         LuckyActionbars.ExtraBars:AddEditModeSettings(bar,
-            { FadeSetting(number), LuckyActionbars.ExtraBars:RowsGrowSetting(bar) })
+            {
+                FadeSetting(number),
+                LuckyActionbars.ExtraBars:RowsGrowSetting(bar),
+                LuckyActionbars.ExtraBars:RowSplitSetting(bar),
+                LuckyActionbars.ExtraBars:RowAlignSetting(bar),
+            })
     end
     local S = LuckyActionbars.Strings.bars
     AddStockFlyoutButton(stockDialog, LuckyActionbars.BarFlyout, S.flyoutButton, S.flyoutDesc, 3.5)
