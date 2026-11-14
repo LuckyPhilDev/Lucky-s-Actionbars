@@ -49,6 +49,18 @@ LuckyActionbars.Strings = {
             up = "Up",
             down = "Down",
         },
+        rowSplit = {
+            label = "First Row Icons",
+            desc = "How many icons go on the first row of a bar\nwith more than one row. The rest share the\nother rows. Even keeps every row the same length.",
+            even = "Even",
+        },
+        rowAlign = {
+            label = "Row Alignment",
+            desc = "Where a shorter row sits under a longer one.",
+            left = "Left",
+            center = "Center",
+            right = "Right",
+        },
         layout = {
             rows = "# of Rows",
             columns = HUD_EDIT_MODE_SETTING_ACTION_BAR_NUM_COLUMNS,
@@ -141,7 +153,7 @@ LuckyActionbars.Strings = {
     },
     settings = {
         groups = { whatsNew = "What's New", bars = "Bars", buttons = "Buttons" },
-        sections = { paging = "Paging", fade = "Hidden until hovered", bars = "Bars", skyriding = "Skyriding",
+        sections = { editMode = "Layout", paging = "Paging", fade = "Hidden until hovered", bars = "Bars", skyriding = "Skyriding",
             import = "Import" },
         importFrom = {
             label = "Import from %s",
@@ -172,6 +184,10 @@ LuckyActionbars.Strings = {
             desc = "How long a hidden bar takes to disappear once you stop pointing at it. Set to 0 to hide it instantly.",
         },
         milliseconds = " ms",
+        rowShape = {
+            label = "Uneven rows",
+            desc = "Adds First Row Icons and Row Alignment to each bar's Edit Mode settings, for splitting a bar into rows of different lengths. Bars you have already shaped keep their shape while this is off.",
+        },
         morePaging = {
             label = "More paging options",
             desc = "Adds Ctrl+Shift, Ctrl+Alt, Alt+Shift and Friendly target to each bar's Paging panel in Edit Mode.",

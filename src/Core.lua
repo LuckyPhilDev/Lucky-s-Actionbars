@@ -18,6 +18,8 @@ local function LoadDatabase()
     end
     db.fade = db.fade or {}
     db.rowsDown = db.rowsDown or {}
+    db.rowSplit = db.rowSplit or {}
+    db.rowAlign = db.rowAlign or {}
     db.hiddenMicroButtons = db.hiddenMicroButtons or {}
     db.controller = db.controller or {}
     db.bars = db.bars or {}

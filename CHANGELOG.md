@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Added
+- **Uneven rows** With Uneven rows turned on in the settings, every horizontal action bar has a First Row Icons setting in Edit Mode, so a bar can be split into rows of different lengths, such as 6 icons over 4. A Row Alignment setting sets whether shorter rows sit left, center or right.
+
 ## [0.5.5] - 2026-11-08
 
 ### Improved
